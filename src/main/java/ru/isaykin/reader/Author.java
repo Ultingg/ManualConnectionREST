@@ -6,8 +6,9 @@ import lombok.NonNull;
 
 import java.time.LocalDate;
 
-@Data
+
 @NoArgsConstructor
+@Data
 public class Author implements Comparable<Author> {
 
     @NonNull
@@ -29,4 +30,6 @@ public class Author implements Comparable<Author> {
     public int compareTo(Author o) {
         return firstName.compareTo(o.firstName);
     }
+
+
 }

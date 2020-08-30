@@ -1,4 +1,4 @@
-package ru.isaykin.databaseactions;
+package ru.isaykin.reader;
 
 import lombok.extern.slf4j.Slf4j;
 

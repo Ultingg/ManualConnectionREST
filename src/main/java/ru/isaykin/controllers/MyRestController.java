@@ -2,7 +2,7 @@ package ru.isaykin.controllers;
 
 
 import org.springframework.web.bind.annotation.*;
-import ru.isaykin.databaseactions.updateRequest;
+import ru.isaykin.reader.updateRequest;
 import ru.isaykin.exceptions.NotFoundException;
 import ru.isaykin.reader.Author;
 import ru.isaykin.reader.DataBaseRepository;
@@ -64,8 +64,10 @@ public class MyRestController {
         return "Author id: " + id + " was deleted";
     }
     @PutMapping("authors/update/{id}")
-    public String updateById(@PathVariable int id, @RequestParam(value = "first_name") String firstname) {
-        String updateRequestString = "UPDATE authors SET first_name = \"" + firstname + "\" WHERE id = \"" + id + "\"";
+    public String updateById(@PathVariable int id,
+                             @RequestParam(value = "key_parameter") String keyParameter,
+                             @RequestParam(value = "value_parameter") String valueParameter) {
+        String updateRequestString = "UPDATE authors SET " + keyParameter + " = \"" + valueParameter + "\" WHERE id = \"" + id + "\"";
         updateRequest.UpdateTable(updateRequestString);
         return "Author id: " + id + " was updated";
 
