@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.isaykin.reader.Author;
 
+import java.util.List;
 import java.util.Set;
 @Service
 public class AuthorServiceImp implements AuthorService{
@@ -16,8 +17,8 @@ public class AuthorServiceImp implements AuthorService{
     }
 
     @Override
-    public Set<Author> getAll() {
-        return (Set<Author>) authorRepository.findAll();
+    public List<Author> getAll() {
+        return authorRepository.findAll();
     }
 
     @Override

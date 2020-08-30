@@ -2,12 +2,12 @@ package ru.isaykin.services;
 
 import ru.isaykin.reader.Author;
 
-import java.util.Set;
+import java.util.List;
 
 public interface AuthorService {
 
     void create(Author author);
-    Set<Author> getAll();
+    List<Author> getAll();
     Author getOneById(int id);
     Author getByFirstNameAndLastName (String firstname, String lastname);
     boolean update(Author author, int id);

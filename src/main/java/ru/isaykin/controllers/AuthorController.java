@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.isaykin.reader.Author;
 import ru.isaykin.services.AuthorService;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -26,8 +27,8 @@ public class AuthorController {
     }
 
     @GetMapping(value = "/newauthors")
-    public ResponseEntity<Set<Author>> getAll() {
-        final Set<Author> authors = authorService.getAll();
+    public ResponseEntity<List<Author>> getAll() {
+        final List<Author> authors = authorService.getAll();
         return authors != null && !authors.isEmpty()
                 ?new ResponseEntity<>(authors, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
