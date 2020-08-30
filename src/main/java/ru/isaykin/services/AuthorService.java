@@ -12,4 +12,5 @@ public interface AuthorService {
     Author getByFirstNameAndLastName (String firstname, String lastname);
     boolean update(Author author, int id);
     boolean delete(int id);
+    List<Author> getAllByName(String name);
 }

@@ -3,7 +3,10 @@ package ru.isaykin.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.isaykin.reader.Author;
+import ru.isaykin.services.specificationsJPA.AgeSpecification;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 @Service
@@ -31,6 +34,7 @@ public class AuthorServiceImp implements AuthorService{
         return null;
     }
 
+
     @Override
     public boolean update(Author author, int id) {
     if(authorRepository.existsById(id)) {
@@ -48,5 +52,10 @@ public class AuthorServiceImp implements AuthorService{
         return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Author> getAllByName(String name) {
+                return authorRepository.findAll(AgeSpecification.getByFirstName(name));
     }
 }

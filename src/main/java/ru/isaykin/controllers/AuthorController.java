@@ -59,4 +59,13 @@ public class AuthorController {
                 ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
+
+//    @GetMapping(value = "/newauthors")
+//    public ResponseEntity<?> getListByName(@RequestParam(value = "first_name") String name){
+//        final List<Author> byName = authorService.getAllByName(name);
+//        return byName != null && !byName.isEmpty()
+//        ?   new ResponseEntity<>(HttpStatus.OK)
+//                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//
+//    }
 }
