@@ -1,8 +1,7 @@
 package ru.isaykin.reader;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
@@ -12,9 +11,9 @@ import java.util.TreeSet;
 
 import static ru.isaykin.reader.PropetiesRepo.*;
 @Component
+@Slf4j
 public class DataBaseRepository {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("ru.isaykin.DataBaseRepository");
 
     public static Set<Author> getAuthorsWithAge(int age) {
         Connection connection = null;
@@ -26,31 +25,31 @@ public class DataBaseRepository {
             connection = DriverManager.getConnection(getUrl(), getUsername(), getPassword());
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(getSqlRequestWithFilterByAge(age));
-            LOGGER.debug("Connection success!");
+            log.debug("Connection success!");
             authors = convertResultSetToAuthors(resultSet); //помещаем в колле цию
-            LOGGER.debug("Collection loaded to ResultSet!");
+            log.debug("Collection loaded to ResultSet!");
             connection.close();
             statement.close();
             resultSet.close();
 
         } catch (SQLException e) {
-            LOGGER.debug("Connection faild" + e.getMessage());
+            log.debug("Connection faild" + e.getMessage());
         } finally {
             try {
                 if (statement != null) {
                     statement.close();
-                    LOGGER.debug("Connection closed");
+                    log.debug("Connection closed");
                 }
             } catch (SQLException e1) {
-                LOGGER.debug("Connection faild!" + e1.getMessage());
+                log.debug("Connection faild!" + e1.getMessage());
             }
             try {
                 if (connection != null) {
                     connection.close();
-                    LOGGER.debug("Connection closed");
+                    log.debug("Connection closed");
                 }
             } catch (SQLException e2) {
-                LOGGER.debug("Connection faild2" + e2.getMessage());
+                log.debug("Connection faild2" + e2.getMessage());
             }
         }
         return authors;
@@ -61,15 +60,15 @@ public class DataBaseRepository {
 
         try (Connection connection = DriverManager.getConnection(getUrl(), getUsername(), getPassword())) {
             try (Statement statement = connection.createStatement()) {
-                LOGGER.debug("connection sucsess");
+                log.debug("connection sucsess");
                 ResultSet resultSet = statement.executeQuery(getAllTableRequest());
                 authors = convertResultSetToAuthors(resultSet); //помещаем в колле цию
-                LOGGER.debug("Collection loaded to ResultSet!");
+                log.debug("Collection loaded to ResultSet!");
 
             }
 
         } catch (SQLException e) {
-            LOGGER.debug(e.getMessage());
+            log.debug(e.getMessage());
         }
         return authors;
     }
