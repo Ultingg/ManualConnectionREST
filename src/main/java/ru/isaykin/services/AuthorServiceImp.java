@@ -3,13 +3,9 @@ package ru.isaykin.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.isaykin.reader.Author;
-import ru.isaykin.services.specificationsJPA.AgeSpecification;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
-@Service
+@Service(value = "JAP")
 public class AuthorServiceImp implements AuthorService{
     @Autowired
     private AuthorRepository authorRepository;
@@ -29,10 +25,6 @@ public class AuthorServiceImp implements AuthorService{
         return authorRepository.getOne(id);
     }
 
-    @Override
-    public Author getByFirstNameAndLastName(String firstname, String lastname) {
-        return null;
-    }
 
 
     @Override
@@ -54,8 +46,5 @@ public class AuthorServiceImp implements AuthorService{
         return false;
     }
 
-    @Override
-    public List<Author> getAllByName(String name) {
-                return authorRepository.findAll(AgeSpecification.getByFirstName(name));
-    }
+
 }

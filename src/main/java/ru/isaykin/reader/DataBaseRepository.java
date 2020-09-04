@@ -3,6 +3,7 @@ package ru.isaykin.reader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -10,8 +11,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static ru.isaykin.reader.PropetiesRepo.*;
-import static ru.isaykin.reader.PropetiesRepo.getPassword;
-
+@Component
 public class DataBaseRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("ru.isaykin.DataBaseRepository");
@@ -55,6 +55,7 @@ public class DataBaseRepository {
         }
         return authors;
     }
+
     public static Set<Author> getAllAuthors() {
         Set<Author> authors = null;
 
@@ -95,6 +96,7 @@ public class DataBaseRepository {
                 toString();
         return "SELECT * FROM authors WHERE birthdate >= '" + currentDateMinusYears + "'";
     }
+
     private static String getAllTableRequest() {
         return "SELECT * FROM authors";
     }
