@@ -12,11 +12,12 @@ import java.util.Set;
 
 @RestController
 @RequestMapping
-public class AuthorConrollerAlpha {
+public class AuthorAlphaConroller {
 
     private final DataBaseRepository dataBaseRepository;
+
     @Autowired
-    public AuthorConrollerAlpha(DataBaseRepository dataBaseRepository) {
+    public AuthorAlphaConroller(DataBaseRepository dataBaseRepository) {
         this.dataBaseRepository = dataBaseRepository;
     }
 
@@ -37,9 +38,9 @@ public class AuthorConrollerAlpha {
 
     @GetMapping("authors/")
     public Author getOneAuthorByNameOrLastname(@RequestParam("first_name") String name,
-                                              @RequestParam("last_name") String lastName) {
+                                               @RequestParam("last_name") String lastName) {
         Set<Author> authors = DataBaseRepository.getAllAuthors();
-        return authors.stream().filter(author -> author.getFirstName().equals(name) && author.getLastName().equals(lastName))
+        return authors.stream().filter(author -> author.getFirstName().equals(name) || author.getLastName().equals(lastName))
                 .findFirst()
                 .orElseThrow(NotFoundException::new);
     }
@@ -55,30 +56,49 @@ public class AuthorConrollerAlpha {
                                       @RequestParam("last_name") String lastName,
                                       @RequestParam("email") String email,
                                       @RequestParam("birthdate") String birthdate) {
-        String insertRequest = "INSERT authors (first_name, last_name, email, birthdate) VALUES (\"" + firstName
-                + "\" ,\"" + lastName + "\" ,\"" + email + "\" ,\"" + birthdate + "\")";
+        String insertRequest = "INSERT authors (first_name, last_name, email, birthdate) VALUES (\""
+                .concat(firstName)
+                .concat("\" ,\"")
+                .concat(lastName)
+                .concat("\" ,\"")
+                .concat(email)
+                .concat("\" ,\"")
+                .concat(birthdate)
+                .concat("\")");
 
-            AuthorsRepositorySQL.requestToTable(insertRequest);
+        AuthorsRepositorySQL.requestToTable(insertRequest);
 
         return "added";
     }
+
     @DeleteMapping("authors/{id}")
     public String delete(@PathVariable String id) {
         String deleteRequest = "DELETE FROM authors WHERE id = " + id;
 
-            AuthorsRepositorySQL.requestToTable(deleteRequest);
+        AuthorsRepositorySQL.requestToTable(deleteRequest);
 
-        return "Author id: ".concat(id).concat(" was deleted") ;
+        return "Author id: "
+                .concat(id)
+                .concat(" was deleted");
     }
+
     @PutMapping("authors/update/{id}")
     public String updateById(@PathVariable int id,
                              @RequestParam("key_parameter") String keyParameter,
                              @RequestParam("value_parameter") String valueParameter) {
-        String updateRequestString = "UPDATE authors SET " + keyParameter + " = \"" + valueParameter + "\" WHERE id = \"" + id + "\"";
+        String updateRequestString = "UPDATE authors SET "
+                .concat(keyParameter)
+                .concat(" = \"")
+                .concat(valueParameter)
+                .concat("\" WHERE id = \"")
+                .concat(String.valueOf(id))
+                .concat("\"");
 
-            AuthorsRepositorySQL.requestToTable(updateRequestString);
+        AuthorsRepositorySQL.requestToTable(updateRequestString);
 
-        return "Author id: " + id + " was updated";
+        return "Author id: "
+                .concat(String.valueOf(id))
+                .concat(" was updated");
 
     }
 

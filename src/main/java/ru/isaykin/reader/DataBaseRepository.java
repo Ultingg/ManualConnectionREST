@@ -93,7 +93,7 @@ public class DataBaseRepository {
         String currentDateMinusYears = Date.
                 valueOf(LocalDate.now().minusYears(yearsAsFilter)).
                 toString();
-        return "SELECT * FROM authors WHERE birthdate >= '" + currentDateMinusYears + "'";
+        return "SELECT * FROM authors WHERE birthdate >= '".concat(currentDateMinusYears).concat("'");
     }
 
     private static String getAllTableRequest() {

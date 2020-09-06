@@ -30,7 +30,7 @@ public class AuthorsServicSQL implements AuthorService {
         Set<Author> authorSet = DataBaseRepository.getAllAuthors();
         return authorSet.stream()
                 .filter(author -> author.getId() == id)
-              .findFirst().orElseThrow(NotFoundException::new);
+                .findFirst().orElseThrow(NotFoundException::new);
     }
 
 
@@ -50,7 +50,7 @@ public class AuthorsServicSQL implements AuthorService {
 
     @Override
     public boolean delete(int id) {
-        String deleteRequest = "DELETE FROM authors WHERE id = " + id;
+        String deleteRequest = "DELETE FROM authors WHERE id = ".concat(String.valueOf(id));
         AuthorsRepositorySQL.requestToTable(deleteRequest);
         return true;
     }
@@ -63,8 +63,15 @@ public class AuthorsServicSQL implements AuthorService {
     }
 
     public String insertAuthorToTable(String firstname, String lastname, String email, String birthdate) {
-        String insertRequest = "INSERT authors (first_name, last_name, email, birthdate) VALUES (\"" + firstname
-                + "\" ,\"" + lastname + "\" ,\"" + email + "\" ,\"" + birthdate + "\")";
+        String insertRequest = "INSERT authors (first_name, last_name, email, birthdate) VALUES (\""
+                .concat(firstname)
+                .concat("\" ,\"")
+                .concat(lastname)
+                .concat("\" ,\"")
+                .concat(email)
+                .concat("\" ,\"")
+                .concat(birthdate)
+                .concat("\")");
         AuthorsRepositorySQL.requestToTable(insertRequest);
         return "added";
     }
