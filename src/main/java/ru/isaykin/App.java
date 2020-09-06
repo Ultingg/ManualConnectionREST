@@ -17,7 +17,6 @@ public class App {
 
 
     public static void main(String[] args) {
-        Logger Logg = LoggerFactory.getLogger("ru.dataexporter");
         getDataForPropRepo();
 
 

@@ -19,7 +19,7 @@ public class AuthorsRepositorySQL {
                 statement.executeUpdate(request);
             }
         } catch (SQLException e) {
-            log.debug(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 }

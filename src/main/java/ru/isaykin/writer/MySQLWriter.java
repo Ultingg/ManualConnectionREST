@@ -36,7 +36,7 @@ public class MySQLWriter {
             }
 
         } catch (SQLException e) {
-            log.debug(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 }

@@ -23,16 +23,19 @@ public class Author implements Comparable<Author> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NonNull
     private int id;
+
     @Column(name = "first_name")
     @NonNull
     private String firstName;
+
     @Column(name = "last_name")
     @NonNull
     private String lastName;
-    @Column(name = "email")
 
+    @Column(name = "email")
     @NonNull
     private String email;
+    
     @Column(name = "birthdate")
     @NonNull
     @JsonDeserialize(using = LocalDateDeserializer.class)
