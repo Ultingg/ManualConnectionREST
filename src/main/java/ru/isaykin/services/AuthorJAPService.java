@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.isaykin.reader.Author;
 
 import java.util.List;
-@Service(value = "JAP")
-public class AuthorServiceImp implements AuthorService{
+@Service("JAP")
+public class AuthorJAPService implements AuthorService{
     @Autowired
     private AuthorRepository authorRepository;
 
@@ -44,6 +44,11 @@ public class AuthorServiceImp implements AuthorService{
         return true;
         }
         return false;
+    }
+
+    @Override
+    public Author getByFirstNameAndLastName(String first_name, String last_name) {
+        return null;
     }
 
 

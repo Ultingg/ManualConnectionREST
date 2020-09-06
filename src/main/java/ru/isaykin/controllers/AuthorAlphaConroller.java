@@ -2,52 +2,64 @@ package ru.isaykin.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 import ru.isaykin.exceptions.NotFoundException;
 import ru.isaykin.reader.Author;
 import ru.isaykin.reader.DataBaseRepository;
+import ru.isaykin.services.AuthorService;
 import ru.isaykin.services.AuthorsRepositorySQL;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
 @RequestMapping
 public class AuthorAlphaConroller {
 
+    private final AuthorService authorService;
     private final DataBaseRepository dataBaseRepository;
 
     @Autowired
-    public AuthorAlphaConroller(DataBaseRepository dataBaseRepository) {
+    public AuthorAlphaConroller(@Qualifier("SQL") AuthorService authorService, DataBaseRepository dataBaseRepository) {
+        this.authorService = authorService;
         this.dataBaseRepository = dataBaseRepository;
     }
 
+//    @GetMapping("authors")
+//    public Set<Author> getList() {
+//        Set<Author> authors = DataBaseRepository.getAllAuthors();
+//
+//        return authors;
+//    }
     @GetMapping("authors")
-    public Set<Author> getList() {
-        Set<Author> authors = DataBaseRepository.getAllAuthors();
+    public Object getOneAuthorByNameOrLastname(@RequestParam(value = "first_name", required = false) String firstName,
+                                               @RequestParam(value = "last_name", required = false) String lastName) {
 
-        return authors;
+        if (firstName != null && lastName != null) {
+            return authorService.getByFirstNameAndLastName(firstName,lastName);
+        } else {
+            return authorService.getAll();
+        }
+//        Set<Author> authors = DataBaseRepository.getAllAuthors();
+//        return authors.stream().filter(author -> author.getFirstName().equals(name) || author.getLastName().equals(lastName))
+//                .findFirst()
+//                .orElseThrow(NotFoundException::new);
     }
 
     @GetMapping("authors/{id}")
     public Author getOneAuthor(@PathVariable int id) {
-        Set<Author> authors = DataBaseRepository.getAllAuthors();
+        List<Author> authors = DataBaseRepository.getAllAuthors();
         return authors.stream()
                 .filter(author -> author.getId() == id)
                 .findFirst().orElseThrow(NotFoundException::new);
     }
 
-    @GetMapping("authors/")
-    public Author getOneAuthorByNameOrLastname(@RequestParam("first_name") String name,
-                                               @RequestParam("last_name") String lastName) {
-        Set<Author> authors = DataBaseRepository.getAllAuthors();
-        return authors.stream().filter(author -> author.getFirstName().equals(name) || author.getLastName().equals(lastName))
-                .findFirst()
-                .orElseThrow(NotFoundException::new);
-    }
+
 
     @GetMapping("authors/age/gt/{age}")
-    public Set<Author> getListByAge(@PathVariable int age) {
-        Set<Author> authors = DataBaseRepository.getAuthorsWithAge(age);
+    public List<Author> getListByAge(@PathVariable int age) {
+        List<Author> authors = DataBaseRepository.getAuthorsWithAge(age);
         return authors;
     }
 
