@@ -16,28 +16,36 @@ public class DataBaseRepository {
 
 
     public static Set<Author> getAuthorsWithAge(int age) {
+        Date currentDateMinusYears = Date.
+                valueOf(LocalDate.now().minusYears(age));
+        String ageRequestSQL = "SELECT * FROM authors WHERE birthdate >= ?";
+
         Connection connection = null;
 
-        Statement statement = null;
+
+        PreparedStatement preparedStatement = null;
         Set<Author> authors = null;
 
         try {
             connection = DriverManager.getConnection(getUrl(), getUsername(), getPassword());
-            statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(getSqlRequestWithFilterByAge(age));
+            preparedStatement = connection.prepareStatement(ageRequestSQL);
+            preparedStatement.setDate(1,currentDateMinusYears);
+
+          //  ResultSet resultSet = statement.executeQuery(getSqlRequestWithFilterByAge(age));
+            ResultSet resultSet = preparedStatement.executeQuery();
             log.debug("Connection success!");
             authors = convertResultSetToAuthors(resultSet); //помещаем в колле цию
             log.debug("Collection loaded to ResultSet!");
             connection.close();
-            statement.close();
+            preparedStatement.close();
             resultSet.close();
 
         } catch (SQLException e) {
             log.debug("Connection faild" + e.getMessage());
         } finally {
             try {
-                if (statement != null) {
-                    statement.close();
+                if (preparedStatement != null) {
+                    preparedStatement.close();
                     log.debug("Connection closed");
                 }
             } catch (SQLException e1) {
@@ -61,7 +69,7 @@ public class DataBaseRepository {
         try (Connection connection = DriverManager.getConnection(getUrl(), getUsername(), getPassword())) {
             try (Statement statement = connection.createStatement()) {
                 log.debug("connection sucsess");
-                ResultSet resultSet = statement.executeQuery(getAllTableRequest());
+                ResultSet resultSet = statement.executeQuery("SELECT * FROM authors");
                 authors = convertResultSetToAuthors(resultSet); //помещаем в колле цию
                 log.debug("Collection loaded to ResultSet!");
 
@@ -89,15 +97,6 @@ public class DataBaseRepository {
         return authorSet;
     }
 
-    private static String getSqlRequestWithFilterByAge(int yearsAsFilter) {
-        String currentDateMinusYears = Date.
-                valueOf(LocalDate.now().minusYears(yearsAsFilter)).
-                toString();
-        return "SELECT * FROM authors WHERE birthdate >= '".concat(currentDateMinusYears).concat("'");
-    }
 
-    private static String getAllTableRequest() {
-        return "SELECT * FROM authors";
-    }
 
 }
