@@ -1,30 +1,31 @@
 package ru.isaykin;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import ru.isaykin.reader.Author;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.isaykin.reader.DataBaseRepository;
-import ru.isaykin.writer.CSVWriter;
-import ru.isaykin.writer.MySQLWriter;
-import ru.isaykin.writer.XLSWriter;
+import ru.isaykin.writer.WriterService;
 
-import java.util.Set;
-
-import static ru.isaykin.reader.PropetiesRepo.*;
-
+@Component
 public class App {
+    DataBaseRepository dataBaseRepository;
+    WriterService writerService;
 
+
+    @Autowired
+    public App(DataBaseRepository dataBaseRepository) {
+        this.dataBaseRepository = dataBaseRepository;
+    }
 
     public static void main(String[] args) {
-        Logger Logg = LoggerFactory.getLogger("ru.dataexporter");
-        getDataForPropRepo();
 
 
-        Set<Author> authors = DataBaseRepository.getAuthorsWithAge(30);
 
-        CSVWriter.writeToCSV(authors, getCsvPath());
-        XLSWriter.writeToXLS(authors, getExclePath());
-        MySQLWriter.exportNewTableToSQLBase(authors);
+
+//                 Set<Author> authors = new App(new DataBaseRepository(new DataSource())).dataBaseRepository.getAuthorsWithAge(30);
+//
+//        CSVWriter.writeToCSV(authors, csvPath);
+//        XLSWriter.writeToXLS(authors, excelPath);
+//        MySQLWriter.exportNewTableToSQLBase(authors);
     }
 }

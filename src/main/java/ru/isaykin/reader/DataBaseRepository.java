@@ -2,20 +2,33 @@ package ru.isaykin.reader;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.TreeSet;
-
-import static ru.isaykin.reader.PropetiesRepo.*;
 @Component
+@ConfigurationProperties(prefix = "spring.datasource")
 @Slf4j
 public class DataBaseRepository {
+    @Value("${spring.datasource.url}")
+    String url;
+    @Value("${spring.datasource.username}")
+    String username;
+    @Value("${spring.datasource.password}")
+    String password;
 
+    private final DataSource dataSource;
 
-    public static Set<Author> getAuthorsWithAge(int age) {
+    public DataBaseRepository(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public Set<Author> getAuthorsWithAge(int age) {
         Date currentDateMinusYears = Date.
                 valueOf(LocalDate.now().minusYears(age));
         String ageRequestSQL = "SELECT * FROM authors WHERE birthdate >= ?";
@@ -27,7 +40,8 @@ public class DataBaseRepository {
         Set<Author> authors = null;
 
         try {
-            connection = DriverManager.getConnection(getUrl(), getUsername(), getPassword());
+           connection = DriverManager.getConnection(url, username, password);
+//           connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(ageRequestSQL);
             preparedStatement.setDate(1,currentDateMinusYears);
 
@@ -63,10 +77,10 @@ public class DataBaseRepository {
         return authors;
     }
 
-    public static Set<Author> getAllAuthors() {
+    public Set<Author> getAllAuthors() {
         Set<Author> authors = null;
 
-        try (Connection connection = DriverManager.getConnection(getUrl(), getUsername(), getPassword())) {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
             try (Statement statement = connection.createStatement()) {
                 log.debug("connection sucsess");
                 ResultSet resultSet = statement.executeQuery("SELECT * FROM authors");

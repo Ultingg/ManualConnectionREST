@@ -8,6 +8,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import ru.isaykin.reader.Author;
 
 import java.io.File;
@@ -19,9 +21,13 @@ import static org.apache.poi.ss.usermodel.CellType.NUMERIC;
 import static org.apache.poi.ss.usermodel.CellType.STRING;
 
 @Slf4j
+@Component
 public class XLSWriter {
 
-    public static CellStyle dateStyle(XSSFWorkbook workbook) {
+    @Value("${user.excelpath}")
+    String excelPath;
+
+    public  CellStyle dateStyle(XSSFWorkbook workbook) {
 
         XSSFCellStyle style;
         style = workbook.createCellStyle();
@@ -31,7 +37,7 @@ public class XLSWriter {
         return style;
     }
 
-    public static void writeToXLS(Set<Author> authors, String excelPath) {
+    public  void writeToXLS(Set<Author> authors){
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("AuthorsUnder30");
 

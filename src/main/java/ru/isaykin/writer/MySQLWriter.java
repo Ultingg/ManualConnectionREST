@@ -1,6 +1,7 @@
 package ru.isaykin.writer;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import ru.isaykin.reader.Author;
 
 import java.sql.*;
@@ -9,15 +10,15 @@ import java.util.Set;
 import static ru.isaykin.reader.PropetiesRepo.*;
 
 @Slf4j
+@Component
 public class MySQLWriter {
     private static final String DROP_SQL_REQUEST = "DROP TABLE IF EXISTS sortedauthors;";
     private static final String CREATE_SQL_REQUEST = "CREATE TABLE sortedauthors (id INT, FirstName VARCHAR(50), " +
             "LastName VARCHAR(50), Email VARCHAR(100), Birthdate DATE)";
 
 
-    public static void exportNewTableToSQLBase(Set<Author> newTable) {
-
-
+    public void exportNewTableToSQLBase(Set<Author> newTable) {
+        String sqlReq = "INSERT sortedauthors (id, FirstName, LastName, Email, Birthdate) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(getUrl(), getUsername(), getPassword())) {
             try (Statement statement = connection.createStatement()) {
                 log.debug("connection sucsess");
@@ -26,7 +27,7 @@ public class MySQLWriter {
                 statement.executeUpdate(CREATE_SQL_REQUEST);
                 log.debug("table created");
                 for (Author author : newTable) {
-                    String sqlReq = "INSERT sortedauthors (id, FirstName, LastName, Email, Birthdate) VALUES (?, ?, ?, ?, ?)";
+
                     PreparedStatement preparedStatement = connection.prepareStatement(sqlReq);
                     preparedStatement.setInt(1, author.getId());
                     preparedStatement.setString(2, author.getFirstName());
@@ -41,8 +42,6 @@ public class MySQLWriter {
 //                            author.getId(), author.getFirstName(), author.getLastName().replaceAll("'", "\\\""),
 //                            author.getEmail().replaceAll("'", "\\\""), author.getBirthdate());
 //                  statement.executeUpdate(sqlRequest);
-
-
 
 
                 }

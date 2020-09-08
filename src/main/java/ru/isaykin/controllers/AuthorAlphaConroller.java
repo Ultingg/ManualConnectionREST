@@ -23,14 +23,14 @@ public class AuthorAlphaConroller {
 
     @GetMapping("authors")
     public Set<Author> getList() {
-        Set<Author> authors = DataBaseRepository.getAllAuthors();
+        Set<Author> authors = dataBaseRepository.getAllAuthors();
 
         return authors;
     }
 
     @GetMapping("authors/{id}")
     public Author getOneAuthor(@PathVariable int id) {
-        Set<Author> authors = DataBaseRepository.getAllAuthors();
+        Set<Author> authors = dataBaseRepository.getAllAuthors();
         return authors.stream()
                 .filter(author -> author.getId() == id)
                 .findFirst().orElseThrow(NotFoundException::new);
@@ -39,7 +39,7 @@ public class AuthorAlphaConroller {
     @GetMapping("authors/")
     public Author getOneAuthorByNameOrLastname(@RequestParam("first_name") String name,
                                                @RequestParam("last_name") String lastName) {
-        Set<Author> authors = DataBaseRepository.getAllAuthors();
+        Set<Author> authors = dataBaseRepository.getAllAuthors();
         return authors.stream().filter(author -> author.getFirstName().equals(name) || author.getLastName().equals(lastName))
                 .findFirst()
                 .orElseThrow(NotFoundException::new);
@@ -47,7 +47,7 @@ public class AuthorAlphaConroller {
 
     @GetMapping("authors/age/gt/{age}")
     public Set<Author> getListByAge(@PathVariable int age) {
-        Set<Author> authors = DataBaseRepository.getAuthorsWithAge(age);
+        Set<Author> authors = dataBaseRepository.getAuthorsWithAge(age);
         return authors;
     }
 

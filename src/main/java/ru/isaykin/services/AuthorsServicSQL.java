@@ -13,21 +13,26 @@ import static ru.isaykin.reader.PropetiesRepo.getDataForPropRepo;
 
 public class AuthorsServicSQL implements AuthorService {
 
+private final DataBaseRepository dataBaseRepository;
+
+    public AuthorsServicSQL(DataBaseRepository dataBaseRepository) {
+        this.dataBaseRepository = dataBaseRepository;
+    }
 
     @Override
     public void create(Author author) {
-        Set<Author> authorSet = DataBaseRepository.getAllAuthors();
+        Set<Author> authorSet = dataBaseRepository.getAllAuthors();
     }
 
     @Override
     public List<Author> getAll() {
-        return (List<Author>) DataBaseRepository.getAllAuthors();
+        return (List<Author>) dataBaseRepository.getAllAuthors();
     }
 
     @Override
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public Author getOneById(int id) {
-        Set<Author> authorSet = DataBaseRepository.getAllAuthors();
+        Set<Author> authorSet = dataBaseRepository.getAllAuthors();
         return authorSet.stream()
                 .filter(author -> author.getId() == id)
                 .findFirst().orElseThrow(NotFoundException::new);
@@ -37,7 +42,7 @@ public class AuthorsServicSQL implements AuthorService {
     public Author getByFirstNameAndLastName(String firstname, String lastname) {
 
 
-        Set<Author> authors = DataBaseRepository.getAllAuthors();
+        Set<Author> authors = dataBaseRepository.getAllAuthors();
         return authors.stream().filter(author -> author.getFirstName().equals(firstname) && author.getLastName().equals(lastname))
                 .findFirst()
                 .orElseThrow(NotFoundException::new);
@@ -58,7 +63,7 @@ public class AuthorsServicSQL implements AuthorService {
 
     public Set<Author> getListByAge(int age) {
         getDataForPropRepo();
-        Set<Author> authors = DataBaseRepository.getAuthorsWithAge(age);
+        Set<Author> authors = dataBaseRepository.getAuthorsWithAge(age);
         return authors;
     }
 
