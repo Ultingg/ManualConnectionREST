@@ -15,7 +15,7 @@ import ru.isaykin.reader.Author;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 
 import static org.apache.poi.ss.usermodel.CellType.NUMERIC;
 import static org.apache.poi.ss.usermodel.CellType.STRING;
@@ -37,7 +37,7 @@ public class XLSWriter {
         return style;
     }
 
-    public  void writeToXLS(Set<Author> authors){
+    public  void writeToXLS(List<Author> authors){
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("AuthorsUnder30");
 

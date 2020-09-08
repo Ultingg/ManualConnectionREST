@@ -11,7 +11,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Set;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -19,7 +19,7 @@ public class CSVWriter {
     @Value("${user.csvpath}")
     String csvPath;
 
-    public void writeToCSV(Set<Author> authors) {
+    public void writeToCSV(List<Author> authors) {
         BufferedWriter writer;
         try {
 

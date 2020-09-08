@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.isaykin.reader.Author;
 import ru.isaykin.services.AuthorsServicSQL;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.List;
 
 @RestController
 @RequestMapping
@@ -22,8 +21,8 @@ public class AuthorAlphaConroller {
     }
 
     @GetMapping("authors")
-    public Set<Author> getList() {
-        Set<Author> authors = new TreeSet<>(authorsServicSQL.getAll()); //TODO: заменить все Set на List
+    public List<Author> getList() {
+        List<Author> authors = authorsServicSQL.getAll(); //TODO: заменить все Set на List
 
         return authors;
     }
@@ -41,7 +40,7 @@ public class AuthorAlphaConroller {
     }
 
     @GetMapping("authors/age/gt/{age}")
-    public Set<Author> getListByAge(@PathVariable int age) {
+    public List<Author> getListByAge(@PathVariable int age) {
         return authorsServicSQL.getListByAge(age);
     }
 

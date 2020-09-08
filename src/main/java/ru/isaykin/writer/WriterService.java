@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.isaykin.reader.Author;
 import ru.isaykin.reader.DataBaseRepository;
 
-import java.util.Set;
+import java.util.List;
 
 
 @Component
@@ -15,9 +15,7 @@ public class WriterService {
     private final XLSWriter xlsWriter;
     private final MySQLWriter mySQLWriter;
     private final DataBaseRepository dataBaseRepository;
-    private Set<Author> authorSet;
-
-
+    private List<Author> authorList;
 
 
     @Autowired
@@ -30,10 +28,10 @@ public class WriterService {
     }
 
     public void writeAllWithAge(int age){
-        authorSet = dataBaseRepository.getAuthorsWithAge(age);
-       csvWriter.writeToCSV(authorSet);
-       xlsWriter.writeToXLS(authorSet);
-       mySQLWriter.exportNewTableToSQLBase(authorSet);
+        authorList = dataBaseRepository.getAuthorsWithAge(age);
+       csvWriter.writeToCSV(authorList);
+       xlsWriter.writeToXLS(authorList);
+       mySQLWriter.exportNewTableToSQLBase(authorList);
     }
 
 }

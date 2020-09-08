@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.isaykin.reader.Author;
 
 import java.sql.*;
-import java.util.Set;
+import java.util.List;
 
 import static ru.isaykin.reader.PropetiesRepo.*;
 
@@ -17,7 +17,7 @@ public class MySQLWriter {
             "LastName VARCHAR(50), Email VARCHAR(100), Birthdate DATE)";
 
 
-    public void exportNewTableToSQLBase(Set<Author> newTable) {
+    public void exportNewTableToSQLBase(List<Author> newTable) {
         String sqlReq = "INSERT sortedauthors (id, FirstName, LastName, Email, Birthdate) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(getUrl(), getUsername(), getPassword())) {
             try (Statement statement = connection.createStatement()) {

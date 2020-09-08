@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 @Component
 @ConfigurationProperties(prefix = "spring.datasource")
 @Slf4j
@@ -28,7 +28,7 @@ public class DataBaseRepository {
         this.dataSource = dataSource;
     }
 
-    public Set<Author> getAuthorsWithAge(int age) {
+    public List<Author> getAuthorsWithAge(int age) {
         Date currentDateMinusYears = Date.
                 valueOf(LocalDate.now().minusYears(age));
         String ageRequestSQL = "SELECT * FROM authors WHERE birthdate >= ?";
@@ -37,7 +37,7 @@ public class DataBaseRepository {
 
 
         PreparedStatement preparedStatement = null;
-        Set<Author> authors = null;
+        List<Author> authors = null;
 
         try {
            connection = DriverManager.getConnection(url, username, password);
@@ -77,8 +77,8 @@ public class DataBaseRepository {
         return authors;
     }
 
-    public Set<Author> getAllAuthors() {
-        Set<Author> authors = null;
+    public List<Author> getAllAuthors() {
+        List<Author> authors = null;
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             try (Statement statement = connection.createStatement()) {
@@ -95,8 +95,8 @@ public class DataBaseRepository {
         return authors;
     }
 
-    private static Set<Author> convertResultSetToAuthors(ResultSet result) throws SQLException {
-        Set<Author> authorSet = new TreeSet<>();
+    private static List<Author> convertResultSetToAuthors(ResultSet result) throws SQLException {
+        List<Author> authorSet = new ArrayList<>();
 
         while (result.next()) {
             Author author = new Author();
