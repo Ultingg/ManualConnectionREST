@@ -3,52 +3,46 @@ package ru.isaykin.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.isaykin.exceptions.NotFoundException;
 import ru.isaykin.reader.Author;
-import ru.isaykin.reader.DataBaseRepository;
-import ru.isaykin.services.AuthorsRepositorySQL;
+import ru.isaykin.services.AuthorsServicSQL;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 @RestController
 @RequestMapping
 public class AuthorAlphaConroller {
 
-    private final DataBaseRepository dataBaseRepository;
+    private final AuthorsServicSQL authorsServicSQL;
 
     @Autowired
-    public AuthorAlphaConroller(DataBaseRepository dataBaseRepository) {
-        this.dataBaseRepository = dataBaseRepository;
+    public AuthorAlphaConroller(AuthorsServicSQL authorsServicSQL) {
+
+        this.authorsServicSQL = authorsServicSQL;
     }
 
     @GetMapping("authors")
     public Set<Author> getList() {
-        Set<Author> authors = dataBaseRepository.getAllAuthors();
+        Set<Author> authors = new TreeSet<>(authorsServicSQL.getAll()); //TODO: заменить все Set на List
 
         return authors;
     }
 
     @GetMapping("authors/{id}")
     public Author getOneAuthor(@PathVariable int id) {
-        Set<Author> authors = dataBaseRepository.getAllAuthors();
-        return authors.stream()
-                .filter(author -> author.getId() == id)
-                .findFirst().orElseThrow(NotFoundException::new);
+        return authorsServicSQL.getOneById(id);
+
     }
 
     @GetMapping("authors/")
-    public Author getOneAuthorByNameOrLastname(@RequestParam("first_name") String name,
+    public Author getOneAuthorByNameOrLastname(@RequestParam("first_name") String firstname,
                                                @RequestParam("last_name") String lastName) {
-        Set<Author> authors = dataBaseRepository.getAllAuthors();
-        return authors.stream().filter(author -> author.getFirstName().equals(name) || author.getLastName().equals(lastName))
-                .findFirst()
-                .orElseThrow(NotFoundException::new);
+        return authorsServicSQL.getByFirstNameAndLastName(firstname, lastName);
     }
 
     @GetMapping("authors/age/gt/{age}")
     public Set<Author> getListByAge(@PathVariable int age) {
-        Set<Author> authors = dataBaseRepository.getAuthorsWithAge(age);
-        return authors;
+        return authorsServicSQL.getListByAge(age);
     }
 
     @PostMapping("authors/insert")
@@ -56,29 +50,16 @@ public class AuthorAlphaConroller {
                                       @RequestParam("last_name") String lastName,
                                       @RequestParam("email") String email,
                                       @RequestParam("birthdate") String birthdate) {
-        String insertRequest = "INSERT authors (first_name, last_name, email, birthdate) VALUES (\""
-                .concat(firstName)
-                .concat("\" ,\"")
-                .concat(lastName)
-                .concat("\" ,\"")
-                .concat(email)
-                .concat("\" ,\"")
-                .concat(birthdate)
-                .concat("\")");
-
-        AuthorsRepositorySQL.requestToTable(insertRequest);
-
+        authorsServicSQL.insertAuthorToTable(firstName, lastName, email, birthdate);
         return "added";
     }
 
     @DeleteMapping("authors/{id}")
-    public String delete(@PathVariable String id) {
-        String deleteRequest = "DELETE FROM authors WHERE id = " + id;
-
-        AuthorsRepositorySQL.requestToTable(deleteRequest);
+    public String delete(@PathVariable int id) {
+        authorsServicSQL.delete(id);
 
         return "Author id: "
-                .concat(id)
+                .concat(String.valueOf(id))
                 .concat(" was deleted");
     }
 
@@ -86,15 +67,7 @@ public class AuthorAlphaConroller {
     public String updateById(@PathVariable int id,
                              @RequestParam("key_parameter") String keyParameter,
                              @RequestParam("value_parameter") String valueParameter) {
-        String updateRequestString = "UPDATE authors SET "
-                .concat(keyParameter)
-                .concat(" = \"")
-                .concat(valueParameter)
-                .concat("\" WHERE id = \"")
-                .concat(String.valueOf(id))
-                .concat("\"");
-
-        AuthorsRepositorySQL.requestToTable(updateRequestString);
+        authorsServicSQL.update(id, keyParameter, valueParameter);
 
         return "Author id: "
                 .concat(String.valueOf(id))

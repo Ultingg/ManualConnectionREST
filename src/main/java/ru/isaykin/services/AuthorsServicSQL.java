@@ -1,6 +1,7 @@
 package ru.isaykin.services;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.isaykin.exceptions.NotFoundException;
 import ru.isaykin.reader.Author;
@@ -10,13 +11,15 @@ import java.util.List;
 import java.util.Set;
 
 import static ru.isaykin.reader.PropetiesRepo.getDataForPropRepo;
-
+@Component
 public class AuthorsServicSQL implements AuthorService {
 
-private final DataBaseRepository dataBaseRepository;
+    private final DataBaseRepository dataBaseRepository;
+    private final AuthorsRepositorySQL authorsRepositorySQL;
 
-    public AuthorsServicSQL(DataBaseRepository dataBaseRepository) {
+    public AuthorsServicSQL(DataBaseRepository dataBaseRepository, AuthorsRepositorySQL authorsRepositorySQL) {
         this.dataBaseRepository = dataBaseRepository;
+        this.authorsRepositorySQL = authorsRepositorySQL;
     }
 
     @Override
@@ -38,25 +41,37 @@ private final DataBaseRepository dataBaseRepository;
                 .findFirst().orElseThrow(NotFoundException::new);
     }
 
+    @Override
+    public boolean update(Author author, int id) {
+        return false;
+    }
+
 
     public Author getByFirstNameAndLastName(String firstname, String lastname) {
-
-
         Set<Author> authors = dataBaseRepository.getAllAuthors();
         return authors.stream().filter(author -> author.getFirstName().equals(firstname) && author.getLastName().equals(lastname))
                 .findFirst()
                 .orElseThrow(NotFoundException::new);
     }
 
-    @Override
-    public boolean update(Author author, int id) {
-        return false;
+
+    public boolean update(int id,String  keyParameter, String valueParameter) {
+
+        String updateRequestString = "UPDATE authors SET "
+                .concat(keyParameter)
+                .concat(" = \"")
+                .concat(valueParameter)
+                .concat("\" WHERE id = \"")
+                .concat(String.valueOf(id))
+                .concat("\"");
+        authorsRepositorySQL.requestToTable(updateRequestString);
+        return true;
     }
 
     @Override
     public boolean delete(int id) {
         String deleteRequest = "DELETE FROM authors WHERE id = ".concat(String.valueOf(id));
-        AuthorsRepositorySQL.requestToTable(deleteRequest);
+        authorsRepositorySQL.requestToTable(deleteRequest);
         return true;
     }
 
@@ -77,7 +92,7 @@ private final DataBaseRepository dataBaseRepository;
                 .concat("\" ,\"")
                 .concat(birthdate)
                 .concat("\")");
-        AuthorsRepositorySQL.requestToTable(insertRequest);
+        authorsRepositorySQL.requestToTable(insertRequest);
         return "added";
     }
 
