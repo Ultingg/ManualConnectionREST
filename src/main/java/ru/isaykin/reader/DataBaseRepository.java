@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,16 +16,13 @@ import java.util.List;
 public class DataBaseRepository {
     @Value("${spring.datasource.url}")
     String url;
+
     @Value("${spring.datasource.username}")
     String username;
+
     @Value("${spring.datasource.password}")
     String password;
 
-    private final DataSource dataSource;
-
-    public DataBaseRepository(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
 
     public List<Author> getAuthorsWithAge(int age) {
         Date currentDateMinusYears = Date.
