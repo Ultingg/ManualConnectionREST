@@ -2,6 +2,7 @@ package ru.isaykin.services;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.isaykin.exceptions.NotFoundException;
 import ru.isaykin.reader.Author;
@@ -12,6 +13,7 @@ import java.util.List;
 import static ru.isaykin.reader.PropertiesRepo.getDataForPropRepo;
 
 @Component
+@Service
 public class AuthorsSQLService implements AuthorService {
 
     private final DataBaseRepository dataBaseRepository;

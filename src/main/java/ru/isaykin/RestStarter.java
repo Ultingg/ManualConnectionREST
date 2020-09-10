@@ -7,6 +7,7 @@ import static ru.isaykin.reader.PropertiesRepo.getDataForPropRepo;
 
 @SpringBootApplication
 public class RestStarter {
+
     public static void main(String[] args) {
         getDataForPropRepo();
         run(RestStarter.class, args);
