@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
+
 @Configuration
 public class SpringConfig {
     @Value("${spring.datasource.url}")
@@ -28,7 +29,6 @@ public class SpringConfig {
         driverManagerDataSource.setUrl(url);
         driverManagerDataSource.setUsername(username);
         driverManagerDataSource.setPassword(password);
-
 
         return driverManagerDataSource;
     }

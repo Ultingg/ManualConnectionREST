@@ -13,7 +13,7 @@ import java.sql.Statement;
 @Component
 @Slf4j
 @Repository
-public class AuthorsRepositorySQL  {
+public class AuthorsRepositorySQL {
     @Value("${spring.datasource.url}")
     String url;
 
@@ -30,7 +30,7 @@ public class AuthorsRepositorySQL  {
     private final DataSource dataSource;
 
     public AuthorsRepositorySQL(DataSource dataSource) {
-      this.dataSource = dataSource;
+        this.dataSource = dataSource;
 
     }
 

@@ -6,7 +6,6 @@ import static ru.isaykin.reader.PropertiesRepo.getDataForPropRepo;
 public class App {
 
 
-
     public static void main(String[] args) {
         getDataForPropRepo();
 

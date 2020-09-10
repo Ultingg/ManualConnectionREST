@@ -4,7 +4,7 @@ import ru.isaykin.reader.Author;
 
 import java.util.List;
 
-public interface AuthorService{
+public interface AuthorService {
 
     void create(Author author);
 
