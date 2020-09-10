@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static ru.isaykin.reader.PropetiesRepo.*;
+
 @Component
 @Slf4j
 public class DataBaseRepository {
@@ -91,8 +92,8 @@ public class DataBaseRepository {
 
     private static String getSqlRequestWithFilterByAge(int yearsAsFilter) {
         String currentDateMinusYears = Date.
-                valueOf(LocalDate.now().minusYears(yearsAsFilter)).
-                toString();
+            valueOf(LocalDate.now().minusYears(yearsAsFilter)).
+            toString();
         return "SELECT * FROM authors WHERE birthdate >= '".concat(currentDateMinusYears).concat("'");
     }
 

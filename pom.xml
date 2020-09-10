@@ -59,7 +59,7 @@
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>libs/</classpathPrefix>
                             <mainClass>
-                                ru.isaykin.RestStrater
+                                ru.isaykin.RestStarter
                             </mainClass>
                         </manifest>
                     </archive>

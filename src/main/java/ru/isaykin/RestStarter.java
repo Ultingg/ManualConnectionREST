@@ -1,14 +1,14 @@
 package ru.isaykin;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import static org.springframework.boot.SpringApplication.run;
 import static ru.isaykin.reader.PropetiesRepo.getDataForPropRepo;
 
 @SpringBootApplication
-public class RestStrater  {
+public class RestStarter {
     public static void main(String[] args) {
         getDataForPropRepo();
-        SpringApplication.run(RestStrater.class, args);
+        run(RestStarter.class, args);
     }
 }
