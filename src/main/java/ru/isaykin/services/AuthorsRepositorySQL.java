@@ -1,20 +1,23 @@
 package ru.isaykin.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import static ru.isaykin.reader.PropetiesRepo.*;
-
+@Component
 @Slf4j
 public class AuthorsRepositorySQL {
+    private final DataSource dataSource;
 
+    public AuthorsRepositorySQL(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
-    public static void requestToTable(String request) {
-        try (Connection connection = DriverManager.getConnection(getUrl(), getUsername(), getPassword())) {
+    public  void requestToTable(String request) {
+        try (Connection connection = dataSource.getConnection()) {
             try (Statement statement = connection.createStatement()) {
                 statement.executeUpdate(request);
             }

@@ -13,15 +13,19 @@ import ru.isaykin.reader.Author;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
 
 import static org.apache.poi.ss.usermodel.CellType.NUMERIC;
 import static org.apache.poi.ss.usermodel.CellType.STRING;
 
 @Slf4j
+@Component
 public class XLSWriter {
 
-    public static CellStyle dateStyle(XSSFWorkbook workbook) {
+    @Value("${user.excelpath}")
+    String excelPath;
+
+    public  CellStyle dateStyle(XSSFWorkbook workbook) {
 
         XSSFCellStyle style;
         style = workbook.createCellStyle();
@@ -31,7 +35,7 @@ public class XLSWriter {
         return style;
     }
 
-    public static void writeToXLS(List<Author> authors, String excelPath) {
+    public  void writeToXLS(List<Author> authors){
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("AuthorsUnder30");
 
