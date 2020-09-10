@@ -11,7 +11,6 @@ import ru.isaykin.services.AuthorService;
 import ru.isaykin.services.AuthorsRepositorySQL;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping
@@ -25,13 +24,6 @@ public class AuthorAlphaConroller {
         this.authorService = authorService;
         this.dataBaseRepository = dataBaseRepository;
     }
-
-//    @GetMapping("authors")
-//    public Set<Author> getList() {
-//        Set<Author> authors = DataBaseRepository.getAllAuthors();
-//
-//        return authors;
-//    }
     @GetMapping("authors")
     public Object getOneAuthorByNameOrLastname(@RequestParam(value = "first_name", required = false) String firstName,
                                                @RequestParam(value = "last_name", required = false) String lastName) {
@@ -41,15 +33,11 @@ public class AuthorAlphaConroller {
         } else {
             return authorService.getAll();
         }
-//        Set<Author> authors = DataBaseRepository.getAllAuthors();
-//        return authors.stream().filter(author -> author.getFirstName().equals(name) || author.getLastName().equals(lastName))
-//                .findFirst()
-//                .orElseThrow(NotFoundException::new);
     }
 
     @GetMapping("authors/{id}")
     public Author getOneAuthor(@PathVariable int id) {
-        List<Author> authors = DataBaseRepository.getAllAuthors();
+        List<Author> authors = dataBaseRepository.getAllAuthors();
         return authors.stream()
                 .filter(author -> author.getId() == id)
                 .findFirst().orElseThrow(NotFoundException::new);
@@ -59,7 +47,7 @@ public class AuthorAlphaConroller {
 
     @GetMapping("authors/age/gt/{age}")
     public List<Author> getListByAge(@PathVariable int age) {
-        List<Author> authors = DataBaseRepository.getAuthorsWithAge(age);
+        List<Author> authors = dataBaseRepository.getAuthorsWithAge(age);
         return authors;
     }
 

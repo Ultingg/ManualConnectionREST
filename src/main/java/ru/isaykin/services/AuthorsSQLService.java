@@ -7,7 +7,6 @@ import ru.isaykin.exceptions.NotFoundException;
 import ru.isaykin.reader.Author;
 import ru.isaykin.reader.DataBaseRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static ru.isaykin.reader.PropetiesRepo.getDataForPropRepo;
@@ -36,7 +35,7 @@ public class AuthorsSQLService implements AuthorService {
     }
 
     public Author getByFirstNameAndLastName(String firstname, String lastname) {
-        List<Author> authors = new ArrayList<Author> (DataBaseRepository.getAllAuthors());
+        List<Author> authors = DataBaseRepository.getAllAuthors();
         return authors.stream().filter(author -> author.getFirstName().equals(firstname) && author.getLastName().equals(lastname))
                 .findFirst()
                 .orElseThrow(NotFoundException::new);

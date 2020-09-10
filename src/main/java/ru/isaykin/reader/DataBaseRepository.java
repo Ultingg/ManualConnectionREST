@@ -8,8 +8,6 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import static ru.isaykin.reader.PropetiesRepo.*;
 @Component
@@ -21,7 +19,7 @@ public class DataBaseRepository {
         Connection connection = null;
 
         Statement statement = null;
-        ArrayList<Author> authors = null;
+        List<Author> authors = null;
 
         try {
             connection = DriverManager.getConnection(getUrl(), getUsername(), getPassword());
