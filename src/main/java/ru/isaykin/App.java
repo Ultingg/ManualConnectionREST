@@ -1,7 +1,7 @@
 package ru.isaykin;
 
 
-import static ru.isaykin.reader.PropetiesRepo.getDataForPropRepo;
+import static ru.isaykin.reader.PropertiesRepo.getDataForPropRepo;
 
 public class App {
 

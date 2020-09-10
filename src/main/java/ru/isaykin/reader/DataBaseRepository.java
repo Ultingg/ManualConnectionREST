@@ -33,18 +33,15 @@ public class DataBaseRepository {
         String ageRequestSQL = "SELECT * FROM authors WHERE birthdate >= ?";
 
         Connection connection = null;
-
-
         PreparedStatement preparedStatement = null;
+
         List<Author> authors = null;
 
         try {
             connection = DriverManager.getConnection(getUrl(), getUrl(), getPassword());
-//           connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(ageRequestSQL);
             preparedStatement.setDate(1, currentDateMinusYears);
 
-            //  ResultSet resultSet = statement.executeQuery(getSqlRequestWithFilterByAge(age));
             ResultSet resultSet = preparedStatement.executeQuery();
             log.debug("Connection success!");
             authors = convertResultSetToAuthors(resultSet); //помещаем в колле цию
@@ -81,7 +78,8 @@ public class DataBaseRepository {
 
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             try (Statement statement = connection.createStatement()) {
-                log.debug("connection sucsess");
+                log.debug("connection success");
+
                 ResultSet resultSet = statement.executeQuery("SELECT * FROM authors");
                 authors = convertResultSetToAuthors(resultSet); //помещаем в колле цию
                 log.debug("Collection loaded to ResultSet!");

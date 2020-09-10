@@ -17,7 +17,7 @@ public class AuthorsRepositorySQL {
         this.dataSource = dataSource;
     }
 
-    public  void requestToTable(String request) {
+    public void requestToTable(String request) {
         try (Connection connection = dataSource.getConnection()) {
             try (Statement statement = connection.createStatement()) {
                 statement.executeUpdate(request);

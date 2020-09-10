@@ -9,7 +9,7 @@ import ru.isaykin.reader.DataBaseRepository;
 
 import java.util.List;
 
-import static ru.isaykin.reader.PropetiesRepo.getDataForPropRepo;
+import static ru.isaykin.reader.PropertiesRepo.getDataForPropRepo;
 
 @Component
 public class AuthorsSQLService implements AuthorService {
@@ -29,7 +29,7 @@ public class AuthorsSQLService implements AuthorService {
 
     @Override
     public List<Author> getAll() {
-        return  dataBaseRepository.getAllAuthors();
+        return dataBaseRepository.getAllAuthors();
     }
 
     @Override
