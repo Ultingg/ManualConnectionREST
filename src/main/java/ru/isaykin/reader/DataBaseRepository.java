@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import static ru.isaykin.reader.PropetiesRepo.*;
 @Component
@@ -15,18 +15,18 @@ import static ru.isaykin.reader.PropetiesRepo.*;
 public class DataBaseRepository {
 
 
-    public static Set<Author> getAuthorsWithAge(int age) {
+    public static List<Author> getAuthorsWithAge(int age) {
         Connection connection = null;
 
         Statement statement = null;
-        Set<Author> authors = null;
+        List<Author> authors = null;
 
         try {
             connection = DriverManager.getConnection(getUrl(), getUsername(), getPassword());
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(getSqlRequestWithFilterByAge(age));
             log.debug("Connection success!");
-            authors = convertResultSetToAuthors(resultSet); //помещаем в колле цию
+            authors = new ArrayList<>(convertResultSetToAuthors(resultSet)); //помещаем в колле цию
             log.debug("Collection loaded to ResultSet!");
             connection.close();
             statement.close();
@@ -55,14 +55,14 @@ public class DataBaseRepository {
         return authors;
     }
 
-    public static Set<Author> getAllAuthors() {
-        Set<Author> authors = null;
+    public static List<Author> getAllAuthors() {
+        ArrayList<Author> authors = null;
 
         try (Connection connection = DriverManager.getConnection(getUrl(), getUsername(), getPassword())) {
             try (Statement statement = connection.createStatement()) {
                 log.debug("connection sucsess");
                 ResultSet resultSet = statement.executeQuery(getAllTableRequest());
-                authors = convertResultSetToAuthors(resultSet); //помещаем в колле цию
+                authors = new ArrayList<>(convertResultSetToAuthors(resultSet)); //помещаем в колле цию
                 log.debug("Collection loaded to ResultSet!");
 
             }
@@ -73,8 +73,8 @@ public class DataBaseRepository {
         return authors;
     }
 
-    private static Set<Author> convertResultSetToAuthors(ResultSet result) throws SQLException {
-        Set<Author> authorSet = new TreeSet<>();
+    private static List<Author> convertResultSetToAuthors(ResultSet result) throws SQLException {
+        List<Author> authorList = new ArrayList<>();
 
         while (result.next()) {
             Author author = new Author();
@@ -84,9 +84,9 @@ public class DataBaseRepository {
             author.setEmail(result.getString("email"));
             author.setBirthdate(result.getDate("birthdate").toLocalDate());
 
-            authorSet.add(author);
+            authorList.add(author);
         }
-        return authorSet;
+        return authorList;
     }
 
     private static String getSqlRequestWithFilterByAge(int yearsAsFilter) {

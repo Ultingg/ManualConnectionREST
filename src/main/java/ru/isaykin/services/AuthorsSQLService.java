@@ -1,23 +1,20 @@
 package ru.isaykin.services;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.isaykin.exceptions.NotFoundException;
 import ru.isaykin.reader.Author;
 import ru.isaykin.reader.DataBaseRepository;
 
 import java.util.List;
-import java.util.Set;
 
 import static ru.isaykin.reader.PropetiesRepo.getDataForPropRepo;
+@Service("SQL")
+public class AuthorsSQLService implements AuthorService {
 
-public class AuthorsServicSQL implements AuthorService {
 
 
-    @Override
-    public void create(Author author) {
-        Set<Author> authorSet = DataBaseRepository.getAllAuthors();
-    }
 
     @Override
     public List<Author> getAll() {
@@ -27,17 +24,18 @@ public class AuthorsServicSQL implements AuthorService {
     @Override
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public Author getOneById(int id) {
-        Set<Author> authorSet = DataBaseRepository.getAllAuthors();
+        List<Author> authorSet = DataBaseRepository.getAllAuthors();
         return authorSet.stream()
                 .filter(author -> author.getId() == id)
                 .findFirst().orElseThrow(NotFoundException::new);
     }
-
+    @Override
+    public void create(Author author) {
+        List<Author> authorSet = DataBaseRepository.getAllAuthors();
+    }
 
     public Author getByFirstNameAndLastName(String firstname, String lastname) {
-
-
-        Set<Author> authors = DataBaseRepository.getAllAuthors();
+        List<Author> authors = DataBaseRepository.getAllAuthors();
         return authors.stream().filter(author -> author.getFirstName().equals(firstname) && author.getLastName().equals(lastname))
                 .findFirst()
                 .orElseThrow(NotFoundException::new);
@@ -56,9 +54,9 @@ public class AuthorsServicSQL implements AuthorService {
     }
 
 
-    public Set<Author> getListByAge(int age) {
+    public List<Author> getListByAge(int age) {
         getDataForPropRepo();
-        Set<Author> authors = DataBaseRepository.getAuthorsWithAge(age);
+        List<Author> authors = DataBaseRepository.getAuthorsWithAge(age);
         return authors;
     }
 

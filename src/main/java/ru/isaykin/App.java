@@ -9,6 +9,7 @@ import ru.isaykin.writer.CSVWriter;
 import ru.isaykin.writer.MySQLWriter;
 import ru.isaykin.writer.XLSWriter;
 
+import java.util.List;
 import java.util.Set;
 
 import static ru.isaykin.reader.PropetiesRepo.*;
@@ -19,8 +20,7 @@ public class App {
     public static void main(String[] args) {
         getDataForPropRepo();
 
-
-        Set<Author> authors = DataBaseRepository.getAuthorsWithAge(30);
+        List<Author> authors = DataBaseRepository.getAuthorsWithAge(30);
 
         CSVWriter.writeToCSV(authors, getCsvPath());
         XLSWriter.writeToXLS(authors, getExclePath());
