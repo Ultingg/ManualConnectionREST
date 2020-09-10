@@ -49,7 +49,7 @@ public class AuthorAlphaController {
         return authorsSQLService.getListByAge(age);
     }
 
-    @PostMapping("authors/insert")
+    @PostMapping("authors")
     public String insertAuthorToTable(@RequestParam("first_name") String firstName,
                                       @RequestParam("last_name") String lastName,
                                       @RequestParam("email") String email,
