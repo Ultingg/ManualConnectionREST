@@ -7,7 +7,7 @@ import ru.isaykin.reader.Author;
 import java.sql.*;
 import java.util.List;
 
-import static ru.isaykin.reader.PropetiesRepo.*;
+import static ru.isaykin.reader.PropertiesRepo.*;
 
 @Slf4j
 @Component
@@ -21,11 +21,14 @@ public class MySQLWriter {
         String sqlReq = "INSERT sortedauthors (id, FirstName, LastName, Email, Birthdate) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(getUrl(), getUsername(), getPassword())) {
             try (Statement statement = connection.createStatement()) {
-                log.debug("connection sucsess");
+                log.debug("Connection success.");
+
                 statement.executeUpdate(DROP_SQL_REQUEST);
-                log.debug("old table droped");
+                log.debug("Old table dropped.");
+
                 statement.executeUpdate(CREATE_SQL_REQUEST);
-                log.debug("table created");
+                log.debug("Table created.");
+
                 for (Author author : newTable) {
 
                     PreparedStatement preparedStatement = connection.prepareStatement(sqlReq);
@@ -45,7 +48,7 @@ public class MySQLWriter {
 
 
                 }
-                log.debug("table filled");
+                log.debug("Table filled.");
             }
 
         } catch (SQLException e) {

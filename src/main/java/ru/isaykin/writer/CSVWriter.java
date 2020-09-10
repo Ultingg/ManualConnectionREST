@@ -13,6 +13,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static java.nio.file.Files.newBufferedWriter;
+import static java.nio.file.Paths.get;
+import static org.apache.commons.csv.CSVFormat.DEFAULT;
+
 @Slf4j
 @Component
 public class CSVWriter {
@@ -22,18 +26,18 @@ public class CSVWriter {
     public void writeToCSV(List<Author> authors) {
         BufferedWriter writer;
         try {
+            writer = newBufferedWriter(get(csvPath));
 
-            writer = Files.newBufferedWriter(Paths.get(csvPath));
-
-            CSVPrinter printer = CSVFormat.DEFAULT.withHeader("ID", "First name", "Last name", "E-mail", "Birhtdate").print(writer);
+            CSVPrinter printer = DEFAULT.withHeader("ID", "First name", "Last name", "E-mail", "Birthdate").print(writer);
             for (Author au : authors) {
                 printer.printRecord(au.getId(), au.getFirstName(), au.getLastName(), au.getEmail(), au.getBirthDate());
             }
             log.debug("CSVFile created");
+
             printer.flush();
             writer.close();
         } catch (IOException e) {
-            log.debug("Error in CSVWriter" + e.getMessage());
+            log.error("Error in CSVWriter" + e.getMessage());
         }
     }
 }

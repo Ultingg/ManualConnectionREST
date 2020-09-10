@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 @Slf4j
-public class PropetiesRepo {
+public class PropertiesRepo {
     private static final String PATH_TO_PROPERTIES = "src\\main\\resources\\config.properties";
 
     private static final Properties prop = new Properties();
@@ -25,7 +25,7 @@ public class PropetiesRepo {
         return prop.getProperty("password");
     }
 
-    public static String getExclePath() {
+    public static String getExcelPath() {
         return prop.getProperty("excelPath");
     }
 
@@ -42,5 +42,4 @@ public class PropetiesRepo {
             log.error("Properties doesn't loaded" + e.getMessage());
         }
     }
-
 }

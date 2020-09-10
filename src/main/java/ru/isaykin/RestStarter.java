@@ -3,7 +3,7 @@ package ru.isaykin;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import static org.springframework.boot.SpringApplication.run;
-import static ru.isaykin.reader.PropetiesRepo.getDataForPropRepo;
+import static ru.isaykin.reader.PropertiesRepo.getDataForPropRepo;
 
 @SpringBootApplication
 public class RestStarter {
