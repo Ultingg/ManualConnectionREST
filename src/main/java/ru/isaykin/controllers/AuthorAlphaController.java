@@ -1,8 +1,6 @@
 package ru.isaykin.controllers;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 import ru.isaykin.exceptions.NotFoundException;
 import ru.isaykin.reader.Author;
@@ -14,16 +12,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping
-public class AuthorAlphaConroller {
+public class AuthorAlphaController {
 
     private final AuthorService authorService;
     private final DataBaseRepository dataBaseRepository;
 
-    @Autowired
-    public AuthorAlphaConroller(@Qualifier("SQL") AuthorService authorService, DataBaseRepository dataBaseRepository) {
+    public AuthorAlphaController(AuthorService authorService, DataBaseRepository dataBaseRepository) {
         this.authorService = authorService;
         this.dataBaseRepository = dataBaseRepository;
     }
+
+
     @GetMapping("authors")
     public Object getOneAuthorByNameOrLastname(@RequestParam(value = "first_name", required = false) String firstName,
                                                @RequestParam(value = "last_name", required = false) String lastName) {
