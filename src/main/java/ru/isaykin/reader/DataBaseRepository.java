@@ -33,7 +33,7 @@ public class DataBaseRepository {
             resultSet.close();
 
         } catch (SQLException e) {
-            log.debug("Connection faild" + e.getMessage());
+            log.error("Connection faild" + e.getMessage());
         } finally {
             try {
                 if (statement != null) {
@@ -41,7 +41,7 @@ public class DataBaseRepository {
                     log.debug("Connection closed");
                 }
             } catch (SQLException e1) {
-                log.debug("Connection faild!" + e1.getMessage());
+                log.error("Connection faild!" + e1.getMessage());
             }
             try {
                 if (connection != null) {
@@ -49,7 +49,7 @@ public class DataBaseRepository {
                     log.debug("Connection closed");
                 }
             } catch (SQLException e2) {
-                log.debug("Connection faild2" + e2.getMessage());
+                log.error("Connection faild2" + e2.getMessage());
             }
         }
         return authors;
@@ -68,7 +68,7 @@ public class DataBaseRepository {
             }
 
         } catch (SQLException e) {
-            log.debug(e.getMessage());
+            log.error(e.getMessage());
         }
         return authors;
     }

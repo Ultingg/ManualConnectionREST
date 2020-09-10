@@ -39,7 +39,7 @@ public class PropetiesRepo {
             prop.load(new FileReader(file));
             log.debug("Properties loaded");
         } catch (IOException e) {
-            log.debug("Properties doesn't loaded" + e.getMessage());
+            log.error("Properties doesn't loaded" + e.getMessage());
         }
     }
 

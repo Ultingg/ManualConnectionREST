@@ -28,7 +28,8 @@ public class CSVWriter {
             printer.flush();
             writer.close();
         } catch (IOException e) {
-            log.debug("Error in CSVWriter" + e.getMessage());
+            log.error("Error in CSVWriter" + e.getMessage());
+
         }
     }
 }
