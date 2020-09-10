@@ -1,6 +1,7 @@
 package ru.isaykin.reader;
 
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,6 +14,7 @@ import java.util.List;
 @Component
 @ConfigurationProperties(prefix = "spring.datasource")
 @Slf4j
+@Getter
 public class DataBaseRepository {
     @Value("${spring.datasource.url}")
     String url;
@@ -36,7 +38,7 @@ public class DataBaseRepository {
         List<Author> authors = null;
 
         try {
-           connection = DriverManager.getConnection(url, username, password);
+           connection = DriverManager.getConnection(getUrl(), getUrl(), getPassword());
 //           connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(ageRequestSQL);
             preparedStatement.setDate(1,currentDateMinusYears);

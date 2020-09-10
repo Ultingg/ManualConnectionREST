@@ -2,29 +2,27 @@ package ru.isaykin;
 
 
 import org.springframework.stereotype.Component;
+import ru.isaykin.reader.Author;
 import ru.isaykin.reader.DataBaseRepository;
 import ru.isaykin.writer.CSVWriter;
 import ru.isaykin.writer.MySQLWriter;
-import ru.isaykin.writer.WriterService;
 import ru.isaykin.writer.XLSWriter;
+
+import java.util.List;
 
 @Component
 public class App {
-    DataBaseRepository dataBaseRepository;
-    WriterService writerService;
-    CSVWriter csvWriter;
-    XLSWriter xlsWriter;
-    MySQLWriter mySQLWriter;
 
 
 
 
     public static void main(String[] args) {
-
-//                 Set<Author> authors = new App(new DataBaseRepository(new DataSource())).dataBaseRepository.getAuthorsWithAge(30);
-//
-//        CSVWriter.writeToCSV(authors, csvPath);
-//        XLSWriter.writeToXLS(authors, excelPath);
-//        MySQLWriter.exportNewTableToSQLBase(authors);
+        List<Author> authors = new DataBaseRepository().getAuthorsWithAge(30);
+    XLSWriter xlsWriter = new XLSWriter();
+    CSVWriter csvWriter = new CSVWriter();
+    MySQLWriter mySQLWriter = new MySQLWriter();
+    csvWriter.writeToCSV(authors);
+    xlsWriter.writeToXLS(authors);
+    mySQLWriter.exportNewTableToSQLBase(authors);
     }
 }
