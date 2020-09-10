@@ -1,7 +1,6 @@
 package ru.isaykin.controllers;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.isaykin.exceptions.NotFoundException;
 import ru.isaykin.reader.Author;
@@ -13,13 +12,6 @@ import java.util.Set;
 @RestController
 @RequestMapping
 public class AuthorAlphaController {
-
-    private final DataBaseRepository dataBaseRepository;
-
-    @Autowired
-    public AuthorAlphaController(DataBaseRepository dataBaseRepository) {
-        this.dataBaseRepository = dataBaseRepository;
-    }
 
     @GetMapping("authors")
     public Set<Author> getList() {
@@ -36,7 +28,7 @@ public class AuthorAlphaController {
             .findFirst().orElseThrow(NotFoundException::new);
     }
 
-    @GetMapping("authors/")
+    @GetMapping("authors")
     public Author getOneAuthorByNameOrLastname(@RequestParam("first_name") String name,
                                                @RequestParam("last_name") String lastName) {
         Set<Author> authors = DataBaseRepository.getAllAuthors();
@@ -99,7 +91,5 @@ public class AuthorAlphaController {
         return "Author id: "
             .concat(String.valueOf(id))
             .concat(" was updated");
-
     }
-
 }

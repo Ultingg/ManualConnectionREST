@@ -11,35 +11,37 @@ import lombok.NonNull;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+import static javax.persistence.GenerationType.IDENTITY;
 
-@NoArgsConstructor
+
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "authors")
-
 public class Author implements Comparable<Author> {
+
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NonNull
+    @Column(name = "id")
+    @GeneratedValue(strategy = IDENTITY)
     private int id;
 
-    @Column(name = "first_name")
     @NonNull
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name")
     @NonNull
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "email")
     @NonNull
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "birthdate")
     @NonNull
-    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @Column(name = "birthdate")
     @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate birthdate;
 
     @Override

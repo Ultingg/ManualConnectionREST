@@ -9,19 +9,17 @@ import ru.isaykin.writer.XLSWriter;
 
 import java.util.Set;
 
-import static ru.isaykin.reader.PropetiesRepo.*;
+import static ru.isaykin.reader.PropertiesRepo.*;
 
 public class App {
-
 
     public static void main(String[] args) {
         getDataForPropRepo();
 
-
         Set<Author> authors = DataBaseRepository.getAuthorsWithAge(30);
 
         CSVWriter.writeToCSV(authors, getCsvPath());
-        XLSWriter.writeToXLS(authors, getExclePath());
+        XLSWriter.writeToXLS(authors, getExcelPath());
         MySQLWriter.exportNewTableToSQLBase(authors);
     }
 }

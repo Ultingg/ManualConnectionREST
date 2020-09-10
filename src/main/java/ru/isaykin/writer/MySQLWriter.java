@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Set;
 
-import static ru.isaykin.reader.PropetiesRepo.*;
+import static ru.isaykin.reader.PropertiesRepo.*;
 
 @Slf4j
 public class MySQLWriter {
@@ -22,11 +22,14 @@ public class MySQLWriter {
 
         try (Connection connection = DriverManager.getConnection(getUrl(), getUsername(), getPassword())) {
             try (Statement statement = connection.createStatement()) {
-                log.debug("connection sucsess");
+                log.debug("Connection success.");
+
                 statement.executeUpdate(DROP_SQL_REQUEST);
-                log.debug("old table droped");
+                log.debug("Old table dropped.");
+
                 statement.executeUpdate(CREATE_SQL_REQUEST);
-                log.debug("table created");
+                log.debug("Table created.");
+
                 for (Author author : newTable) {
                     //Date tempDate = Date.valueOf(author.getBirthdate());
                     String sqlRequest = String.format("INSERT sortedauthors (id, FirstName, LastName, Email, Birthdate) " +
@@ -35,7 +38,7 @@ public class MySQLWriter {
                         author.getEmail().replaceAll("'", "\\\""), author.getBirthdate());
                     statement.executeUpdate(sqlRequest);
                 }
-                log.debug("table filled");
+                log.debug("Table filled.");
             }
 
         } catch (SQLException e) {

@@ -9,12 +9,13 @@ import java.time.LocalDate;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static ru.isaykin.reader.PropetiesRepo.*;
+import static ru.isaykin.reader.PropertiesRepo.*;
 
 @Component
 @Slf4j
 public class DataBaseRepository {
 
+    public static final String AUTHORS_WITH_BIRTHSDAY_QUERY = "SELECT * FROM authors WHERE birthdate >= '";
 
     public static Set<Author> getAuthorsWithAge(int age) {
         Connection connection = null;
@@ -27,12 +28,13 @@ public class DataBaseRepository {
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(getSqlRequestWithFilterByAge(age));
             log.debug("Connection success!");
+
             authors = convertResultSetToAuthors(resultSet); //помещаем в колле цию
             log.debug("Collection loaded to ResultSet!");
+
             connection.close();
             statement.close();
             resultSet.close();
-
         } catch (SQLException e) {
             log.error("Connection faild" + e.getMessage());
         } finally {
@@ -61,13 +63,11 @@ public class DataBaseRepository {
 
         try (Connection connection = DriverManager.getConnection(getUrl(), getUsername(), getPassword())) {
             try (Statement statement = connection.createStatement()) {
-                log.debug("connection sucsess");
-                ResultSet resultSet = statement.executeQuery(getAllTableRequest());
+                log.debug("connection success");
+                ResultSet resultSet = statement.executeQuery("SELECT * FROM authors");
                 authors = convertResultSetToAuthors(resultSet); //помещаем в колле цию
                 log.debug("Collection loaded to ResultSet!");
-
             }
-
         } catch (SQLException e) {
             log.error(e.getMessage());
         }
@@ -94,11 +94,6 @@ public class DataBaseRepository {
         String currentDateMinusYears = Date.
             valueOf(LocalDate.now().minusYears(yearsAsFilter)).
             toString();
-        return "SELECT * FROM authors WHERE birthdate >= '".concat(currentDateMinusYears).concat("'");
+        return AUTHORS_WITH_BIRTHSDAY_QUERY.concat(currentDateMinusYears).concat("'");
     }
-
-    private static String getAllTableRequest() {
-        return "SELECT * FROM authors";
-    }
-
 }

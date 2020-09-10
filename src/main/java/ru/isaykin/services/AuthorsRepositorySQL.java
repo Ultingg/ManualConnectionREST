@@ -7,11 +7,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static ru.isaykin.reader.PropetiesRepo.*;
+import static ru.isaykin.reader.PropertiesRepo.*;
 
 @Slf4j
 public class AuthorsRepositorySQL {
-
 
     public static void requestToTable(String request) {
         try (Connection connection = DriverManager.getConnection(getUrl(), getUsername(), getPassword())) {

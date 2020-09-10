@@ -22,7 +22,6 @@ import static org.apache.poi.ss.usermodel.CellType.STRING;
 public class XLSWriter {
 
     public static CellStyle dateStyle(XSSFWorkbook workbook) {
-
         XSSFCellStyle style;
         style = workbook.createCellStyle();
         CreationHelper helper = workbook.getCreationHelper();
