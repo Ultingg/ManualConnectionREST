@@ -29,8 +29,8 @@ public class AuthorsServicSQL implements AuthorService {
     public Author getOneById(int id) {
         Set<Author> authorSet = DataBaseRepository.getAllAuthors();
         return authorSet.stream()
-                .filter(author -> author.getId() == id)
-                .findFirst().orElseThrow(NotFoundException::new);
+            .filter(author -> author.getId() == id)
+            .findFirst().orElseThrow(NotFoundException::new);
     }
 
 
@@ -39,8 +39,8 @@ public class AuthorsServicSQL implements AuthorService {
 
         Set<Author> authors = DataBaseRepository.getAllAuthors();
         return authors.stream().filter(author -> author.getFirstName().equals(firstname) && author.getLastName().equals(lastname))
-                .findFirst()
-                .orElseThrow(NotFoundException::new);
+            .findFirst()
+            .orElseThrow(NotFoundException::new);
     }
 
     @Override
@@ -64,14 +64,14 @@ public class AuthorsServicSQL implements AuthorService {
 
     public String insertAuthorToTable(String firstname, String lastname, String email, String birthdate) {
         String insertRequest = "INSERT authors (first_name, last_name, email, birthdate) VALUES (\""
-                .concat(firstname)
-                .concat("\" ,\"")
-                .concat(lastname)
-                .concat("\" ,\"")
-                .concat(email)
-                .concat("\" ,\"")
-                .concat(birthdate)
-                .concat("\")");
+            .concat(firstname)
+            .concat("\" ,\"")
+            .concat(lastname)
+            .concat("\" ,\"")
+            .concat(email)
+            .concat("\" ,\"")
+            .concat(birthdate)
+            .concat("\")");
         AuthorsRepositorySQL.requestToTable(insertRequest);
         return "added";
     }

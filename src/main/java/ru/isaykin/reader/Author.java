@@ -35,7 +35,7 @@ public class Author implements Comparable<Author> {
     @Column(name = "email")
     @NonNull
     private String email;
-    
+
     @Column(name = "birthdate")
     @NonNull
     @JsonDeserialize(using = LocalDateDeserializer.class)

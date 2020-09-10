@@ -11,7 +11,7 @@ import javax.persistence.criteria.Root;
 public class AgeSpecification {
 
 
-    public static Specification<Author> getByFirstName(String firstName){
+    public static Specification<Author> getByFirstName(String firstName) {
         return new Specification<Author>() {
             @Override
             public Predicate toPredicate(Root<Author> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
