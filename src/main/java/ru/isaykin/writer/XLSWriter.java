@@ -8,12 +8,14 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import ru.isaykin.reader.Author;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 
 import static org.apache.poi.ss.usermodel.CellType.NUMERIC;
 import static org.apache.poi.ss.usermodel.CellType.STRING;
@@ -22,10 +24,10 @@ import static org.apache.poi.ss.usermodel.CellType.STRING;
 @Component
 public class XLSWriter {
 
-    @Value("${user.excelpath}")
+    @Value("${user.exclepath}")
     String excelPath;
 
-    public  CellStyle dateStyle(XSSFWorkbook workbook) {
+    public CellStyle dateStyle(XSSFWorkbook workbook) {
 
         XSSFCellStyle style;
         style = workbook.createCellStyle();
@@ -35,7 +37,7 @@ public class XLSWriter {
         return style;
     }
 
-    public  void writeToXLS(List<Author> authors){
+    public void writeToXLS(List<Author> authors) {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("AuthorsUnder30");
 
@@ -59,7 +61,7 @@ public class XLSWriter {
         cell.setCellValue("E-mail");
 
         cell = row.createCell(4, STRING);
-        cell.setCellValue("Birthdate");
+        cell.setCellValue("Birth date");
         cell.setCellStyle(dateCellStyle);
 
         for (Author au : authors) {
@@ -78,7 +80,7 @@ public class XLSWriter {
             //email
             cell = row.createCell(3, STRING);
             cell.setCellValue(au.getEmail());
-            //birthdate_Cell
+            //birth_date_Cell
             cell = row.createCell(4, NUMERIC);
             cell.setCellValue(au.getBirthDate());
             cell.setCellStyle(dateCellStyle);

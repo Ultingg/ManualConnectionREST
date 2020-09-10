@@ -11,6 +11,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 @Component
 @ConfigurationProperties(prefix = "spring.datasource")
 @Slf4j
@@ -38,12 +39,12 @@ public class DataBaseRepository {
         List<Author> authors = null;
 
         try {
-           connection = DriverManager.getConnection(getUrl(), getUrl(), getPassword());
+            connection = DriverManager.getConnection(getUrl(), getUrl(), getPassword());
 //           connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(ageRequestSQL);
-            preparedStatement.setDate(1,currentDateMinusYears);
+            preparedStatement.setDate(1, currentDateMinusYears);
 
-          //  ResultSet resultSet = statement.executeQuery(getSqlRequestWithFilterByAge(age));
+            //  ResultSet resultSet = statement.executeQuery(getSqlRequestWithFilterByAge(age));
             ResultSet resultSet = preparedStatement.executeQuery();
             log.debug("Connection success!");
             authors = convertResultSetToAuthors(resultSet); //помещаем в колле цию
@@ -102,13 +103,12 @@ public class DataBaseRepository {
             author.setFirstName(result.getString("first_name"));
             author.setLastName(result.getString("last_name"));
             author.setEmail(result.getString("email"));
-            author.setBirthdate(result.getDate("birthdate").toLocalDate());
+            author.setBirthDate(result.getDate("birthdate").toLocalDate());
 
             authorSet.add(author);
         }
         return authorSet;
     }
-
 
 
 }

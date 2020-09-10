@@ -16,6 +16,5 @@ public interface AuthorService {
 
     boolean delete(int id);
 
-    Author getByFirstNameAndLastName(String first_name, String last_name);
 
 }

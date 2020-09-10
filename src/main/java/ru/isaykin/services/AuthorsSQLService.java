@@ -1,34 +1,35 @@
 package ru.isaykin.services;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.isaykin.exceptions.NotFoundException;
 import ru.isaykin.reader.Author;
 import ru.isaykin.reader.DataBaseRepository;
 
 import java.util.List;
-import java.util.Set;
 
 import static ru.isaykin.reader.PropetiesRepo.getDataForPropRepo;
 
-public class AuthorsServicSQL implements AuthorService {
+@Component
+public class AuthorsSQLService implements AuthorService {
 
     private final DataBaseRepository dataBaseRepository;
     private final AuthorsRepositorySQL authorsRepositorySQL;
 
-    public AuthorsServicSQL(DataBaseRepository dataBaseRepository, AuthorsRepositorySQL authorsRepositorySQL) {
+    public AuthorsSQLService(DataBaseRepository dataBaseRepository, AuthorsRepositorySQL authorsRepositorySQL) {
         this.dataBaseRepository = dataBaseRepository;
         this.authorsRepositorySQL = authorsRepositorySQL;
     }
 
     @Override
     public void create(Author author) {
-        Set<Author> authorSet = DataBaseRepository.getAllAuthors();
+        List<Author> authorList = dataBaseRepository.getAllAuthors();
     }
 
     @Override
     public List<Author> getAll() {
-        return (List<Author>) dataBaseRepository.getAllAuthors();
+        return  dataBaseRepository.getAllAuthors();
     }
 
     @Override
@@ -36,20 +37,25 @@ public class AuthorsServicSQL implements AuthorService {
     public Author getOneById(int id) {
         List<Author> authorSet = dataBaseRepository.getAllAuthors();
         return authorSet.stream()
-            .filter(author -> author.getId() == id)
-            .findFirst().orElseThrow(NotFoundException::new);
+                .filter(author -> author.getId() == id)
+                .findFirst().orElseThrow(NotFoundException::new);
+    }
+
+    @Override
+    public boolean update(Author author, int id) {
+        return false;
     }
 
 
     public Author getByFirstNameAndLastName(String firstname, String lastname) {
         List<Author> authors = dataBaseRepository.getAllAuthors();
         return authors.stream().filter(author -> author.getFirstName().equals(firstname) && author.getLastName().equals(lastname))
-            .findFirst()
-            .orElseThrow(NotFoundException::new);
+                .findFirst()
+                .orElseThrow(NotFoundException::new);
     }
 
 
-    public boolean update(int id,String  keyParameter, String valueParameter) {
+    public boolean update(int id, String keyParameter, String valueParameter) {
 
         String updateRequestString = "UPDATE authors SET "
                 .concat(keyParameter)
@@ -72,8 +78,7 @@ public class AuthorsServicSQL implements AuthorService {
 
     public List<Author> getListByAge(int age) {
         getDataForPropRepo();
-        List<Author> authors = dataBaseRepository.getAuthorsWithAge(age);
-        return authors;
+        return dataBaseRepository.getAuthorsWithAge(age);
     }
 
     public String insertAuthorToTable(String firstname, String lastname, String email, String birthdate) {
