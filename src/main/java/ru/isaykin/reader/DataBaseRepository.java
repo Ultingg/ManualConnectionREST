@@ -11,17 +11,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Component
 @ConfigurationProperties(prefix = "spring.datasource")
-@Slf4j
-
 public class DataBaseRepository {
     private final DataSource dataSource;
 
     public DataBaseRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
-
 
     public List<Author> getAuthorsWithAge(int age) {
         Date currentDateMinusYears = Date.
@@ -30,24 +28,24 @@ public class DataBaseRepository {
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-
         List<Author> authors = null;
 
         try {
             connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(ageRequestSQL);
             preparedStatement.setDate(1, currentDateMinusYears);
-
             ResultSet resultSet = preparedStatement.executeQuery();
             log.debug("Connection success!");
+
             authors = convertResultSetToAuthors(resultSet); //помещаем в колле цию
             log.debug("Collection loaded to ResultSet!");
+
             connection.close();
             preparedStatement.close();
             resultSet.close();
 
         } catch (SQLException e) {
-            log.debug("Connection faild" + e.getMessage());
+            log.debug("Connection failed" + e.getMessage());
         } finally {
             try {
                 if (preparedStatement != null) {
@@ -55,7 +53,7 @@ public class DataBaseRepository {
                     log.debug("Connection closed");
                 }
             } catch (SQLException e1) {
-                log.debug("Connection faild!" + e1.getMessage());
+                log.debug("Connection failed!" + e1.getMessage());
             }
             try {
                 if (connection != null) {
@@ -63,7 +61,7 @@ public class DataBaseRepository {
                     log.debug("Connection closed");
                 }
             } catch (SQLException e2) {
-                log.debug("Connection faild2" + e2.getMessage());
+                log.debug("Connection failed2" + e2.getMessage());
             }
         }
         return authors;

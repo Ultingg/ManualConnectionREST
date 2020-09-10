@@ -7,21 +7,22 @@ import lombok.NonNull;
 import java.time.LocalDate;
 
 
-@NoArgsConstructor
 @Data
-
-
+@NoArgsConstructor
 public class Author implements Comparable<Author> {
 
     @NonNull
     private int id;
+
     @NonNull
     private String firstName;
+
     @NonNull
     private String lastName;
 
     @NonNull
     private String email;
+
     @NonNull
     private LocalDate birthDate;
 

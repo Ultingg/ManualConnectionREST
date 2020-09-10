@@ -12,8 +12,8 @@ import java.util.List;
 
 import static ru.isaykin.reader.PropertiesRepo.getDataForPropRepo;
 
-@Component
 @Service
+@Component
 public class AuthorsSQLService implements AuthorService {
 
     private final DataBaseRepository dataBaseRepository;
@@ -55,7 +55,6 @@ public class AuthorsSQLService implements AuthorService {
                 .findFirst()
                 .orElseThrow(NotFoundException::new);
     }
-
 
     public boolean update(int id, String keyParameter, String valueParameter) {
 
