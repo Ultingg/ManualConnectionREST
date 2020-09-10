@@ -1,12 +1,11 @@
 package ru.isaykin.reader;
 
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,16 +14,13 @@ import java.util.List;
 @Component
 @ConfigurationProperties(prefix = "spring.datasource")
 @Slf4j
-@Getter
+
 public class DataBaseRepository {
-    @Value("${spring.datasource.url}")
-    String url;
+    private final DataSource dataSource;
 
-    @Value("${spring.datasource.username}")
-    String username;
-
-    @Value("${spring.datasource.password}")
-    String password;
+    public DataBaseRepository(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
 
     public List<Author> getAuthorsWithAge(int age) {
@@ -38,7 +34,7 @@ public class DataBaseRepository {
         List<Author> authors = null;
 
         try {
-            connection = DriverManager.getConnection(getUrl(), getUrl(), getPassword());
+            connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(ageRequestSQL);
             preparedStatement.setDate(1, currentDateMinusYears);
 
@@ -76,7 +72,7 @@ public class DataBaseRepository {
     public List<Author> getAllAuthors() {
         List<Author> authors = null;
 
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+        try (Connection connection = dataSource.getConnection()) {
             try (Statement statement = connection.createStatement()) {
                 log.debug("connection success");
 

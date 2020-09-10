@@ -25,8 +25,8 @@ public class AuthorAlphaController {
 
 
     @GetMapping("authors")
-    public Object getListOrGetOneByFirstNameAndLastName(@RequestParam("first_name") String firstName,
-                                                        @RequestParam("last_name") String lastName) {
+    public Object getListOrGetOneByFirstNameAndLastName(@RequestParam(value = "first_name", required = false) String firstName,
+                                                        @RequestParam(value = "last_name", required = false) String lastName) {
         List<Author> authors = dataBaseRepository.getAllAuthors();
 
         if (firstName != null && lastName != null) {
