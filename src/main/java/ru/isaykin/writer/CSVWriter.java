@@ -22,7 +22,7 @@ public class CSVWriter {
 
             CSVPrinter printer = CSVFormat.DEFAULT.withHeader("ID", "First name", "Last name", "E-mail", "Birhtdate").print(writer);
             for (Author au : authors) {
-                printer.printRecord(au.getId(), au.getFirstName(), au.getLastName(), au.getEmail(), au.getBirthdate());
+                printer.printRecord(au.getId(), au.getFirstName(), au.getLastName(), au.getEmail(), au.getBirthDate());
             }
             log.debug("CSVFile created");
             printer.flush();

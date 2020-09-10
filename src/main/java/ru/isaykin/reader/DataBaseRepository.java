@@ -82,7 +82,7 @@ public class DataBaseRepository {
             author.setFirstName(result.getString("first_name"));
             author.setLastName(result.getString("last_name"));
             author.setEmail(result.getString("email"));
-            author.setBirthdate(result.getDate("birthdate").toLocalDate());
+            author.setBirthDate(result.getDate("birthdate").toLocalDate());
 
             authorList.add(author);
         }

@@ -31,7 +31,7 @@ public class MySQLWriter {
                     String sqlRequest = String.format("INSERT sortedauthors (id, FirstName, LastName, Email, Birthdate) " +
                                     "VALUES (%d, '%s', '%s', '%s', '%tF')",
                             author.getId(), author.getFirstName(), author.getLastName().replaceAll("'", "\\\""),
-                            author.getEmail().replaceAll("'", "\\\""), author.getBirthdate());
+                            author.getEmail().replaceAll("'", "\\\""), author.getBirthDate());
                     statement.executeUpdate(sqlRequest);
                 }
                 log.debug("table filled");

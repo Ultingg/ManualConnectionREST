@@ -23,7 +23,7 @@ public class Author implements Comparable<Author> {
     @NonNull
     private String email;
     @NonNull
-    private LocalDate birthdate;
+    private LocalDate birthDate;
 
     @Override
     public int compareTo(Author o) {
