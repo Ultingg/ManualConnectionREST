@@ -1,35 +1,30 @@
 package ru.isaykin.controllers;
 
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.isaykin.reader.Author;
-import ru.isaykin.reader.DataBaseRepository;
-import ru.isaykin.services.AuthorsRepositorySQL;
 import ru.isaykin.services.AuthorsSQLService;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping
 public class AuthorAlphaController {
 
     private final AuthorsSQLService authorsSQLService;
-    private final DataBaseRepository dataBaseRepository;
-    private final AuthorsRepositorySQL authorsRepositorySQL;
 
-    public AuthorAlphaController(AuthorsSQLService authorsSQLService, DataBaseRepository dataBaseRepository, AuthorsRepositorySQL authorsRepositorySQL) {
+    public AuthorAlphaController(AuthorsSQLService authorsSQLService) {
         this.authorsSQLService = authorsSQLService;
-        this.dataBaseRepository = dataBaseRepository;
-        this.authorsRepositorySQL = authorsRepositorySQL;
     }
 
 
     @GetMapping("authors")
-    public Object getListOrGetOneByFirstNameAndLastName(@RequestParam(value = "first_name", required = false) String firstName,
-                                                        @RequestParam(value = "last_name", required = false) String lastName) {
-        List<Author> authors = dataBaseRepository.getAllAuthors();
-
-        if (firstName != null && lastName != null) {
+    public List<Author> getListOrGetOneByFirstNameAndLastName(@RequestParam(value = "first_name", required = false) String firstName,
+                                                              @RequestParam(value = "last_name", required = false) String lastName) {
+        if (firstName != null || lastName != null) {
             return authorsSQLService.getByFirstNameAndLastName(firstName, lastName);
         } else {
             return authorsSQLService.getAll();
@@ -38,9 +33,7 @@ public class AuthorAlphaController {
 
     @GetMapping("authors/{id}")
     public Author getOneAuthor(@PathVariable int id) {
-        List<Author> authors = dataBaseRepository.getAllAuthors();
         return authorsSQLService.getOneById(id);
-
     }
 
 
@@ -49,46 +42,42 @@ public class AuthorAlphaController {
         return authorsSQLService.getListByAge(age);
     }
 
+
     @PostMapping("authors")
-    public String insertAuthorToTable(@RequestParam("first_name") String firstName,
-                                      @RequestParam("last_name") String lastName,
-                                      @RequestParam("email") String email,
-                                      @RequestParam("birthdate") String birthdate) {
-        String insertRequest = "INSERT authors (first_name, last_name, email, birthdate) VALUES (\""
-                .concat(firstName)
-                .concat("\" ,\"")
-                .concat(lastName)
-                .concat("\" ,\"")
-                .concat(email)
-                .concat("\" ,\"")
-                .concat(birthdate)
-                .concat("\")");
+    public ResponseEntity<Author> create(@RequestBody Author author) {
+        ResponseEntity<Author> result;
 
-        authorsRepositorySQL.requestToTable(insertRequest);
+        if (author == null) {
+            result = new ResponseEntity<>(NO_CONTENT);
+        } else {
+            Author author1 = authorsSQLService.create(author);
+            result = new ResponseEntity<>(author1, OK);
+        }
 
-        return "added";
+        return result;
     }
+
 
     @DeleteMapping("authors/{id}")
-    public String delete(@PathVariable String id) {
-        String deleteRequest = "DELETE FROM authors WHERE id = " + id;
+    public StringBuilder delete(@PathVariable int id) {
+        authorsSQLService.delete(id);
 
-        authorsRepositorySQL.requestToTable(deleteRequest);
+        return new StringBuilder("Author id: ").append(id).append(" was deleted");
 
-        return "Author id: "
-                .concat(String.valueOf(id))
-                .concat(" was deleted");
     }
 
-    @PutMapping("authors/update/{id}")
-    public String updateById(@PathVariable int id,
-                             @RequestParam("key_parameter") String keyParameter,
-                             @RequestParam("value_parameter") String valueParameter) {
-        authorsSQLService.update(id, keyParameter, valueParameter);
+    @PutMapping("authors/{id}")
+    public ResponseEntity<Author> updateById(@PathVariable int id,
+                                             @RequestBody Author author) {
+        ResponseEntity<Author> result;
+        if (author == null) {
+            result = new ResponseEntity<>(NOT_MODIFIED);
+        } else {
+            Author author1 = authorsSQLService.update(author, id);
+            result = new ResponseEntity<>(author1, OK);
+        }
 
-        return "Author id: "
-                .concat(String.valueOf(id))
-                .concat(" was updated");
+        return result;
 
     }
 

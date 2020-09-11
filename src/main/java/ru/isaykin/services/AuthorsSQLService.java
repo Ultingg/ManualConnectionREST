@@ -1,59 +1,95 @@
 package ru.isaykin.services;
 
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.isaykin.exceptions.NotFoundException;
 import ru.isaykin.reader.Author;
-import ru.isaykin.reader.DataBaseRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static ru.isaykin.reader.PropertiesRepo.getDataForPropRepo;
+import static java.lang.String.format;
+import static java.lang.String.valueOf;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
+@Slf4j
 @Service
 @Component
 public class AuthorsSQLService implements AuthorService {
 
-    private final DataBaseRepository dataBaseRepository;
     private final AuthorsRepositorySQL authorsRepositorySQL;
 
-    public AuthorsSQLService(DataBaseRepository dataBaseRepository, AuthorsRepositorySQL authorsRepositorySQL) {
-        this.dataBaseRepository = dataBaseRepository;
+    public AuthorsSQLService(AuthorsRepositorySQL authorsRepositorySQL) {
         this.authorsRepositorySQL = authorsRepositorySQL;
     }
 
     @Override
-    public void create(Author author) {
-        List<Author> authorList = dataBaseRepository.getAllAuthors();
+    public Author update(Author author, int id) {
+        String selectionRequest = format("SELECT * FROM authors WHERE id = %d;", id);
+
+        String updateRequest = format(
+                "UPDATE authors SET first_name = '%s', last_name = '%s', email = '%s', birthdate = '%tF' WHERE id = %d;",
+                author.getFirstName(), author.getLastName().replaceAll("'", "\\\\\'"),
+                author.getEmail(), author.getBirthDate(), id);
+
+        authorsRepositorySQL.requestToTable(updateRequest);
+
+        List<Author> authorList = authorsRepositorySQL.getListOfAuthors(selectionRequest);
+
+
+        return authorList.get(0);
+    }
+
+    @Override
+    public Author create(Author author) {
+
+        String creationRequest = format("INSERT INTO authors (first_name, last_name, email, birthdate) VALUES " +
+                        "( '%s', '%s', '%s', '%tF')",
+                author.getFirstName(), author.getLastName().replaceAll("'", "\\\\\'"), author.getEmail(), author.getBirthDate());
+        authorsRepositorySQL.requestToTable(creationRequest);
+
+        String feedbackRequest = format("SELECT * FROM authors WHERE first_name = '%s' AND last_name = '%s';",
+                author.getFirstName(), author.getLastName().replaceAll("'", "\\\\\'"));
+        Author author1 = new Author();
+        try {
+            List<Author> authors = authorsRepositorySQL.getListOfAuthors(feedbackRequest);
+            author1 = authors.get(0);
+        } catch (NullPointerException e) {
+            log.error(e.getMessage() + "you get List authors = null. Wrong request to DB");
+
+        }
+        if (author1 != null) return author1;
+
+        return author;
+
     }
 
     @Override
     public List<Author> getAll() {
-        return dataBaseRepository.getAllAuthors();
+        return authorsRepositorySQL.getAll();
     }
 
     @Override
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    @ResponseStatus(code = NOT_FOUND)
     public Author getOneById(int id) {
-        List<Author> authorSet = dataBaseRepository.getAllAuthors();
-        return authorSet.stream()
+        List<Author> authorList = authorsRepositorySQL.getAll();
+        return authorList.stream()
                 .filter(author -> author.getId() == id)
                 .findFirst().orElseThrow(NotFoundException::new);
     }
 
-    @Override
-    public boolean update(Author author, int id) {
-        return false;
-    }
 
-
-    public Author getByFirstNameAndLastName(String firstname, String lastname) {
-        List<Author> authors = dataBaseRepository.getAllAuthors();
-        return authors.stream().filter(author -> author.getFirstName().equals(firstname) || author.getLastName().equals(lastname))
-                .findFirst()
-                .orElseThrow(NotFoundException::new);
+    public List<Author> getByFirstNameAndLastName(String firstname, String lastname) {
+        List<Author> authors = authorsRepositorySQL.getAll();
+        List<Author> selectedAuthors = new ArrayList<>();
+        for (Author author : authors) {
+            if ((author.getFirstName().equals(firstname)) || (author.getLastName().equals(lastname))) {
+                selectedAuthors.add(author);
+            }
+        }
+        return selectedAuthors;
     }
 
     public boolean update(int id, String keyParameter, String valueParameter) {
@@ -63,7 +99,7 @@ public class AuthorsSQLService implements AuthorService {
                 .concat(" = \"")
                 .concat(valueParameter)
                 .concat("\" WHERE id = \"")
-                .concat(String.valueOf(id))
+                .concat(valueOf(id))
                 .concat("\"");
         authorsRepositorySQL.requestToTable(updateRequestString);
         return true;
@@ -71,31 +107,14 @@ public class AuthorsSQLService implements AuthorService {
 
     @Override
     public boolean delete(int id) {
-        String deleteRequest = "DELETE FROM authors WHERE id = ".concat(String.valueOf(id));
-        authorsRepositorySQL.requestToTable(deleteRequest);
+        authorsRepositorySQL.requestToTable(new StringBuilder("DELETE FROM authors WHERE id = ").append(id).toString());
         return true;
     }
 
 
     public List<Author> getListByAge(int age) {
-        getDataForPropRepo();
-        return dataBaseRepository.getAuthorsWithAge(age);
+        return authorsRepositorySQL.getAuthorsWithAge(age);
     }
-
-    public String insertAuthorToTable(String firstname, String lastname, String email, String birthdate) {
-        String insertRequest = "INSERT authors (first_name, last_name, email, birthdate) VALUES (\""
-                .concat(firstname)
-                .concat("\" ,\"")
-                .concat(lastname)
-                .concat("\" ,\"")
-                .concat(email)
-                .concat("\" ,\"")
-                .concat(birthdate)
-                .concat("\")");
-        authorsRepositorySQL.requestToTable(insertRequest);
-        return "added";
-    }
-
 
 }
 

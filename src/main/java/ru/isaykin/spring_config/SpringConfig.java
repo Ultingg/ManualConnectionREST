@@ -26,9 +26,9 @@ public class SpringConfig {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
 
         driverManagerDataSource.setDriverClassName(className);
-        driverManagerDataSource.setUrl(url);
         driverManagerDataSource.setUsername(username);
         driverManagerDataSource.setPassword(password);
+        driverManagerDataSource.setUrl(url);
 
         return driverManagerDataSource;
     }
