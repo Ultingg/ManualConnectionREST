@@ -12,7 +12,7 @@ public interface AuthorService {
 
     Author getOneById(int id);
 
-    boolean update(Author author, int id);
+    Author update(Author author, int id);
 
     boolean delete(int id);
 

@@ -1,7 +1,6 @@
 package ru.isaykin.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -13,6 +12,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
 @Service
@@ -23,6 +23,23 @@ public class AuthorsSQLService implements AuthorService {
 
     public AuthorsSQLService(AuthorsRepositorySQL authorsRepositorySQL) {
         this.authorsRepositorySQL = authorsRepositorySQL;
+    }
+
+    @Override
+    public Author update(Author author, int id) {
+        String selectionRequest = format("SELECT * FROM authors WHERE id = %d;", id);
+
+        String updateRequest = format(
+                "UPDATE authors SET first_name = '%s', last_name = '%s', email = '%s', birthdate = '%tF' WHERE id = %d;",
+                author.getFirstName(), author.getLastName().replaceAll("'", "\\\\\'"),
+                author.getEmail(), author.getBirthDate(), id);
+
+        authorsRepositorySQL.requestToTable(updateRequest);
+
+        List<Author> authorList = authorsRepositorySQL.getListOfAuthors(selectionRequest);
+
+
+        return authorList.get(0);
     }
 
     @Override
@@ -55,7 +72,7 @@ public class AuthorsSQLService implements AuthorService {
     }
 
     @Override
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    @ResponseStatus(code = NOT_FOUND)
     public Author getOneById(int id) {
         List<Author> authorList = authorsRepositorySQL.getAll();
         return authorList.stream()
@@ -63,21 +80,16 @@ public class AuthorsSQLService implements AuthorService {
                 .findFirst().orElseThrow(NotFoundException::new);
     }
 
-    @Override
-    public boolean update(Author author, int id) {
-        return false;
-    }
-
 
     public List<Author> getByFirstNameAndLastName(String firstname, String lastname) {
         List<Author> authors = authorsRepositorySQL.getAll();
         List<Author> selectedAuthors = new ArrayList<>();
-        for(Author author: authors) {
-            if((author.getFirstName().equals(firstname)) || (author.getLastName().equals(lastname))) {
+        for (Author author : authors) {
+            if ((author.getFirstName().equals(firstname)) || (author.getLastName().equals(lastname))) {
                 selectedAuthors.add(author);
             }
         }
-     return selectedAuthors;
+        return selectedAuthors;
     }
 
     public boolean update(int id, String keyParameter, String valueParameter) {

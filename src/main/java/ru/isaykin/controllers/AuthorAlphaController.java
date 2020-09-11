@@ -8,8 +8,7 @@ import ru.isaykin.services.AuthorsSQLService;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping
@@ -35,7 +34,6 @@ public class AuthorAlphaController {
     @GetMapping("authors/{id}")
     public Author getOneAuthor(@PathVariable int id) {
         return authorsSQLService.getOneById(id);
-
     }
 
 
@@ -48,6 +46,7 @@ public class AuthorAlphaController {
     @PostMapping("authors")
     public ResponseEntity<Author> create(@RequestBody Author author) {
         ResponseEntity<Author> result;
+
         if (author == null) {
             result = new ResponseEntity<>(NO_CONTENT);
         } else {
@@ -60,23 +59,25 @@ public class AuthorAlphaController {
 
 
     @DeleteMapping("authors/{id}")
-    public String delete(@PathVariable int id) {
+    public StringBuilder delete(@PathVariable int id) {
         authorsSQLService.delete(id);
 
-        return "Author id: "
-                .concat(String.valueOf(id))
-                .concat(" was deleted");
+        return new StringBuilder("Author id: ").append(id).append(" was deleted");
+
     }
 
-    @PutMapping("authors/update/{id}")
-    public String updateById(@PathVariable int id,
-                             @RequestParam("key_parameter") String keyParameter,
-                             @RequestParam("value_parameter") String valueParameter) {
-        authorsSQLService.update(id, keyParameter, valueParameter);
+    @PutMapping("authors/{id}")
+    public ResponseEntity<Author> updateById(@PathVariable int id,
+                                             @RequestBody Author author) {
+        ResponseEntity<Author> result;
+        if (author == null) {
+            result = new ResponseEntity<>(NOT_MODIFIED);
+        } else {
+            Author author1 = authorsSQLService.update(author, id);
+            result = new ResponseEntity<>(author1, OK);
+        }
 
-        return "Author id: "
-                .concat(String.valueOf(id))
-                .concat(" was updated");
+        return result;
 
     }
 

@@ -11,8 +11,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 @Slf4j
+@Component
 @Repository
 public class AuthorsRepositorySQL {
 
@@ -28,6 +28,7 @@ public class AuthorsRepositorySQL {
         List<Author> authorList = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM authors")) {
+
                 ResultSet resultSet = preparedStatement.executeQuery();
                 authorList = convertResultSetToAuthors(resultSet);
             }
@@ -84,7 +85,7 @@ public class AuthorsRepositorySQL {
 
     private static List<Author> convertResultSetToAuthors(ResultSet result) throws SQLException {
 
-        List<Author> authorSet = new ArrayList<>();
+        List<Author> authorList = new ArrayList<>();
 
         while (result.next()) {
             Author author = new Author();
@@ -94,9 +95,9 @@ public class AuthorsRepositorySQL {
             author.setEmail(result.getString("email"));
             author.setBirthDate(result.getDate("birthdate").toLocalDate());
 
-            authorSet.add(author);
+            authorList.add(author);
         }
-        return authorSet;
+        return authorList;
     }
 
 
