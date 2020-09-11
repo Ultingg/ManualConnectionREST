@@ -93,8 +93,7 @@ public class AuthorsSQLService implements AuthorService {
 
     @Override
     public boolean delete(int id) {
-        String deleteRequest = "DELETE FROM authors WHERE id = ".concat(valueOf(id));
-        authorsRepositorySQL.requestToTable(deleteRequest);
+        authorsRepositorySQL.requestToTable(new StringBuilder("DELETE FROM authors WHERE id = ").append(id).toString());
         return true;
     }
 
@@ -103,21 +102,6 @@ public class AuthorsSQLService implements AuthorService {
         getDataForPropRepo();
         return dataBaseRepository.getAuthorsWithAge(age);
     }
-
-    public String insertAuthorToTable(String firstname, String lastname, String email, String birthdate) {
-        String insertRequest = "INSERT authors (first_name, last_name, email, birthdate) VALUES (\""
-                .concat(firstname)
-                .concat("\" ,\"")
-                .concat(lastname)
-                .concat("\" ,\"")
-                .concat(email)
-                .concat("\" ,\"")
-                .concat(birthdate)
-                .concat("\")");
-        authorsRepositorySQL.requestToTable(insertRequest);
-        return "added";
-    }
-
 
 }
 
