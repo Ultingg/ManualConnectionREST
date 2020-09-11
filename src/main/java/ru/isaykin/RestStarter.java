@@ -12,4 +12,5 @@ public class RestStarter {
         getDataForPropRepo();
         run(RestStarter.class, args);
     }
+
 }
