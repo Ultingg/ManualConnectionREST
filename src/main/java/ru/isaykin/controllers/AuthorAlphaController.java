@@ -4,7 +4,6 @@ package ru.isaykin.controllers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.isaykin.reader.Author;
-import ru.isaykin.services.AuthorsRepositorySQL;
 import ru.isaykin.services.AuthorsSQLService;
 
 import java.util.List;
@@ -17,18 +16,16 @@ import static org.springframework.http.HttpStatus.OK;
 public class AuthorAlphaController {
 
     private final AuthorsSQLService authorsSQLService;
-    private final AuthorsRepositorySQL authorsRepositorySQL;
 
-    public AuthorAlphaController(AuthorsSQLService authorsSQLService, AuthorsRepositorySQL authorsRepositorySQL) {
+    public AuthorAlphaController(AuthorsSQLService authorsSQLService) {
         this.authorsSQLService = authorsSQLService;
-        this.authorsRepositorySQL = authorsRepositorySQL;
     }
 
 
     @GetMapping("authors")
-    public Object getListOrGetOneByFirstNameAndLastName(@RequestParam(value = "first_name", required = false) String firstName,
-                                                        @RequestParam(value = "last_name", required = false) String lastName) {
-        if (firstName != null && lastName != null) {
+    public List<Author> getListOrGetOneByFirstNameAndLastName(@RequestParam(value = "first_name", required = false) String firstName,
+                                                              @RequestParam(value = "last_name", required = false) String lastName) {
+        if (firstName != null || lastName != null) {
             return authorsSQLService.getByFirstNameAndLastName(firstName, lastName);
         } else {
             return authorsSQLService.getAll();
@@ -63,10 +60,8 @@ public class AuthorAlphaController {
 
 
     @DeleteMapping("authors/{id}")
-    public String delete(@PathVariable String id) {
-        String deleteRequest = "DELETE FROM authors WHERE id = " + id;
-
-        authorsRepositorySQL.requestToTable(deleteRequest);
+    public String delete(@PathVariable int id) {
+        authorsSQLService.delete(id);
 
         return "Author id: "
                 .concat(String.valueOf(id))

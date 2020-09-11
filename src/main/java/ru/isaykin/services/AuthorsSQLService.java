@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.isaykin.exceptions.NotFoundException;
 import ru.isaykin.reader.Author;
-import ru.isaykin.reader.DataBaseRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -19,11 +19,9 @@ import static java.lang.String.valueOf;
 @Component
 public class AuthorsSQLService implements AuthorService {
 
-    private final DataBaseRepository dataBaseRepository;
     private final AuthorsRepositorySQL authorsRepositorySQL;
 
-    public AuthorsSQLService(DataBaseRepository dataBaseRepository, AuthorsRepositorySQL authorsRepositorySQL) {
-        this.dataBaseRepository = dataBaseRepository;
+    public AuthorsSQLService(AuthorsRepositorySQL authorsRepositorySQL) {
         this.authorsRepositorySQL = authorsRepositorySQL;
     }
 
@@ -53,13 +51,13 @@ public class AuthorsSQLService implements AuthorService {
 
     @Override
     public List<Author> getAll() {
-        return dataBaseRepository.getAllAuthors();
+        return authorsRepositorySQL.getAll();
     }
 
     @Override
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public Author getOneById(int id) {
-        List<Author> authorList = dataBaseRepository.getAllAuthors();
+        List<Author> authorList = authorsRepositorySQL.getAll();
         return authorList.stream()
                 .filter(author -> author.getId() == id)
                 .findFirst().orElseThrow(NotFoundException::new);
@@ -71,11 +69,15 @@ public class AuthorsSQLService implements AuthorService {
     }
 
 
-    public Author getByFirstNameAndLastName(String firstname, String lastname) {
-        List<Author> authors = dataBaseRepository.getAllAuthors();
-        return authors.stream().filter(author -> author.getFirstName().equals(firstname) || author.getLastName().equals(lastname))
-                .findFirst()
-                .orElseThrow(NotFoundException::new);
+    public List<Author> getByFirstNameAndLastName(String firstname, String lastname) {
+        List<Author> authors = authorsRepositorySQL.getAll();
+        List<Author> selectedAuthors = new ArrayList<>();
+        for(Author author: authors) {
+            if((author.getFirstName().equals(firstname)) || (author.getLastName().equals(lastname))) {
+                selectedAuthors.add(author);
+            }
+        }
+     return selectedAuthors;
     }
 
     public boolean update(int id, String keyParameter, String valueParameter) {
@@ -99,7 +101,7 @@ public class AuthorsSQLService implements AuthorService {
 
 
     public List<Author> getListByAge(int age) {
-        return dataBaseRepository.getAuthorsWithAge(age);
+        return authorsRepositorySQL.getAuthorsWithAge(age);
     }
 
 }
