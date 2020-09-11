@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AuthorService {
 
-    void create(Author author);
+    Author create(Author author);
 
     List<Author> getAll();
 

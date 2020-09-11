@@ -86,7 +86,7 @@ public class DataBaseRepository {
         return authors;
     }
 
-    private static List<Author> convertResultSetToAuthors(ResultSet result) throws SQLException {
+    public static List<Author> convertResultSetToAuthors(ResultSet result) throws SQLException {
         List<Author> authorSet = new ArrayList<>();
 
         while (result.next()) {

@@ -34,8 +34,8 @@ public class MySQLWriter {
                     PreparedStatement preparedStatement = connection.prepareStatement(sqlReq);
                     preparedStatement.setInt(1, author.getId());
                     preparedStatement.setString(2, author.getFirstName());
-                    preparedStatement.setString(3, author.getLastName().replaceAll("'", "\\\""));
-                    preparedStatement.setString(4, author.getEmail().replaceAll("'", "\\\""));
+                    preparedStatement.setString(3, author.getLastName().replaceAll("'", "\\\\\'"));
+                    preparedStatement.setString(4, author.getEmail().replaceAll("'", "\\\\\'"));
                     preparedStatement.setDate(5, Date.valueOf(author.getBirthDate()));
                     preparedStatement.executeUpdate();
                     preparedStatement.close();

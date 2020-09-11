@@ -1,25 +1,26 @@
 package ru.isaykin.controllers;
 
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.isaykin.reader.Author;
-import ru.isaykin.reader.DataBaseRepository;
 import ru.isaykin.services.AuthorsRepositorySQL;
 import ru.isaykin.services.AuthorsSQLService;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping
 public class AuthorAlphaController {
 
     private final AuthorsSQLService authorsSQLService;
-    private final DataBaseRepository dataBaseRepository;
     private final AuthorsRepositorySQL authorsRepositorySQL;
 
-    public AuthorAlphaController(AuthorsSQLService authorsSQLService, DataBaseRepository dataBaseRepository, AuthorsRepositorySQL authorsRepositorySQL) {
+    public AuthorAlphaController(AuthorsSQLService authorsSQLService, AuthorsRepositorySQL authorsRepositorySQL) {
         this.authorsSQLService = authorsSQLService;
-        this.dataBaseRepository = dataBaseRepository;
         this.authorsRepositorySQL = authorsRepositorySQL;
     }
 
@@ -27,8 +28,6 @@ public class AuthorAlphaController {
     @GetMapping("authors")
     public Object getListOrGetOneByFirstNameAndLastName(@RequestParam(value = "first_name", required = false) String firstName,
                                                         @RequestParam(value = "last_name", required = false) String lastName) {
-        List<Author> authors = dataBaseRepository.getAllAuthors();
-
         if (firstName != null && lastName != null) {
             return authorsSQLService.getByFirstNameAndLastName(firstName, lastName);
         } else {
@@ -38,7 +37,6 @@ public class AuthorAlphaController {
 
     @GetMapping("authors/{id}")
     public Author getOneAuthor(@PathVariable int id) {
-        List<Author> authors = dataBaseRepository.getAllAuthors();
         return authorsSQLService.getOneById(id);
 
     }
@@ -49,25 +47,16 @@ public class AuthorAlphaController {
         return authorsSQLService.getListByAge(age);
     }
 
+
     @PostMapping("authors")
-    public String insertAuthorToTable(@RequestParam("first_name") String firstName,
-                                      @RequestParam("last_name") String lastName,
-                                      @RequestParam("email") String email,
-                                      @RequestParam("birthdate") String birthdate) {
-        String insertRequest = "INSERT authors (first_name, last_name, email, birthdate) VALUES (\""
-                .concat(firstName)
-                .concat("\" ,\"")
-                .concat(lastName)
-                .concat("\" ,\"")
-                .concat(email)
-                .concat("\" ,\"")
-                .concat(birthdate)
-                .concat("\")");
+    public ResponseEntity create(@RequestBody Author author) {
+        if(author == null) return new ResponseEntity(NO_CONTENT);
+              Author author1 =  authorsSQLService.create(author);
 
-        authorsRepositorySQL.requestToTable(insertRequest);
-
-        return "added";
+        return new ResponseEntity(author1,OK);
     }
+
+
 
     @DeleteMapping("authors/{id}")
     public String delete(@PathVariable String id) {

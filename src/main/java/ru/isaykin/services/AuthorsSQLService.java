@@ -1,5 +1,6 @@
 package ru.isaykin.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -10,8 +11,10 @@ import ru.isaykin.reader.DataBaseRepository;
 
 import java.util.List;
 
+import static java.lang.String.format;
+import static java.lang.String.valueOf;
 import static ru.isaykin.reader.PropertiesRepo.getDataForPropRepo;
-
+@Slf4j
 @Service
 @Component
 public class AuthorsSQLService implements AuthorService {
@@ -25,8 +28,27 @@ public class AuthorsSQLService implements AuthorService {
     }
 
     @Override
-    public void create(Author author) {
-        List<Author> authorList = dataBaseRepository.getAllAuthors();
+    public Author create(Author author) {
+
+            String creationRequest = format("INSERT INTO authors (first_name, last_name, email, birthdate) VALUES " +
+                    "( '%s', '%s', '%s', '%tF')",
+                    author.getFirstName(), author.getLastName().replaceAll("'","\\\\\'"), author.getEmail(), author.getBirthDate());
+            authorsRepositorySQL.requestToTable(creationRequest);
+
+            String feedbackRequest = format("SELECT * FROM authors WHERE first_name = '%s' AND last_name = '%s';",
+                    author.getFirstName(), author.getLastName().replaceAll("'", "\\\\\'"));
+        Author author1 = new Author();
+           try {
+               List<Author> authors = authorsRepositorySQL.getListOfAuthors(feedbackRequest);
+                author1 = authors.get(0);
+           } catch (NullPointerException e) {
+               log.error(e.getMessage() + "you get List authors = null. Wrong request to DB");
+
+           }
+        if(author1 != null) return author1;
+
+        return author;
+
     }
 
     @Override
@@ -37,8 +59,8 @@ public class AuthorsSQLService implements AuthorService {
     @Override
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public Author getOneById(int id) {
-        List<Author> authorSet = dataBaseRepository.getAllAuthors();
-        return authorSet.stream()
+        List<Author> authorList = dataBaseRepository.getAllAuthors();
+        return authorList.stream()
                 .filter(author -> author.getId() == id)
                 .findFirst().orElseThrow(NotFoundException::new);
     }
@@ -63,7 +85,7 @@ public class AuthorsSQLService implements AuthorService {
                 .concat(" = \"")
                 .concat(valueParameter)
                 .concat("\" WHERE id = \"")
-                .concat(String.valueOf(id))
+                .concat(valueOf(id))
                 .concat("\"");
         authorsRepositorySQL.requestToTable(updateRequestString);
         return true;
@@ -71,7 +93,7 @@ public class AuthorsSQLService implements AuthorService {
 
     @Override
     public boolean delete(int id) {
-        String deleteRequest = "DELETE FROM authors WHERE id = ".concat(String.valueOf(id));
+        String deleteRequest = "DELETE FROM authors WHERE id = ".concat(valueOf(id));
         authorsRepositorySQL.requestToTable(deleteRequest);
         return true;
     }
