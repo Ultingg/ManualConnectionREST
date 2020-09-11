@@ -13,7 +13,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
-import static ru.isaykin.reader.PropertiesRepo.getDataForPropRepo;
+
 @Slf4j
 @Service
 @Component
@@ -30,22 +30,22 @@ public class AuthorsSQLService implements AuthorService {
     @Override
     public Author create(Author author) {
 
-            String creationRequest = format("INSERT INTO authors (first_name, last_name, email, birthdate) VALUES " +
-                    "( '%s', '%s', '%s', '%tF')",
-                    author.getFirstName(), author.getLastName().replaceAll("'","\\\\\'"), author.getEmail(), author.getBirthDate());
-            authorsRepositorySQL.requestToTable(creationRequest);
+        String creationRequest = format("INSERT INTO authors (first_name, last_name, email, birthdate) VALUES " +
+                        "( '%s', '%s', '%s', '%tF')",
+                author.getFirstName(), author.getLastName().replaceAll("'", "\\\\\'"), author.getEmail(), author.getBirthDate());
+        authorsRepositorySQL.requestToTable(creationRequest);
 
-            String feedbackRequest = format("SELECT * FROM authors WHERE first_name = '%s' AND last_name = '%s';",
-                    author.getFirstName(), author.getLastName().replaceAll("'", "\\\\\'"));
+        String feedbackRequest = format("SELECT * FROM authors WHERE first_name = '%s' AND last_name = '%s';",
+                author.getFirstName(), author.getLastName().replaceAll("'", "\\\\\'"));
         Author author1 = new Author();
-           try {
-               List<Author> authors = authorsRepositorySQL.getListOfAuthors(feedbackRequest);
-                author1 = authors.get(0);
-           } catch (NullPointerException e) {
-               log.error(e.getMessage() + "you get List authors = null. Wrong request to DB");
+        try {
+            List<Author> authors = authorsRepositorySQL.getListOfAuthors(feedbackRequest);
+            author1 = authors.get(0);
+        } catch (NullPointerException e) {
+            log.error(e.getMessage() + "you get List authors = null. Wrong request to DB");
 
-           }
-        if(author1 != null) return author1;
+        }
+        if (author1 != null) return author1;
 
         return author;
 
@@ -99,7 +99,6 @@ public class AuthorsSQLService implements AuthorService {
 
 
     public List<Author> getListByAge(int age) {
-        getDataForPropRepo();
         return dataBaseRepository.getAuthorsWithAge(age);
     }
 

@@ -49,13 +49,17 @@ public class AuthorAlphaController {
 
 
     @PostMapping("authors")
-    public ResponseEntity create(@RequestBody Author author) {
-        if(author == null) return new ResponseEntity(NO_CONTENT);
-              Author author1 =  authorsSQLService.create(author);
+    public ResponseEntity<Author> create(@RequestBody Author author) {
+        ResponseEntity<Author> result;
+        if (author == null) {
+            result = new ResponseEntity<>(NO_CONTENT);
+        } else {
+            Author author1 = authorsSQLService.create(author);
+            result = new ResponseEntity<>(author1, OK);
+        }
 
-        return new ResponseEntity(author1,OK);
+        return result;
     }
-
 
 
     @DeleteMapping("authors/{id}")
