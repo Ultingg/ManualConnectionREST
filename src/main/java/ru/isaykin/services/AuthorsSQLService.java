@@ -116,5 +116,9 @@ public class AuthorsSQLService implements AuthorService {
         return authorsRepositorySQL.getAuthorsWithAge(age);
     }
 
+    public String createList(List<Author> authorList) {
+        return authorsRepositorySQL.createList(authorList);
+
+    }
 }
 
