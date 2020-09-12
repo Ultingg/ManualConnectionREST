@@ -124,7 +124,7 @@ public class AuthorsRepositorySQL {
         } catch (SQLException e) {
             log.error(e.getMessage());
         }
-        return "was edded: " + count;
+        return "was added: " + count;
 
     }
 }
