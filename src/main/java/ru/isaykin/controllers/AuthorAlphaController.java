@@ -56,11 +56,12 @@ public class AuthorAlphaController {
 
         return result;
     }
+
     @PostMapping("authors/addlist")
     public ResponseEntity<Author> createList(@RequestBody List<Author> authorList) {
         ResponseEntity<Author> result;
 
-        if(authorList == null){
+        if (authorList == null) {
             result = new ResponseEntity<>(NO_CONTENT);
         } else {
             String resultMassage = authorsSQLService.createList(authorList);
