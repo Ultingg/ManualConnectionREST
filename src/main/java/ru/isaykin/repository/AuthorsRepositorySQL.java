@@ -1,4 +1,4 @@
-package ru.isaykin.services;
+package ru.isaykin.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
