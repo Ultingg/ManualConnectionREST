@@ -82,7 +82,7 @@ public class XLSWriter {
             cell.setCellValue(au.getEmail());
             //birth_date_Cell
             cell = row.createCell(4, NUMERIC);
-            cell.setCellValue(au.getBirthDate());
+            cell.setCellValue(au.getBirthdate());
             cell.setCellStyle(dateCellStyle);
         }
 

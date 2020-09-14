@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import ru.isaykin.exceptions.NotFoundException;
 import ru.isaykin.reader.Author;
 import ru.isaykin.repository.AuthorRepo;
 import ru.isaykin.repository.AuthorsRepositorySQL;
@@ -37,7 +36,7 @@ public class AuthorsSQLService {
         String updateRequest = format(
                 "UPDATE authors SET first_name = '%s', last_name = '%s', email = '%s', birthdate = '%tF' WHERE id = %d;",
                 author.getFirstName(), author.getLastName().replaceAll("'", "\\\\\'"),
-                author.getEmail(), author.getBirthDate(), id);
+                author.getEmail(), author.getBirthdate(), id);
 
         authorsRepositorySQL.requestToTable(updateRequest);
 
@@ -51,7 +50,7 @@ public class AuthorsSQLService {
 
         String creationRequest = format("INSERT INTO authors (first_name, last_name, email, birthdate) VALUES " +
                         "( '%s', '%s', '%s', '%tF')",
-                author.getFirstName(), author.getLastName().replaceAll("'", "\\\\\'"), author.getEmail(), author.getBirthDate());
+                author.getFirstName(), author.getLastName().replaceAll("'", "\\\\\'"), author.getEmail(), author.getBirthdate());
         authorsRepositorySQL.requestToTable(creationRequest);
 
         String feedbackRequest = format("SELECT * FROM authors WHERE first_name = '%s' AND last_name = '%s';",
@@ -76,10 +75,7 @@ public class AuthorsSQLService {
 
     @ResponseStatus(code = NOT_FOUND)
     public Author getOneById(Long id) {
-        List<Author> authorList = authorsRepositorySQL.getAll();
-        return authorList.stream()
-                .filter(author -> author.getId() == id)
-                .findFirst().orElseThrow(NotFoundException::new);
+       return authorRepo.getById(id);
     }
 
 
