@@ -8,6 +8,8 @@ import ru.isaykin.reader.Author;
 import ru.isaykin.repository.AuthorRepo;
 import ru.isaykin.repository.AuthorsRepositorySQL;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,7 +111,12 @@ public class AuthorsSQLService {
 
 
     public List<Author> getListByAge(int age) {
-        return authorsRepositorySQL.getAuthorsWithAge(age);
+        Date currentDateMinusYears = Date.
+                valueOf(LocalDate.now().minusYears(age));
+
+        return authorRepo.getListByAge(currentDateMinusYears);
+
+
     }
 
     public String createList(List<Author> authorList) {
