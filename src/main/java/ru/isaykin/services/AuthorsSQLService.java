@@ -18,7 +18,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Slf4j
 @Service
 @Component
-public class AuthorsSQLService implements AuthorService {
+public class AuthorsSQLService {
 
     private final AuthorsRepositorySQL authorsRepositorySQL;
 
@@ -26,7 +26,6 @@ public class AuthorsSQLService implements AuthorService {
         this.authorsRepositorySQL = authorsRepositorySQL;
     }
 
-    @Override
     public Author update(Author author, int id) {
         String selectionRequest = format("SELECT * FROM authors WHERE id = %d;", id);
 
@@ -43,7 +42,6 @@ public class AuthorsSQLService implements AuthorService {
         return authorList.get(0);
     }
 
-    @Override
     public Author create(Author author) {
 
         String creationRequest = format("INSERT INTO authors (first_name, last_name, email, birthdate) VALUES " +
@@ -67,12 +65,10 @@ public class AuthorsSQLService implements AuthorService {
 
     }
 
-    @Override
     public List<Author> getAll() {
         return authorsRepositorySQL.getAll();
     }
 
-    @Override
     @ResponseStatus(code = NOT_FOUND)
     public Author getOneById(int id) {
         List<Author> authorList = authorsRepositorySQL.getAll();
@@ -106,7 +102,6 @@ public class AuthorsSQLService implements AuthorService {
         return true;
     }
 
-    @Override
     public boolean delete(int id) {
         authorsRepositorySQL.requestToTable(new StringBuilder("DELETE FROM authors WHERE id = ").append(id).toString());
         return true;
