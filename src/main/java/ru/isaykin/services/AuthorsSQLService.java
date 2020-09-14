@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.String.format;
-import static java.lang.String.valueOf;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -22,7 +21,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class AuthorsSQLService {
 
     private final AuthorsRepositorySQL authorsRepositorySQL;
-     private final AuthorRepo authorRepo;
+    private final AuthorRepo authorRepo;
 
 
     public AuthorsSQLService(AuthorsRepositorySQL authorsRepositorySQL, AuthorRepo authorRepo) {
@@ -31,25 +30,7 @@ public class AuthorsSQLService {
         this.authorRepo = authorRepo;
     }
 
-    public Author update(Author author, Long id) {
-        String selectionRequest = format("SELECT * FROM authors WHERE id = %d;", id);
 
-        String updateRequest = format(
-                "UPDATE authors SET first_name = '%s', last_name = '%s', email = '%s', birthdate = '%tF' WHERE id = %d;",
-                author.getFirstName(), author.getLastName().replaceAll("'", "\\\\\'"),
-                author.getEmail(), author.getBirthdate(), id);
-
-        authorsRepositorySQL.requestToTable(updateRequest);
-
-        List<Author> authorList = authorsRepositorySQL.getListOfAuthors(selectionRequest);
-
-
-        return authorList.get(0);
-    }
-    public Author saveme (Author author) {
-        authorRepo.save(author);
-        return  author;
-    }
 
     public Author create(Author author) {
 
@@ -79,16 +60,14 @@ public class AuthorsSQLService {
     }
 
 
-
-
     public ResponseEntity<Author> getOneById(Long id) {
-       ResponseEntity<Author> result;
-       Author author = authorRepo.getById(id);
-       if(author == null) {
-           return result = new ResponseEntity<>(NOT_FOUND);
-       } else {
-           return result = new ResponseEntity<Author>(author, OK);
-       }
+        ResponseEntity<Author> result;
+        Author author = authorRepo.getById(id);
+        if (author == null) {
+            return result = new ResponseEntity<>(NOT_FOUND);
+        } else {
+            return result = new ResponseEntity<Author>(author, OK);
+        }
     }
 
 
@@ -104,24 +83,27 @@ public class AuthorsSQLService {
         return selectedAuthors;
     }
 
-    public boolean update(Long id, String keyParameter, String valueParameter) {
+    public Author update(Long id, Author authorToUpdate) {
 
-        String updateRequestString = "UPDATE authors SET "
-                .concat(keyParameter)
-                .concat(" = \"")
-                .concat(valueParameter)
-                .concat("\" WHERE id = \"")
-                .concat(valueOf(id))
-                .concat("\"");
-        authorsRepositorySQL.requestToTable(updateRequestString);
-        return true;
+        Author oldAuthor = authorRepo.getById(id);
+        if (oldAuthor == null) {
+            return null;
+        } else {
+            authorToUpdate.setId(oldAuthor.getId());
+            authorRepo.save(authorToUpdate);
+
+            return authorToUpdate;
+        }
     }
 
     public ResponseEntity<Author> delete(Long id) {
         ResponseEntity<Author> result;
-        if(id == null) {return result = new ResponseEntity<>(NOT_FOUND);}
-        else  { authorRepo.deleteById(id);
-        return result = new ResponseEntity<>(OK);}
+        if (id == null) {
+            return result = new ResponseEntity<>(NOT_FOUND);
+        } else {
+            authorRepo.deleteById(id);
+            return result = new ResponseEntity<>(OK);
+        }
         //authorsRepositorySQL.requestToTable(new StringBuilder("DELETE FROM authors WHERE id = ").append(id).toString());
     }
 
