@@ -89,7 +89,7 @@ public class AuthorsRepositorySQL {
 
         while (result.next()) {
             Author author = new Author();
-            author.setId(result.getInt("id"));
+            author.setId(result.getLong("id"));
             author.setFirstName(result.getString("first_name"));
             author.setLastName(result.getString("last_name"));
             author.setEmail(result.getString("email"));

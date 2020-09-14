@@ -16,8 +16,10 @@
 
     </parent>
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+<!--        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
+<!--        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>-->
+        <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
+        <spring-framework.version>5.2.8.RELEASE</spring-framework.version>
 
     </properties>
     <build>
@@ -89,6 +91,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jdbc</artifactId>
+            <version>${spring-boot.version}</version>
         </dependency>
 
 <!--        springframework-->

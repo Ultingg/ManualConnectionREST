@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.isaykin.exceptions.NotFoundException;
 import ru.isaykin.reader.Author;
+import ru.isaykin.repository.AuthorRepo;
 import ru.isaykin.repository.AuthorsRepositorySQL;
 
 import java.util.ArrayList;
@@ -21,12 +22,14 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class AuthorsSQLService {
 
     private final AuthorsRepositorySQL authorsRepositorySQL;
+    private final AuthorRepo authorRepo;
 
-    public AuthorsSQLService(AuthorsRepositorySQL authorsRepositorySQL) {
+    public AuthorsSQLService(AuthorsRepositorySQL authorsRepositorySQL, AuthorRepo authorRepo) {
         this.authorsRepositorySQL = authorsRepositorySQL;
+        this.authorRepo = authorRepo;
     }
 
-    public Author update(Author author, int id) {
+    public Author update(Author author, Long id) {
         String selectionRequest = format("SELECT * FROM authors WHERE id = %d;", id);
 
         String updateRequest = format(
@@ -70,7 +73,7 @@ public class AuthorsSQLService {
     }
 
     @ResponseStatus(code = NOT_FOUND)
-    public Author getOneById(int id) {
+    public Author getOneById(Long id) {
         List<Author> authorList = authorsRepositorySQL.getAll();
         return authorList.stream()
                 .filter(author -> author.getId() == id)
@@ -89,7 +92,7 @@ public class AuthorsSQLService {
         return selectedAuthors;
     }
 
-    public boolean update(int id, String keyParameter, String valueParameter) {
+    public boolean update(Long id, String keyParameter, String valueParameter) {
 
         String updateRequestString = "UPDATE authors SET "
                 .concat(keyParameter)
@@ -102,7 +105,7 @@ public class AuthorsSQLService {
         return true;
     }
 
-    public boolean delete(int id) {
+    public boolean delete(Long id) {
         authorsRepositorySQL.requestToTable(new StringBuilder("DELETE FROM authors WHERE id = ").append(id).toString());
         return true;
     }

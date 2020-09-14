@@ -32,7 +32,7 @@ public class AuthorAlphaController {
     }
 
     @GetMapping("authors/{id}")
-    public Author getOneAuthor(@PathVariable int id) {
+    public Author getOneAuthor(@PathVariable Long id) {
         return authorsSQLService.getOneById(id);
     }
 
@@ -72,7 +72,7 @@ public class AuthorAlphaController {
 
 
     @DeleteMapping("authors/{id}")
-    public StringBuilder delete(@PathVariable int id) {
+    public StringBuilder delete(@PathVariable Long id) {
         authorsSQLService.delete(id);
 
         return new StringBuilder("Author id: ").append(id).append(" was deleted");
@@ -80,7 +80,7 @@ public class AuthorAlphaController {
     }
 
     @PutMapping("authors/{id}")
-    public ResponseEntity<Author> updateById(@PathVariable int id,
+    public ResponseEntity<Author> updateById(@PathVariable Long id,
                                              @RequestBody Author author) {
         ResponseEntity<Author> result;
         if (author == null) {

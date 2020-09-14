@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class Author implements Comparable<Author> {
 
     @NonNull
-    private int id;
+    private Long id;
 
     @NonNull
     private String firstName;
