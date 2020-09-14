@@ -58,7 +58,7 @@ public class AuthorsSQLService {
     }
 
     public List<Author> getAll() {
-        return authorsRepositorySQL.getAll();
+        return authorRepo.getAll();
     }
 
 
@@ -110,13 +110,18 @@ public class AuthorsSQLService {
     }
 
 
-    public List<Author> getListByAge(int age) {
+    public List<Author> getListByAgeGT(int age) {
         Date currentDateMinusYears = Date.
                 valueOf(LocalDate.now().minusYears(age));
 
-        return authorRepo.getListByAge(currentDateMinusYears);
+        return authorRepo.getListByAgeGraterThen(currentDateMinusYears);
+    }
 
+    public List<Author> getListByAgeLT(int age) {
+        Date currentDateMinusYears = Date.
+                valueOf(LocalDate.now().minusYears(age));
 
+        return authorRepo.getListByAgeLessThen(currentDateMinusYears);
     }
 
     public String createList(List<Author> authorList) {
