@@ -1,9 +1,9 @@
 package ru.isaykin.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.isaykin.reader.Author;
 import ru.isaykin.repository.AuthorRepo;
 import ru.isaykin.repository.AuthorsRepositorySQL;
@@ -14,6 +14,7 @@ import java.util.List;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
 @Service
@@ -45,6 +46,10 @@ public class AuthorsSQLService {
 
         return authorList.get(0);
     }
+    public Author saveme (Author author) {
+        authorRepo.save(author);
+        return  author;
+    }
 
     public Author create(Author author) {
 
@@ -73,9 +78,17 @@ public class AuthorsSQLService {
         return authorsRepositorySQL.getAll();
     }
 
-    @ResponseStatus(code = NOT_FOUND)
-    public Author getOneById(Long id) {
-       return authorRepo.getById(id);
+
+
+
+    public ResponseEntity<Author> getOneById(Long id) {
+       ResponseEntity<Author> result;
+       Author author = authorRepo.getById(id);
+       if(author == null) {
+           return result = new ResponseEntity<>(NOT_FOUND);
+       } else {
+           return result = new ResponseEntity<Author>(author, OK);
+       }
     }
 
 
@@ -87,6 +100,7 @@ public class AuthorsSQLService {
                 selectedAuthors.add(author);
             }
         }
+
         return selectedAuthors;
     }
 
@@ -103,9 +117,12 @@ public class AuthorsSQLService {
         return true;
     }
 
-    public boolean delete(Long id) {
-        authorsRepositorySQL.requestToTable(new StringBuilder("DELETE FROM authors WHERE id = ").append(id).toString());
-        return true;
+    public ResponseEntity<Author> delete(Long id) {
+        ResponseEntity<Author> result;
+        if(id == null) {return result = new ResponseEntity<>(NOT_FOUND);}
+        else  { authorRepo.deleteById(id);
+        return result = new ResponseEntity<>(OK);}
+        //authorsRepositorySQL.requestToTable(new StringBuilder("DELETE FROM authors WHERE id = ").append(id).toString());
     }
 
 

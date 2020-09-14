@@ -32,13 +32,14 @@ public class AuthorAlphaController {
     }
 
     @GetMapping("authors/{id}")
-    public Author getOneAuthor(@PathVariable Long id) {
+    public ResponseEntity<Author> getOneAuthor(@PathVariable Long id) {
         return authorsSQLService.getOneById(id);
     }
 
 
     @GetMapping("authors/age/gt/{age}")
-    public List<Author> getListByAge(@PathVariable int age) {
+    public List<Author> getListByAge(@PathVariable int age)
+    {
         return authorsSQLService.getListByAge(age);
     }
 
@@ -72,10 +73,10 @@ public class AuthorAlphaController {
 
 
     @DeleteMapping("authors/{id}")
-    public StringBuilder delete(@PathVariable Long id) {
-        authorsSQLService.delete(id);
+    public ResponseEntity<Author> delete(@PathVariable Long id) {
 
-        return new StringBuilder("Author id: ").append(id).append(" was deleted");
+
+        return authorsSQLService.delete(id);
 
     }
 
