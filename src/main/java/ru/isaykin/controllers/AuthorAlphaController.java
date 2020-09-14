@@ -32,13 +32,14 @@ public class AuthorAlphaController {
     }
 
     @GetMapping("authors/{id}")
-    public Author getOneAuthor(@PathVariable int id) {
+    public ResponseEntity<Author> getOneAuthor(@PathVariable Long id) {
         return authorsSQLService.getOneById(id);
     }
 
 
     @GetMapping("authors/age/gt/{age}")
-    public List<Author> getListByAge(@PathVariable int age) {
+    public List<Author> getListByAge(@PathVariable int age)
+    {
         return authorsSQLService.getListByAge(age);
     }
 
@@ -58,36 +59,36 @@ public class AuthorAlphaController {
     }
 
     @PostMapping("authors/addlist")
-    public ResponseEntity<Author> createList(@RequestBody List<Author> authorList) {
-        ResponseEntity<Author> result;
+    public ResponseEntity<String> createList(@RequestBody List<Author> authorList) {
+        ResponseEntity<String> result;
 
         if (authorList == null) {
             result = new ResponseEntity<>(NO_CONTENT);
         } else {
             String resultMassage = authorsSQLService.createList(authorList);
-            result = new ResponseEntity(resultMassage, OK);
+            result = new ResponseEntity<>(resultMassage, OK);
         }
         return result;
     }
 
 
     @DeleteMapping("authors/{id}")
-    public StringBuilder delete(@PathVariable int id) {
-        authorsSQLService.delete(id);
+    public ResponseEntity<Author> delete(@PathVariable Long id) {
 
-        return new StringBuilder("Author id: ").append(id).append(" was deleted");
+
+        return authorsSQLService.delete(id);
 
     }
 
     @PutMapping("authors/{id}")
-    public ResponseEntity<Author> updateById(@PathVariable int id,
+    public ResponseEntity<Author> updateById(@PathVariable Long id,
                                              @RequestBody Author author) {
         ResponseEntity<Author> result;
-        if (author == null) {
+        Author updatedAuthor = authorsSQLService.update(id, author);
+        if (updatedAuthor == null) {
             result = new ResponseEntity<>(NOT_MODIFIED);
         } else {
-            Author author1 = authorsSQLService.update(author, id);
-            result = new ResponseEntity<>(author1, OK);
+            result = new ResponseEntity<>(updatedAuthor, OK);
         }
 
         return result;

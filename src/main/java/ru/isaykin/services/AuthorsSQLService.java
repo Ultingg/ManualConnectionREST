@@ -1,54 +1,44 @@
 package ru.isaykin.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import ru.isaykin.exceptions.NotFoundException;
 import ru.isaykin.reader.Author;
+import ru.isaykin.repository.AuthorRepo;
 import ru.isaykin.repository.AuthorsRepositorySQL;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.String.format;
-import static java.lang.String.valueOf;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
 @Service
 @Component
-public class AuthorsSQLService implements AuthorService {
+public class AuthorsSQLService {
 
     private final AuthorsRepositorySQL authorsRepositorySQL;
+    private final AuthorRepo authorRepo;
 
-    public AuthorsSQLService(AuthorsRepositorySQL authorsRepositorySQL) {
+
+    public AuthorsSQLService(AuthorsRepositorySQL authorsRepositorySQL, AuthorRepo authorRepo) {
         this.authorsRepositorySQL = authorsRepositorySQL;
+
+        this.authorRepo = authorRepo;
     }
 
-    @Override
-    public Author update(Author author, int id) {
-        String selectionRequest = format("SELECT * FROM authors WHERE id = %d;", id);
-
-        String updateRequest = format(
-                "UPDATE authors SET first_name = '%s', last_name = '%s', email = '%s', birthdate = '%tF' WHERE id = %d;",
-                author.getFirstName(), author.getLastName().replaceAll("'", "\\\\\'"),
-                author.getEmail(), author.getBirthDate(), id);
-
-        authorsRepositorySQL.requestToTable(updateRequest);
-
-        List<Author> authorList = authorsRepositorySQL.getListOfAuthors(selectionRequest);
 
 
-        return authorList.get(0);
-    }
-
-    @Override
     public Author create(Author author) {
 
         String creationRequest = format("INSERT INTO authors (first_name, last_name, email, birthdate) VALUES " +
                         "( '%s', '%s', '%s', '%tF')",
-                author.getFirstName(), author.getLastName().replaceAll("'", "\\\\\'"), author.getEmail(), author.getBirthDate());
+                author.getFirstName(), author.getLastName().replaceAll("'", "\\\\\'"), author.getEmail(), author.getBirthdate());
         authorsRepositorySQL.requestToTable(creationRequest);
 
         String feedbackRequest = format("SELECT * FROM authors WHERE first_name = '%s' AND last_name = '%s';",
@@ -67,18 +57,19 @@ public class AuthorsSQLService implements AuthorService {
 
     }
 
-    @Override
     public List<Author> getAll() {
         return authorsRepositorySQL.getAll();
     }
 
-    @Override
-    @ResponseStatus(code = NOT_FOUND)
-    public Author getOneById(int id) {
-        List<Author> authorList = authorsRepositorySQL.getAll();
-        return authorList.stream()
-                .filter(author -> author.getId() == id)
-                .findFirst().orElseThrow(NotFoundException::new);
+
+    public ResponseEntity<Author> getOneById(Long id) {
+        ResponseEntity<Author> result;
+        Author author = authorRepo.getById(id);
+        if (author == null) {
+            return result = new ResponseEntity<>(NOT_FOUND);
+        } else {
+            return result = new ResponseEntity<Author>(author, OK);
+        }
     }
 
 
@@ -90,31 +81,42 @@ public class AuthorsSQLService implements AuthorService {
                 selectedAuthors.add(author);
             }
         }
+
         return selectedAuthors;
     }
 
-    public boolean update(int id, String keyParameter, String valueParameter) {
+    public Author update(Long id, Author authorToUpdate) {
 
-        String updateRequestString = "UPDATE authors SET "
-                .concat(keyParameter)
-                .concat(" = \"")
-                .concat(valueParameter)
-                .concat("\" WHERE id = \"")
-                .concat(valueOf(id))
-                .concat("\"");
-        authorsRepositorySQL.requestToTable(updateRequestString);
-        return true;
+        Author oldAuthor = authorRepo.getById(id);
+        if (oldAuthor == null) {
+            return null;
+        } else {
+            authorToUpdate.setId(oldAuthor.getId());
+            authorRepo.save(authorToUpdate);
+
+            return authorToUpdate;
+        }
     }
 
-    @Override
-    public boolean delete(int id) {
-        authorsRepositorySQL.requestToTable(new StringBuilder("DELETE FROM authors WHERE id = ").append(id).toString());
-        return true;
+    public ResponseEntity<Author> delete(Long id) {
+        ResponseEntity<Author> result;
+        if (id == null) {
+            return result = new ResponseEntity<>(NOT_FOUND);
+        } else {
+            authorRepo.deleteById(id);
+            return result = new ResponseEntity<>(OK);
+        }
+        //authorsRepositorySQL.requestToTable(new StringBuilder("DELETE FROM authors WHERE id = ").append(id).toString());
     }
 
 
     public List<Author> getListByAge(int age) {
-        return authorsRepositorySQL.getAuthorsWithAge(age);
+        Date currentDateMinusYears = Date.
+                valueOf(LocalDate.now().minusYears(age));
+
+        return authorRepo.getListByAge(currentDateMinusYears);
+
+
     }
 
     public String createList(List<Author> authorList) {

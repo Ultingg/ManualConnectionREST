@@ -27,7 +27,7 @@ public class CSVWriter {
 
             CSVPrinter printer = DEFAULT.withHeader("ID", "First name", "Last name", "E-mail", "Birthdate").print(writer);
             for (Author au : authors) {
-                printer.printRecord(au.getId(), au.getFirstName(), au.getLastName(), au.getEmail(), au.getBirthDate());
+                printer.printRecord(au.getId(), au.getFirstName(), au.getLastName(), au.getEmail(), au.getBirthdate());
             }
             log.debug("CSVFile created");
 
