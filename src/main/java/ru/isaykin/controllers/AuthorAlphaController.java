@@ -38,11 +38,13 @@ public class AuthorAlphaController {
 
 
     @GetMapping("authors/age/gt/{age}")
-    public List<Author> getListByAge(@PathVariable int age)
+    public List<Author> getListByAgeGraterThen(@PathVariable int age)
     {
-        return authorsSQLService.getListByAge(age);
+        return authorsSQLService.getListByAgeGT(age);
     }
 
+    @GetMapping("authors/age/ls/{age}")
+    public List<Author> getListByAgeLessThen(@PathVariable int age) { return authorsSQLService.getListByAgeLT(age);}
 
     @PostMapping("authors")
     public ResponseEntity<Author> create(@RequestBody Author author) {
