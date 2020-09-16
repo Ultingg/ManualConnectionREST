@@ -41,6 +41,7 @@ public class FileDownloadController {
         writersService.writeAllByAgeLTToXLS(age);
         return getResourceResponseXLSEntity(request);
     }
+
     @GetMapping("download/xlsx/age/gt/{age}")
     public ResponseEntity<Resource> downloadFileXLSByAgeGraterThen(@PathVariable("age") int age, HttpServletRequest request) {
         writersService.writeAllByAgeGTToXLS(age);
@@ -64,6 +65,7 @@ public class FileDownloadController {
         writersService.writeAllToCSV();
         return getResourceResponseCSVEntity(request);
     }
+
     @GetMapping("download/xlsx")
     public ResponseEntity<Resource> downloadFileXLSAllAuthors(HttpServletRequest request) {
         writersService.writeAllToXLS();

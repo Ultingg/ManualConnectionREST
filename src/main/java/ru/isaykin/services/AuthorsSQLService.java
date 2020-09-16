@@ -85,7 +85,6 @@ public class AuthorsSQLService {
     }
 
 
-
     public Author update(Long id, Author authorToUpdate) {
 
         Author oldAuthor = authorRepo.getById(id);
