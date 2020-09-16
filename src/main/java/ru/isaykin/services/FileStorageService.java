@@ -19,11 +19,12 @@ public class FileStorageService {
 
     private final Path fileStorageLocation;
 
+
     public FileStorageService(FileStorageProperties fileStorageProperties) {
-        this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
+        fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
 
         try {
-            Files.createDirectories(this.fileStorageLocation);
+            Files.createDirectories(fileStorageLocation);
         } catch (IOException e) {
             log.error("Could not create the directory where the uploaded files will be stored." + e.getMessage());
         }
@@ -33,15 +34,13 @@ public class FileStorageService {
     public Resource loadFileAsResource(String fileName) {
         Resource resource = null;
         try {
-            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+            Path filePath = fileStorageLocation.resolve(fileName).normalize();
             resource = new UrlResource(filePath.toUri());
-            if (resource.exists()) {
-                return resource;
-            } else {
+            if (!resource.exists()) {
                 throw new FileNotFoundException("File not found" + fileName);
             }
         } catch (MalformedURLException | FileNotFoundException e) {
-            e.printStackTrace();
+            log.error("Error during loading file " + fileName, e.getMessage());
         }
         return resource;
     }
