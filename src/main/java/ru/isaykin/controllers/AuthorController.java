@@ -12,17 +12,18 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping
-public class AuthorAlphaController {
+public class AuthorController {
 
     private final AuthorsSQLService authorsSQLService;
 
-    public AuthorAlphaController(AuthorsSQLService authorsSQLService) {
+    public AuthorController(AuthorsSQLService authorsSQLService) {
         this.authorsSQLService = authorsSQLService;
     }
 
 
+
     @GetMapping("authors")
-    public List<Author> getListOrGetOneByFirstNameAndLastName(@RequestParam(value = "first_name", required = false) String firstName,
+    public Object getListOrGetOneByFirstNameAndLastName(@RequestParam(value = "first_name", required = false) String firstName,
                                                               @RequestParam(value = "last_name", required = false) String lastName) {
         if (firstName != null || lastName != null) {
             return authorsSQLService.getListByFirstNameAndLastName(firstName, lastName);
@@ -49,13 +50,13 @@ public class AuthorAlphaController {
     }
 
     @PostMapping("authors")
-    public ResponseEntity<Author> create(@RequestBody Author author) {
+    public ResponseEntity<Author> insert(@RequestBody Author author) {
         ResponseEntity<Author> result;
 
         if (author == null) {
             result = new ResponseEntity<>(NO_CONTENT);
         } else {
-            Author author1 = authorsSQLService.create(author);
+            Author author1 = authorsSQLService.insert(author);
             result = new ResponseEntity<>(author1, OK);
         }
 

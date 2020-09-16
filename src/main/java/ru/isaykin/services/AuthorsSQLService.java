@@ -128,5 +128,16 @@ public class AuthorsSQLService {
         return authorsRepositorySQL.createList(authorList);
 
     }
+
+    public Author insert(Author author) {
+
+         authorRepo.insert(author.getFirstName()
+                , author.getLastName()
+                , author.getEmail()
+                , Date.valueOf(author.getBirthdate()));
+
+         return authorRepo.getByEmail(author.getEmail());
+
+    }
 }
 

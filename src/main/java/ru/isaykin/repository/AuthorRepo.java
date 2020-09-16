@@ -2,6 +2,7 @@ package ru.isaykin.repository;
 
 
 import lombok.NonNull;
+import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -33,5 +34,13 @@ public interface AuthorRepo extends CrudRepository<Author, Long> {
     @Query("SELECT * FROM authors")
     List<Author> getAll();
 
+    @Modifying
+    @Query("INSERT INTO authors (first_name, last_name, email, birthdate) VALUES (:firstName, :lastName, :email, :birthDate)")
+    void insert(@Param("firstName") String firstName,
+                @Param("lastName") String lastName,
+                @Param("email") String email,
+                @Param("birthDate") Date birthDate);
 
+
+    Author getByEmail(String email);
 }
