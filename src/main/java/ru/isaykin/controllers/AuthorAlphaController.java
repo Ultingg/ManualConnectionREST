@@ -25,11 +25,12 @@ public class AuthorAlphaController {
     public List<Author> getListOrGetOneByFirstNameAndLastName(@RequestParam(value = "first_name", required = false) String firstName,
                                                               @RequestParam(value = "last_name", required = false) String lastName) {
         if (firstName != null || lastName != null) {
-            return authorsSQLService.getByFirstNameAndLastName(firstName, lastName);
+            return authorsSQLService.getListByFirstNameAndLastName(firstName, lastName);
         } else {
             return authorsSQLService.getAll();
         }
     }
+
 
     @GetMapping("authors/{id}")
     public ResponseEntity<Author> getOneAuthor(@PathVariable Long id) {
@@ -38,13 +39,14 @@ public class AuthorAlphaController {
 
 
     @GetMapping("authors/age/gt/{age}")
-    public List<Author> getListByAgeGraterThen(@PathVariable int age)
-    {
+    public List<Author> getListByAgeGraterThen(@PathVariable int age) {
         return authorsSQLService.getListByAgeGT(age);
     }
 
     @GetMapping("authors/age/ls/{age}")
-    public List<Author> getListByAgeLessThen(@PathVariable int age) { return authorsSQLService.getListByAgeLT(age);}
+    public List<Author> getListByAgeLessThen(@PathVariable int age) {
+        return authorsSQLService.getListByAgeLT(age);
+    }
 
     @PostMapping("authors")
     public ResponseEntity<Author> create(@RequestBody Author author) {

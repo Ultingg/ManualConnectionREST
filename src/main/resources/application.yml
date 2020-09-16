@@ -4,7 +4,13 @@ spring:
     username: root
     password: 1986
     driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 25MB
 
+file.upload-dir: .\\tables
 
 
 user.exclepath: tables\\authors.xlsx

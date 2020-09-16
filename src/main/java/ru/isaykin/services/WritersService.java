@@ -33,6 +33,7 @@ public class WritersService {
             return false;
         }
     }
+
     public boolean writeAllToCSV() {
         List<Author> authorList = authorRepo.getAll();
         if (!authorList.isEmpty()) {
@@ -83,8 +84,9 @@ public class WritersService {
             return false;
         }
     }
+
     private Date ageToDateConverter(int age) {
-        return  Date.
+        return Date.
                 valueOf(LocalDate.now().minusYears(age));
     }
 }

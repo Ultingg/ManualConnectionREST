@@ -33,7 +33,6 @@ public class AuthorsSQLService {
     }
 
 
-
     public Author create(Author author) {
 
         String creationRequest = format("INSERT INTO authors (first_name, last_name, email, birthdate) VALUES " +
@@ -73,8 +72,8 @@ public class AuthorsSQLService {
     }
 
 
-    public List<Author> getByFirstNameAndLastName(String firstname, String lastname) {
-        List<Author> authors = authorsRepositorySQL.getAll();
+    public List<Author> getListByFirstNameAndLastName(String firstname, String lastname) {
+        List<Author> authors = authorRepo.getAll();
         List<Author> selectedAuthors = new ArrayList<>();
         for (Author author : authors) {
             if ((author.getFirstName().equals(firstname)) || (author.getLastName().equals(lastname))) {
@@ -84,6 +83,8 @@ public class AuthorsSQLService {
 
         return selectedAuthors;
     }
+
+
 
     public Author update(Long id, Author authorToUpdate) {
 
