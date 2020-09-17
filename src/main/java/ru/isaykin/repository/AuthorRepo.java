@@ -41,6 +41,12 @@ public interface AuthorRepo extends CrudRepository<Author, Long> {
                 @Param("email") String email,
                 @Param("birthDate") Date birthDate);
 
+    @Modifying
+    @Query("INSERT INTO sortedAuthors (first_name, last_name, email, birthdate) VALUES (:firstName, :lastName, :email, :birthDate)")
+    void insertInNewTable(@Param("firstName") String firstName,
+                @Param("lastName") String lastName,
+                @Param("email") String email,
+                @Param("birthDate") Date birthDate);
 
     Author getByEmail(String email);
 }

@@ -3,6 +3,7 @@ package ru.isaykin.writer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.isaykin.reader.Author;
+import ru.isaykin.services.AuthorsSQLService;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -19,10 +20,16 @@ public class MySQLWriter {
     private static final String CREATE_SQL_REQUEST = "CREATE TABLE sortedauthors (id INT, FirstName VARCHAR(50), " +
             "LastName VARCHAR(50), Email VARCHAR(100), Birthdate DATE)";
 
-    public MySQLWriter(DataSource dataSource) {
+    private final AuthorsSQLService authorsSQLService;
+
+    public MySQLWriter(DataSource dataSource, AuthorsSQLService authorsSQLService) {
         this.dataSource = dataSource;
+        this.authorsSQLService = authorsSQLService;
     }
 
+    public void exportToNewSQLTable(List<Author> authorList) {
+        authorsSQLService.insertManyToSortedAuthors(authorList);
+    }
 
     public void exportNewTableToSQLBase(List<Author> newTable) {
         String sqlReq = "INSERT sortedauthors (id, FirstName, LastName, Email, Birthdate) VALUES (?, ?, ?, ?, ?)";

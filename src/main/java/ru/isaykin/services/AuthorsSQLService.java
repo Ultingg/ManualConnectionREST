@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.isaykin.reader.Author;
 import ru.isaykin.repository.AuthorRepo;
-import ru.isaykin.repository.AuthorsRepositorySQL;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -21,12 +20,10 @@ import static org.springframework.http.HttpStatus.OK;
 @Component
 public class AuthorsSQLService {
 
-    private final AuthorsRepositorySQL authorsRepositorySQL;
     private final AuthorRepo authorRepo;
 
 
-    public AuthorsSQLService(AuthorsRepositorySQL authorsRepositorySQL, AuthorRepo authorRepo) {
-        this.authorsRepositorySQL = authorsRepositorySQL;
+    public AuthorsSQLService(AuthorRepo authorRepo) {
 
         this.authorRepo = authorRepo;
     }
@@ -40,9 +37,9 @@ public class AuthorsSQLService {
     public ResponseEntity<Author> getOneById(Long id) {
         Author author = authorRepo.getById(id);
         if (author == null) {
-            return  new ResponseEntity<>(NOT_FOUND);
+            return new ResponseEntity<>(NOT_FOUND);
         } else {
-            return  new ResponseEntity<>(author, OK);
+            return new ResponseEntity<>(author, OK);
         }
     }
 
@@ -75,7 +72,7 @@ public class AuthorsSQLService {
 
     public ResponseEntity<Author> delete(Long id) {
         if (id == null) {
-            return  new ResponseEntity<>(NOT_FOUND);
+            return new ResponseEntity<>(NOT_FOUND);
         } else {
             authorRepo.deleteById(id);
             return new ResponseEntity<>(OK);
@@ -96,10 +93,6 @@ public class AuthorsSQLService {
         return authorRepo.getListByAgeLessThen(currentDateMinusYears);
     }
 
-    public String createList(List<Author> authorList) {
-        return authorsRepositorySQL.createList(authorList);
-
-    }
 
     public Author insert(Author author) {
 
@@ -110,6 +103,30 @@ public class AuthorsSQLService {
 
         return authorRepo.getByEmail(author.getEmail());
 
+    }
+
+    public List<Author> insertMany(List<Author> authorList) {
+        List<Author> insertedAuthors = new ArrayList<>();
+        for (Author author : authorList) {
+            authorRepo.insert(author.getFirstName()
+                    , author.getLastName()
+                    , author.getEmail()
+                    , Date.valueOf(author.getBirthdate()));
+            insertedAuthors.add(authorRepo.getByEmail(author.getEmail()));
+        }
+        return insertedAuthors;
+    }
+
+    public List<Author> insertManyToSortedAuthors(List<Author> authorList) {
+        List<Author> insertedAuthors = new ArrayList<>();
+        for (Author author : authorList) {
+            authorRepo.insert(author.getFirstName()
+                    , author.getLastName()
+                    , author.getEmail()
+                    , Date.valueOf(author.getBirthdate()));
+            insertedAuthors.add(authorRepo.getByEmail(author.getEmail()));
+        }
+        return insertedAuthors;
     }
 }
 

@@ -21,10 +21,9 @@ public class AuthorController {
     }
 
 
-
     @GetMapping("authors")
     public Object getListOrGetOneByFirstNameAndLastName(@RequestParam(value = "first_name", required = false) String firstName,
-                                                              @RequestParam(value = "last_name", required = false) String lastName) {
+                                                        @RequestParam(value = "last_name", required = false) String lastName) {
         if (firstName != null || lastName != null) {
             return authorsSQLService.getListByFirstNameAndLastName(firstName, lastName);
         } else {
@@ -64,16 +63,14 @@ public class AuthorController {
     }
 
     @PostMapping("authors/addlist")
-    public ResponseEntity<String> createList(@RequestBody List<Author> authorList) {
-        ResponseEntity<String> result;
-
+    public ResponseEntity<List<Author>> createList(@RequestBody List<Author> authorList) {
+        List<Author> insertedList;
         if (authorList == null) {
-            result = new ResponseEntity<>(NO_CONTENT);
+            return new ResponseEntity<>(NO_CONTENT);
         } else {
-            String resultMassage = authorsSQLService.createList(authorList);
-            result = new ResponseEntity<>(resultMassage, OK);
+            insertedList = authorsSQLService.insertMany(authorList);
+            return new ResponseEntity<>(insertedList, OK);
         }
-        return result;
     }
 
 
