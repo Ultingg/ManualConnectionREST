@@ -6,8 +6,10 @@ import org.springframework.stereotype.Repository;
 import ru.isaykin.reader.Author;
 
 import javax.sql.DataSource;
-import java.sql.*;
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Slf4j
@@ -23,48 +25,7 @@ public class AuthorsRepositorySQL {
 
     }
 
-    public void requestToTable(String request) {
-        try (Connection connection = dataSource.getConnection()) {
-            try (Statement statement = connection.createStatement()) {
-                statement.executeUpdate(request);
-            }
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-        }
-    }
-
-    public List<Author> getListOfAuthors(String request) throws NullPointerException {
-        List<Author> authorsList = null;
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(request)) {
-                ResultSet resultSet = preparedStatement.executeQuery();
-                authorsList = convertResultSetToAuthors(resultSet);
-            }
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-        }
-        return authorsList;
-    }
-
-    private static List<Author> convertResultSetToAuthors(ResultSet result) throws SQLException {
-
-        List<Author> authorList = new ArrayList<>();
-
-        while (result.next()) {
-            Author author = new Author();
-            author.setId(result.getLong("id"));
-            author.setFirstName(result.getString("first_name"));
-            author.setLastName(result.getString("last_name"));
-            author.setEmail(result.getString("email"));
-            author.setBirthdate(result.getDate("birthdate").toLocalDate());
-
-            authorList.add(author);
-        }
-        return authorList;
-    }
-
-
-    public String createList(List<Author> authorList) {
+       public String createList(List<Author> authorList) {
         int count = 0;
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO authors VALUES ( ?, ?, ?, ?, ?, ?)")) {
