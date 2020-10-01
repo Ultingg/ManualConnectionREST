@@ -12,24 +12,25 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping
-public class AuthorAlphaController {
+public class AuthorController {
 
     private final AuthorsSQLService authorsSQLService;
 
-    public AuthorAlphaController(AuthorsSQLService authorsSQLService) {
+    public AuthorController(AuthorsSQLService authorsSQLService) {
         this.authorsSQLService = authorsSQLService;
     }
 
 
     @GetMapping("authors")
-    public List<Author> getListOrGetOneByFirstNameAndLastName(@RequestParam(value = "first_name", required = false) String firstName,
-                                                              @RequestParam(value = "last_name", required = false) String lastName) {
+    public Object getListOrGetOneByFirstNameAndLastName(@RequestParam(value = "first_name", required = false) String firstName,
+                                                        @RequestParam(value = "last_name", required = false) String lastName) {
         if (firstName != null || lastName != null) {
-            return authorsSQLService.getByFirstNameAndLastName(firstName, lastName);
+            return authorsSQLService.getListByFirstNameAndLastName(firstName, lastName);
         } else {
             return authorsSQLService.getAll();
         }
     }
+
 
     @GetMapping("authors/{id}")
     public ResponseEntity<Author> getOneAuthor(@PathVariable Long id) {
@@ -38,22 +39,23 @@ public class AuthorAlphaController {
 
 
     @GetMapping("authors/age/gt/{age}")
-    public List<Author> getListByAgeGraterThen(@PathVariable int age)
-    {
+    public List<Author> getListByAgeGraterThen(@PathVariable int age) {
         return authorsSQLService.getListByAgeGT(age);
     }
 
     @GetMapping("authors/age/ls/{age}")
-    public List<Author> getListByAgeLessThen(@PathVariable int age) { return authorsSQLService.getListByAgeLT(age);}
+    public List<Author> getListByAgeLessThen(@PathVariable int age) {
+        return authorsSQLService.getListByAgeLT(age);
+    }
 
     @PostMapping("authors")
-    public ResponseEntity<Author> create(@RequestBody Author author) {
+    public ResponseEntity<Author> insert(@RequestBody Author author) {
         ResponseEntity<Author> result;
 
         if (author == null) {
             result = new ResponseEntity<>(NO_CONTENT);
         } else {
-            Author author1 = authorsSQLService.create(author);
+            Author author1 = authorsSQLService.insert(author);
             result = new ResponseEntity<>(author1, OK);
         }
 
@@ -61,16 +63,14 @@ public class AuthorAlphaController {
     }
 
     @PostMapping("authors/addlist")
-    public ResponseEntity<String> createList(@RequestBody List<Author> authorList) {
-        ResponseEntity<String> result;
-
+    public ResponseEntity<List<Author>> createList(@RequestBody List<Author> authorList) {
+        List<Author> insertedList;
         if (authorList == null) {
-            result = new ResponseEntity<>(NO_CONTENT);
+            return new ResponseEntity<>(NO_CONTENT);
         } else {
-            String resultMassage = authorsSQLService.createList(authorList);
-            result = new ResponseEntity<>(resultMassage, OK);
+            insertedList = authorsSQLService.insertMany(authorList);
+            return new ResponseEntity<>(insertedList, OK);
         }
-        return result;
     }
 
 

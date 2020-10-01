@@ -6,14 +6,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.isaykin.reader.Author;
 import ru.isaykin.repository.AuthorRepo;
-import ru.isaykin.repository.AuthorsRepositorySQL;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -22,40 +20,14 @@ import static org.springframework.http.HttpStatus.OK;
 @Component
 public class AuthorsSQLService {
 
-    private final AuthorsRepositorySQL authorsRepositorySQL;
     private final AuthorRepo authorRepo;
 
 
-    public AuthorsSQLService(AuthorsRepositorySQL authorsRepositorySQL, AuthorRepo authorRepo) {
-        this.authorsRepositorySQL = authorsRepositorySQL;
+    public AuthorsSQLService(AuthorRepo authorRepo) {
 
         this.authorRepo = authorRepo;
     }
 
-
-
-    public Author create(Author author) {
-
-        String creationRequest = format("INSERT INTO authors (first_name, last_name, email, birthdate) VALUES " +
-                        "( '%s', '%s', '%s', '%tF')",
-                author.getFirstName(), author.getLastName().replaceAll("'", "\\\\\'"), author.getEmail(), author.getBirthdate());
-        authorsRepositorySQL.requestToTable(creationRequest);
-
-        String feedbackRequest = format("SELECT * FROM authors WHERE first_name = '%s' AND last_name = '%s';",
-                author.getFirstName(), author.getLastName().replaceAll("'", "\\\\\'"));
-        Author author1 = new Author();
-        try {
-            List<Author> authors = authorsRepositorySQL.getListOfAuthors(feedbackRequest);
-            author1 = authors.get(0);
-        } catch (NullPointerException e) {
-            log.error(e.getMessage() + "you get List authors = null. Wrong request to DB");
-
-        }
-        if (author1 != null) return author1;
-
-        return author;
-
-    }
 
     public List<Author> getAll() {
         return authorRepo.getAll();
@@ -63,18 +35,17 @@ public class AuthorsSQLService {
 
 
     public ResponseEntity<Author> getOneById(Long id) {
-        ResponseEntity<Author> result;
         Author author = authorRepo.getById(id);
         if (author == null) {
-            return result = new ResponseEntity<>(NOT_FOUND);
+            return new ResponseEntity<>(NOT_FOUND);
         } else {
-            return result = new ResponseEntity<Author>(author, OK);
+            return new ResponseEntity<>(author, OK);
         }
     }
 
 
-    public List<Author> getByFirstNameAndLastName(String firstname, String lastname) {
-        List<Author> authors = authorsRepositorySQL.getAll();
+    public List<Author> getListByFirstNameAndLastName(String firstname, String lastname) {
+        List<Author> authors = authorRepo.getAll();
         List<Author> selectedAuthors = new ArrayList<>();
         for (Author author : authors) {
             if ((author.getFirstName().equals(firstname)) || (author.getLastName().equals(lastname))) {
@@ -84,6 +55,7 @@ public class AuthorsSQLService {
 
         return selectedAuthors;
     }
+
 
     public Author update(Long id, Author authorToUpdate) {
 
@@ -99,16 +71,13 @@ public class AuthorsSQLService {
     }
 
     public ResponseEntity<Author> delete(Long id) {
-        ResponseEntity<Author> result;
         if (id == null) {
-            return result = new ResponseEntity<>(NOT_FOUND);
+            return new ResponseEntity<>(NOT_FOUND);
         } else {
             authorRepo.deleteById(id);
-            return result = new ResponseEntity<>(OK);
+            return new ResponseEntity<>(OK);
         }
-        //authorsRepositorySQL.requestToTable(new StringBuilder("DELETE FROM authors WHERE id = ").append(id).toString());
     }
-
 
     public List<Author> getListByAgeGT(int age) {
         Date currentDateMinusYears = Date.
@@ -124,9 +93,40 @@ public class AuthorsSQLService {
         return authorRepo.getListByAgeLessThen(currentDateMinusYears);
     }
 
-    public String createList(List<Author> authorList) {
-        return authorsRepositorySQL.createList(authorList);
 
+    public Author insert(Author author) {
+
+        authorRepo.insert(author.getFirstName()
+                , author.getLastName()
+                , author.getEmail()
+                , Date.valueOf(author.getBirthdate()));
+
+        return authorRepo.getByEmail(author.getEmail());
+
+    }
+
+    public List<Author> insertMany(List<Author> authorList) {
+        List<Author> insertedAuthors = new ArrayList<>();
+        for (Author author : authorList) {
+            authorRepo.insert(author.getFirstName()
+                    , author.getLastName()
+                    , author.getEmail()
+                    , Date.valueOf(author.getBirthdate()));
+            insertedAuthors.add(authorRepo.getByEmail(author.getEmail()));
+        }
+        return insertedAuthors;
+    }
+
+    public List<Author> insertManyToSortedAuthors(List<Author> authorList) {
+        List<Author> insertedAuthors = new ArrayList<>();
+        for (Author author : authorList) {
+            authorRepo.insert(author.getFirstName()
+                    , author.getLastName()
+                    , author.getEmail()
+                    , Date.valueOf(author.getBirthdate()));
+            insertedAuthors.add(authorRepo.getByEmail(author.getEmail()));
+        }
+        return insertedAuthors;
     }
 }
 

@@ -2,6 +2,7 @@ package ru.isaykin.repository;
 
 
 import lombok.NonNull;
+import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +13,7 @@ import ru.isaykin.reader.Author;
 import java.sql.Date;
 import java.util.List;
 
+//TODO: сделать отдельный кастомный репозиторий для запросов
 @Component
 @Repository
 public interface AuthorRepo extends CrudRepository<Author, Long> {
@@ -22,14 +24,29 @@ public interface AuthorRepo extends CrudRepository<Author, Long> {
 
     void deleteById(Long id);
 
-    @Query("SELECT * FROM authors WHERE birthdate >= :date")
-    List<Author> getListByAgeGraterThen(@Param("date")Date date);
-
-
     @Query("SELECT * FROM authors WHERE birthdate <= :date")
-    List<Author> getListByAgeLessThen(@Param("date")Date date);
+    List<Author> getListByAgeGraterThen(@Param("date") Date date);
+
+
+    @Query("SELECT * FROM authors WHERE birthdate >= :date")
+    List<Author> getListByAgeLessThen(@Param("date") Date date);
 
     @Query("SELECT * FROM authors")
     List<Author> getAll();
 
+    @Modifying
+    @Query("INSERT INTO authors (first_name, last_name, email, birthdate) VALUES (:firstName, :lastName, :email, :birthDate)")
+    void insert(@Param("firstName") String firstName,
+                @Param("lastName") String lastName,
+                @Param("email") String email,
+                @Param("birthDate") Date birthDate);
+
+    @Modifying
+    @Query("INSERT INTO sortedAuthors (first_name, last_name, email, birthdate) VALUES (:firstName, :lastName, :email, :birthDate)")
+    void insertInNewTable(@Param("firstName") String firstName,
+                @Param("lastName") String lastName,
+                @Param("email") String email,
+                @Param("birthDate") Date birthDate);
+
+    Author getByEmail(String email);
 }
