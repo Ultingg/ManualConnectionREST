@@ -43,6 +43,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+
         </dependency>
 
         <dependency>
@@ -75,6 +76,7 @@
                     <source>14</source>
                     <target>14</target>
                 </configuration>
+
             </plugin>
 
             <plugin>
@@ -105,7 +107,7 @@
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>libs/</classpathPrefix>
                             <mainClass>
-                                ru.isaykin.RestStrater
+                                ru.isaykin.RestStarter
                             </mainClass>
                         </manifest>
                     </archive>

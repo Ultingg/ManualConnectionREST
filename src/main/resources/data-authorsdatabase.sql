@@ -1,37 +1,5 @@
--- Generation time: Sat, 25 Jul 2020 13:51:00 +0000
--- Host: mysql.hostinger.ro
--- DB name: u574849695_25
-/*!40030 SET NAMES UTF8 */;
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT = @@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS = @@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION = @@COLLATION_CONNECTION */;
-/*!40103 SET @OLD_TIME_ZONE = @@TIME_ZONE */;
-/*!40103 SET TIME_ZONE = '+03:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS = @@UNIQUE_CHECKS, UNIQUE_CHECKS = 0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS = 0 */;
-/*!40101 SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES = @@SQL_NOTES, SQL_NOTES = 0 */;
-DROP DATABASE IF EXISTS redakzia;
-CREATE DATABASE redakzia;
-USE redakzia;
-DROP TABLE IF EXISTS `authors`;
-CREATE TABLE `authors`
-(
-    `id`         int(11)                              NOT NULL AUTO_INCREMENT,
-    `first_name` varchar(50) COLLATE utf8_unicode_ci  NOT NULL,
-    `last_name`  varchar(50) COLLATE utf8_unicode_ci  NOT NULL,
-    `email`      varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-    `birthdate`  date                                 NOT NULL,
-    `added`      timestamp                            NOT NULL DEFAULT current_timestamp(),
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `email` (`email`)
-) ENGINE = InnoDB
-  AUTO_INCREMENT = 101
-  DEFAULT CHARSET = utf8
-  COLLATE = utf8_unicode_ci;
-
 INSERT INTO `authors`
-VALUES ('1', 'Wendy', 'Goodwin', 'mertz.rosalee@example.net', '1973-07-13', '1980-12-11 15:37:11'),
+VALUES ('1', 'Alina', 'Zagitova', 'mertz.rosalee@example.net', '1973-07-13', '1980-12-11 15:37:11'),
        ('2', 'Neva', 'Johns', 'abbott.alda@example.net', '2012-07-09', '2010-08-25 12:32:08'),
        ('3', 'Deonte', 'DuBuque', 'o\'connell.kyler@example.org', '2013-06-27', '1995-12-23 15:49:01'),
        ('4', 'Lew', 'Abshire', 'dzemlak@example.net', '2019-01-10', '2011-07-05 19:13:35'),
@@ -539,14 +507,3 @@ VALUES ('1', '1', 'Et aut molestias dolorem sapiente deserunt nisi at.',
         'Ullam nemo sit aliquam fugiat delectus quam consectetur. Reprehenderit esse rem nostrum nobis illum deleniti velit. Nostrum omnis nam illum quidem voluptatum rerum sed fuga. Necessitatibus deleniti sint totam minima delectus ut.',
         'Qui velit numquam placeat fugit nam voluptates doloribus. Animi expedita laudantium quos perferendis autem rerum dolorem. Aperiam sit ut est reprehenderit quis.',
         '2002-12-29');
-
-
-
-/*!40101 SET SQL_MODE = @OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS = @OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES = @OLD_SQL_NOTES */;
-
