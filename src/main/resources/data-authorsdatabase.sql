@@ -1,5 +1,5 @@
 INSERT INTO `authors`
-VALUES ('1', 'Alina', 'Zagitova', 'mertz.rosalee@example.net', '1973-07-13', '1980-12-11 15:37:11'),
+VALUES ('1', 'Leonid', 'Zub', 'mertz.rosalee@example.net', '1973-07-13', '1980-12-11 15:37:11'),
        ('2', 'Neva', 'Johns', 'abbott.alda@example.net', '2012-07-09', '2010-08-25 12:32:08'),
        ('3', 'Deonte', 'DuBuque', 'o\'connell.kyler@example.org', '2013-06-27', '1995-12-23 15:49:01'),
        ('4', 'Lew', 'Abshire', 'dzemlak@example.net', '2019-01-10', '2011-07-05 19:13:35'),

@@ -20,7 +20,6 @@ public interface AuthorRepo extends CrudRepository<Author, Long> {
 
     Author getById(@NonNull Long id);
 
-    Author getByFirstNameAndLastName(String firstName, String LastName);
 
     void deleteById(Long id);
 

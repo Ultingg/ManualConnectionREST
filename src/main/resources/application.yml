@@ -4,7 +4,7 @@ spring:
     username: root
     password: 1986
     driver-class-name: com.mysql.cj.jdbc.Driver
-    initialization-mode: always
+    initialization-mode: never
     platform: authorsdatabase
   servlet:
     multipart:
