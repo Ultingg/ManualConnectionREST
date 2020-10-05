@@ -28,14 +28,6 @@ public class FileDownloadController {
     }
 
 
-    @GetMapping("download/{filename:.+}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable("filename") String fileName, HttpServletRequest request) {
-
-        Resource resource = fileStorageService.loadFileAsResource(fileName);
-
-        return getCheckedResourceResponseEntity(request, resource);
-    }
-
     @GetMapping("download/xlsx/age/lt/{age}")
     public ResponseEntity<Resource> downloadFileXLSByAgeLessThen(@PathVariable("age") int age, HttpServletRequest request) {
         writersService.writeAllByAgeLTToXLS(age);

@@ -19,7 +19,7 @@ public class WriterController {
         this.writersService = writersService;
     }
 
-    @GetMapping("writers/xls")
+    @GetMapping("writers/xlsx")
     public ResponseEntity<String> writeAllToXlS() {
         ResponseEntity<String> result;
         if (writersService.writeAllToXLS()) {
@@ -29,7 +29,7 @@ public class WriterController {
         }
     }
 
-    @GetMapping("writers/xls/age/gt/{age}")
+    @GetMapping("writers/xlsx/age/gt/{age}")
     public ResponseEntity<String> writeAllByGraterAgeToXls(@PathVariable("age") int age) {
         ResponseEntity<String> result;
         if (writersService.writeAllByAgeGTToXLS(age)) {
@@ -39,7 +39,7 @@ public class WriterController {
         }
     }
 
-    @GetMapping("writers/xls/age/lt/{age}")
+    @GetMapping("writers/xlsx/age/lt/{age}")
     public ResponseEntity<String> writeAllByLessAgeToXls(@PathVariable("age") int age) {
         ResponseEntity<String> result;
         if (writersService.writeAllByAgeLTToXLS(age)) {

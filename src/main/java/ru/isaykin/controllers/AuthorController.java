@@ -43,7 +43,7 @@ public class AuthorController {
         return authorsSQLService.getListByAgeGT(age);
     }
 
-    @GetMapping("authors/age/ls/{age}")
+    @GetMapping("authors/age/lt/{age}")
     public List<Author> getListByAgeLessThen(@PathVariable int age) {
         return authorsSQLService.getListByAgeLT(age);
     }
