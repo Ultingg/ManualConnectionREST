@@ -1,0 +1,637 @@
+{
+	"info": {
+		"_postman_id": "18d5263e-1091-41ac-a7a8-81ee546d31dc",
+		"name": "MCRCollection",
+		"description": "# API to ManualConnectionREST\r\n\r\n### Requests works with authors database:\r\n\r\n  * CRUD functions;\r\n  * create xlsx files;\r\n  * create csv files;",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GetAuthorById",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8b61a748-b3cb-4c47-bb34-e1a91974aa2d",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/authors/7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"authors",
+						"7"
+					]
+				},
+				"description": "Get one author by it's id\r\nNumber 5 in this case"
+			},
+			"response": []
+		},
+		{
+			"name": "GetListOfAuthors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/authors",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"authors"
+					]
+				},
+				"description": "Get List Of Authors"
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteAuthor",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/authors/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"authors",
+						"5"
+					]
+				},
+				"description": "Delete author by id"
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateAuthorById",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{    \r\n      \"firstName\": \"Lizzy\",\r\n    \"lastName\": \"Story\",\r\n    \"email\": \"teller@example.net\",\r\n    \"birthdate\": \"1987-07-13\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/authors/100",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"authors",
+						"100"
+					]
+				},
+				"description": "Update author by id"
+			},
+			"response": []
+		},
+		{
+			"name": "CreateOneAuthor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dbada8d8-e47c-450a-99a0-de1931e2b570",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{    \r\n      \"firstName\": \"Ludmila\",\r\n    \"lastName\": \"Koldunya\",\r\n    \"email\": \"kodunia@withc.ru\",\r\n    \"birthdate\": \"1850-04-10\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/authors",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"authors"
+					]
+				},
+				"description": "Create one author by JSON"
+			},
+			"response": []
+		},
+		{
+			"name": "CreateListOfAuthors",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[ {    \r\n      \"firstName\": \"Maria\",\r\n    \"lastName\": \"Petrova\",\r\n    \"email\": \"bigbad@mail.ru\",\r\n    \"birthdate\": \"2000-01-31\"\r\n    },\r\n    {    \r\n      \"firstName\": \"George\",\r\n    \"lastName\": \"West-Hamilton\",\r\n    \"email\": \"charman@fathersfounders.gov\",\r\n    \"birthdate\": \"1980-02-25\"\r\n    },\r\n    {    \r\n      \"firstName\": \"Peter\",\r\n    \"lastName\": \"Shmidt\",\r\n    \"email\": \"shmidtinfo@gmail.com\",\r\n    \"birthdate\": \"1996-07-15\"\r\n    }\r\n  \r\n]\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/authors/addlist",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"authors",
+						"addlist"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "vorchun@mail.ru",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "1978-09-23",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Create list of authors by list of JSON"
+			},
+			"response": []
+		},
+		{
+			"name": "GetListByAgeGT",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{    \r\n      \"firstName\": \"Todd\",\r\n    \"lastName\": \"Suinny\",\r\n    \"email\": \"suinnytodd@ripper.uk\",\r\n    \"birthdate\": \"1904-10-01\"\r\n    }\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/authors/age/gt/45",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"authors",
+						"age",
+						"gt",
+						"45"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "vorchun@mail.ru",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "1978-09-23",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Getting list of authors by age gratter then param (45 years old in this case)\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "GetListByAgeLT",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{    \r\n      \"firstName\": \"Todd\",\r\n    \"lastName\": \"Suinny\",\r\n    \"email\": \"suinnytodd@ripper.uk\",\r\n    \"birthdate\": \"1904-10-01\"\r\n    }\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/authors/age/lt/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"authors",
+						"age",
+						"lt",
+						"5"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "vorchun@mail.ru",
+							"disabled": true
+						},
+						{
+							"key": "birthdate",
+							"value": "1978-09-23",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Get list of authors by age less then param (5 in this case)"
+			},
+			"response": []
+		},
+		{
+			"name": "GetAuthorByNames",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/authors?first_name=Arianna&last_name=Heller",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"authors"
+					],
+					"query": [
+						{
+							"key": "first_name",
+							"value": "Arianna"
+						},
+						{
+							"key": "last_name",
+							"value": "Heller"
+						}
+					]
+				},
+				"description": "Get Authors by firstName and LastName. Both parameters are not requers, so you could get author by one of them."
+			},
+			"response": []
+		},
+		{
+			"name": "WriteCSVFileToDisk",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/writers/csv",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"writers",
+						"csv"
+					]
+				},
+				"description": "Writing csv file to /table folder"
+			},
+			"response": []
+		},
+		{
+			"name": "WriteXLSFileToDisk",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/writers/xlsx",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"writers",
+						"xlsx"
+					]
+				},
+				"description": "Writing Excle file to /table folder"
+			},
+			"response": []
+		},
+		{
+			"name": "WriteXLSFileToDiskAgeFilterGT",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/writers/xlsx/age/gt/55",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"writers",
+						"xlsx",
+						"age",
+						"gt",
+						"55"
+					]
+				},
+				"description": "Write Excle file to /table and filtered data by age gratter then param (55 in this case)"
+			},
+			"response": []
+		},
+		{
+			"name": "WriteXLSFileToDiskAgeFilterLT",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/writers/xlsx/age/lt/25",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"writers",
+						"xlsx",
+						"age",
+						"lt",
+						"25"
+					]
+				},
+				"description": "Write Excle file to /tabel folder and filter data by age less then param (25 in this case)"
+			},
+			"response": []
+		},
+		{
+			"name": "WriteCSVFileToDiskAgeFilterGT",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/writers/csv/age/gt/25",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"writers",
+						"csv",
+						"age",
+						"gt",
+						"25"
+					]
+				},
+				"description": "Write CSV file to /table and filter data by age gratter then param (25 in this case)"
+			},
+			"response": []
+		},
+		{
+			"name": "WriteCSVFileToDiskAgeFilterLT",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/writers/csv/age/lt/30",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"writers",
+						"csv",
+						"age",
+						"lt",
+						"30"
+					]
+				},
+				"description": "Write CSV file to /table and filter data by age less then param (35 in this case)"
+			},
+			"response": []
+		},
+		{
+			"name": "DownloadXLS",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/download/xlsx",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"download",
+						"xlsx"
+					]
+				},
+				"description": "Downloading defaulte list of authors in Excle file "
+			},
+			"response": []
+		},
+		{
+			"name": "DownloadCSV",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/download/csv",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"download",
+						"csv"
+					]
+				},
+				"description": "Download file of defaulte list of authors in csv format "
+			},
+			"response": []
+		},
+		{
+			"name": "DownloadCSVByAgeGT",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/download/csv/age/gt/15",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"download",
+						"csv",
+						"age",
+						"gt",
+						"15"
+					]
+				},
+				"description": "Download list of authors filtered by age less then param\r\nin csv format"
+			},
+			"response": []
+		},
+		{
+			"name": "DownloadCSVByAgeLT",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/download/csv/age/lt/15",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"download",
+						"csv",
+						"age",
+						"lt",
+						"15"
+					]
+				},
+				"description": "Download list of authors filtered by age gratter then param in csv format"
+			},
+			"response": []
+		},
+		{
+			"name": "DownloadXLSByAgeLT",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/download/xlsx/age/lt/15",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"download",
+						"xlsx",
+						"age",
+						"lt",
+						"15"
+					]
+				},
+				"description": "Download list of authors filtered by age less then param in xlsx format"
+			},
+			"response": []
+		},
+		{
+			"name": "DownloadXLSByAgeGT",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/download/xlsx/age/gt/15",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"download",
+						"xlsx",
+						"age",
+						"gt",
+						"15"
+					]
+				},
+				"description": "Download list of authors filtered by age gratter then param in xlsx format"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
