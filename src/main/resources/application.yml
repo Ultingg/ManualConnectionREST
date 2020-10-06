@@ -2,10 +2,12 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/redakzia
     username: root
-    password: 1986
+    password: 9999
     driver-class-name: com.mysql.cj.jdbc.Driver
-    initialization-mode: never
-    platform: authorsdatabase
+    initialization-mode: always
+
+
+
   servlet:
     multipart:
       enabled: true
