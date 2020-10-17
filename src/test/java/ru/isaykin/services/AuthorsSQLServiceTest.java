@@ -20,7 +20,7 @@ class AuthorsSQLServiceTest {
     private AuthorsSQLService authorsSQLService;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         authorRepo = Mockito.mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
     }
@@ -33,7 +33,7 @@ class AuthorsSQLServiceTest {
         List<Author> authorList = Arrays.asList(author);
         Mockito.when(authorRepo.getAll()).thenReturn(authorList);
         List<Author> expected = authorRepo.getAll();
-        assertEquals(expected,authorList);
+        assertEquals(expected, authorList);
     }
 
     @Test
@@ -47,8 +47,8 @@ class AuthorsSQLServiceTest {
         Mockito.when(authorRepo.getByEmail("bumblebe@transformer.ab")).
                 thenReturn(author);
 
-     Author expected = authorsSQLService.insert(author);
-     assertEquals(expected,author);
+        Author expected = authorsSQLService.insert(author);
+        assertEquals(expected, author);
 
 
     }
@@ -77,9 +77,8 @@ class AuthorsSQLServiceTest {
 
         Mockito.when(authorRepo.getAll()).thenReturn(authorList);
 
-        List<Author> excpected = Arrays.asList(author1);
-        List<Author> excpectedList = Arrays.asList(author1, author2);
-
+        List<Author> expected = Arrays.asList(author1);
+        List<Author> expectedList = Arrays.asList(author1, author2);
 
 
         List<Author> actual = authorsSQLService.getListByFirstNameAndLastName("Napoleon", "Garic");
@@ -87,11 +86,11 @@ class AuthorsSQLServiceTest {
         List<Author> actual3 = authorsSQLService.getListByFirstNameAndLastName("Romul", "Bonaparte");
         List<Author> actual4 = authorsSQLService.getListByFirstNameAndLastName("Friedrich", "Bonaparte");
         assertAll(
-                ()-> assertEquals(excpected, actual, "Cheking searchinig by firstName"),
-                ()-> assertEquals(excpected, actual2, "Cheking searchinig by firstName and lastName"),
-                ()-> assertEquals(excpected, actual3, "Cheking searchinig by lastName"),
-                ()-> assertEquals(excpectedList, actual4, "Cheking searchinig by firstName of few authors")
-                );
+                () -> assertEquals(expected, actual, "Cheking searchinig by firstName"),
+                () -> assertEquals(expected, actual2, "Cheking searchinig by firstName and lastName"),
+                () -> assertEquals(expected, actual3, "Cheking searchinig by lastName"),
+                () -> assertEquals(expectedList, actual4, "Cheking searchinig by firstName of few authors")
+        );
 
     }
 }
