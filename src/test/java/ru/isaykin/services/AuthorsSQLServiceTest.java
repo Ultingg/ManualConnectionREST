@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AuthorsSQLServiceTest {
@@ -74,6 +75,23 @@ class AuthorsSQLServiceTest {
 
         List<Author> authorList = Arrays.asList(author, author1, author2);
 
+        Mockito.when(authorRepo.getAll()).thenReturn(authorList);
+
+        List<Author> excpected = Arrays.asList(author1);
+        List<Author> excpectedList = Arrays.asList(author1, author2);
+
+
+
+        List<Author> actual = authorsSQLService.getListByFirstNameAndLastName("Napoleon", "Garic");
+        List<Author> actual2 = authorsSQLService.getListByFirstNameAndLastName("Napoleon", "Bonaparte");
+        List<Author> actual3 = authorsSQLService.getListByFirstNameAndLastName("Romul", "Bonaparte");
+        List<Author> actual4 = authorsSQLService.getListByFirstNameAndLastName("Friedrich", "Bonaparte");
+        assertAll(
+                ()-> assertEquals(excpected, actual, "Cheking searchinig by firstName"),
+                ()-> assertEquals(excpected, actual2, "Cheking searchinig by firstName and lastName"),
+                ()-> assertEquals(excpected, actual3, "Cheking searchinig by lastName"),
+                ()-> assertEquals(excpectedList, actual4, "Cheking searchinig by firstName of few authors")
+                );
 
     }
 }
