@@ -95,16 +95,13 @@ public class AuthorsSQLService {
         return authorRepo.getListByAgeLessThen(currentDateMinusYears);
     }
 
-
     public Author insert(Author author) {
-
-        authorRepo.insert(author.getFirstName()
-                , author.getLastName()
-                , author.getEmail()
-                , Date.valueOf(author.getBirthdate()));
+        authorRepo.insert(author.getFirstName(),
+                author.getLastName(),
+                author.getEmail(),
+                Date.valueOf(author.getBirthdate()));
 
         return authorRepo.getByEmail(author.getEmail());
-
     }
 
     public List<Author> insertMany(List<Author> authorList) {

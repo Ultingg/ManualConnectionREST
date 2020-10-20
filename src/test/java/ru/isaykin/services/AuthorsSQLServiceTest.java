@@ -2,16 +2,16 @@ package ru.isaykin.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import ru.isaykin.reader.Author;
 import ru.isaykin.repository.AuthorRepo;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class AuthorsSQLServiceTest {
 
@@ -21,7 +21,7 @@ class AuthorsSQLServiceTest {
 
     @BeforeEach
     void setUp() {
-        authorRepo = Mockito.mock(AuthorRepo.class);
+        authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
     }
 
@@ -31,26 +31,36 @@ class AuthorsSQLServiceTest {
 
         Author author = new Author();
         List<Author> authorList = Arrays.asList(author);
-        Mockito.when(authorRepo.getAll()).thenReturn(authorList);
+        when(authorRepo.getAll()).thenReturn(authorList);
         List<Author> expected = authorRepo.getAll();
         assertEquals(expected, authorList);
     }
 
     @Test
-    void insertTest() {
+    void insert_validInput_successOutput() {
         Author author = new Author();
         author.setEmail("bumblebe@transformer.ab");
         author.setFirstName("Yellow");
         author.setLastName("Car");
         author.setBirthdate(LocalDate.parse("2020-10-12"));
-
-        Mockito.when(authorRepo.getByEmail("bumblebe@transformer.ab")).
+        when(authorRepo.getByEmail("bumblebe@transformer.ab")).
                 thenReturn(author);
 
         Author expected = authorsSQLService.insert(author);
+
         assertEquals(expected, author);
+        verify(authorRepo, times(1))
+                .insert(anyString(), anyString(), anyString(), any(Date.class));
+        verify(authorRepo, times(1))
+                .insert("Yellow", "Car", "bumblebe@transformer.ab", Date.valueOf(LocalDate.parse("2020-10-12")));
+        verify(authorRepo, times(1)).getByEmail(anyString());
+        verify(authorRepo, times(1)).getByEmail("bumblebe@transformer.ab");
+    }
 
-
+    @Test
+    void insert_nullInput_successOutput() {
+        assertThrows(NullPointerException.class,
+                () -> authorsSQLService.insert(null));
     }
 
     @Test
@@ -75,7 +85,7 @@ class AuthorsSQLServiceTest {
 
         List<Author> authorList = Arrays.asList(author, author1, author2);
 
-        Mockito.when(authorRepo.getAll()).thenReturn(authorList);
+        when(authorRepo.getAll()).thenReturn(authorList);
 
         List<Author> expected = Arrays.asList(author1);
         List<Author> expectedList = Arrays.asList(author1, author2);
