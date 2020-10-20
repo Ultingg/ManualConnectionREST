@@ -8,10 +8,11 @@ import ru.isaykin.reader.Author;
 import ru.isaykin.repository.AuthorRepo;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.sql.Date.valueOf;
+import static java.time.LocalDate.now;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -26,15 +27,12 @@ public class AuthorsSQLService {
 
 
     public AuthorsSQLService(AuthorRepo authorRepo) {
-
         this.authorRepo = authorRepo;
     }
-
 
     public List<Author> getAll() {
         return authorRepo.getAll();
     }
-
 
     public ResponseEntity<Author> getOneById(Long id) {
         Author author = authorRepo.getById(id);
@@ -45,7 +43,6 @@ public class AuthorsSQLService {
         }
     }
 
-
     public List<Author> getListByFirstNameAndLastName(String firstname, String lastname) {
         List<Author> authors = authorRepo.getAll();
         List<Author> selectedAuthors = new ArrayList<>();
@@ -54,43 +51,36 @@ public class AuthorsSQLService {
                 selectedAuthors.add(author);
             }
         }
-
         return selectedAuthors;
     }
 
 
     public Author update(Long id, Author authorToUpdate) {
-
         Author oldAuthor = authorRepo.getById(id);
         if (oldAuthor == null) {
             return null;
-        } else {
-            authorToUpdate.setId(oldAuthor.getId());
-            authorRepo.save(authorToUpdate);
-
-            return authorToUpdate;
         }
+        authorToUpdate.setId(oldAuthor.getId());
+        authorRepo.save(authorToUpdate);
+        return authorToUpdate;
     }
 
     public ResponseEntity<Author> delete(Long id) {
         if (id == null) {
             return new ResponseEntity<>(NOT_FOUND);
-        } else {
-            authorRepo.deleteById(id);
-            return new ResponseEntity<>(OK);
         }
+        authorRepo.deleteById(id);
+        return new ResponseEntity<>(OK);
     }
 
     public List<Author> getListByAgeGT(int age) {
-        Date currentDateMinusYears = Date.
-                valueOf(LocalDate.now().minusYears(age));
+        Date currentDateMinusYears = valueOf(now().minusYears(age));
 
         return authorRepo.getListByAgeGraterThen(currentDateMinusYears);
     }
 
     public List<Author> getListByAgeLT(int age) {
-        Date currentDateMinusYears = Date.
-                valueOf(LocalDate.now().minusYears(age));
+        Date currentDateMinusYears = valueOf(now().minusYears(age));
 
         return authorRepo.getListByAgeLessThen(currentDateMinusYears);
     }
@@ -99,7 +89,7 @@ public class AuthorsSQLService {
         authorRepo.insert(author.getFirstName(),
                 author.getLastName(),
                 author.getEmail(),
-                Date.valueOf(author.getBirthdate()));
+                valueOf(author.getBirthdate()));
 
         return authorRepo.getByEmail(author.getEmail());
     }
@@ -107,10 +97,10 @@ public class AuthorsSQLService {
     public List<Author> insertMany(List<Author> authorList) {
         List<Author> insertedAuthors = new ArrayList<>();
         for (Author author : authorList) {
-            authorRepo.insert(author.getFirstName()
-                    , author.getLastName()
-                    , author.getEmail()
-                    , Date.valueOf(author.getBirthdate()));
+            authorRepo.insert(author.getFirstName(),
+                    author.getLastName(),
+                    author.getEmail(),
+                    valueOf(author.getBirthdate()));
             insertedAuthors.add(authorRepo.getByEmail(author.getEmail()));
         }
         return insertedAuthors;
@@ -119,10 +109,10 @@ public class AuthorsSQLService {
     public List<Author> insertManyToSortedAuthors(List<Author> authorList) {
         List<Author> insertedAuthors = new ArrayList<>();
         for (Author author : authorList) {
-            authorRepo.insert(author.getFirstName()
-                    , author.getLastName()
-                    , author.getEmail()
-                    , Date.valueOf(author.getBirthdate()));
+            authorRepo.insert(author.getFirstName(),
+                    author.getLastName(),
+                    author.getEmail(),
+                    valueOf(author.getBirthdate()));
             insertedAuthors.add(authorRepo.getByEmail(author.getEmail()));
         }
         return insertedAuthors;
