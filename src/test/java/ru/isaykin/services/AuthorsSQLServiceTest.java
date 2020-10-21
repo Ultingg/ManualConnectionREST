@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.time.LocalDate.now;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -76,28 +77,28 @@ class AuthorsSQLServiceTest {
         author.setId(1L);
         author.setFirstName("Trevor");
         author.setLastName("Long");
-        author.setBirthdate(LocalDate.of(1975,05,13));
+        author.setBirthdate(LocalDate.of(1975, 05, 13));
         author.setEmail("longverylong@yahoo.com");
         when(authorRepo.getById(1L)).thenReturn(author);
         Author authorUpdated = new Author();
         authorUpdated.setEmail("logan@bp.uk");
         authorUpdated.setFirstName("Trevor");
         authorUpdated.setLastName("Logan");
-        authorUpdated.setBirthdate(LocalDate.of(1975,05,13));
+        authorUpdated.setBirthdate(LocalDate.of(1975, 05, 13));
         Author expected = new Author();
         expected.setId(1L);
-        expected.setBirthdate(LocalDate.of(1975,05,13));
+        expected.setBirthdate(LocalDate.of(1975, 05, 13));
         expected.setFirstName("Trevor");
         expected.setLastName("Logan");
         expected.setEmail("logan@bp.uk");
 
-        Author actual = authorsSQLService.update(1L,authorUpdated);
+        Author actual = authorsSQLService.update(1L, authorUpdated);
 
         assertEquals(expected, actual);
         verify(authorRepo, times(1)).save(authorUpdated);
         verify(authorRepo, times(1)).save(any());
-        verify(authorRepo,times(1)).getById(anyLong());
-        verify(authorRepo,times(1)).getById(1L);
+        verify(authorRepo, times(1)).getById(anyLong());
+        verify(authorRepo, times(1)).getById(1L);
     }
 
     @Test
@@ -109,13 +110,13 @@ class AuthorsSQLServiceTest {
         authorUpdated.setEmail("logan@bp.uk");
         authorUpdated.setFirstName("Trevor");
         authorUpdated.setLastName("Logan");
-        authorUpdated.setBirthdate(LocalDate.of(1975,05,13));
+        authorUpdated.setBirthdate(LocalDate.of(1975, 05, 13));
 
         Author actual = authorsSQLService.update(1L, authorUpdated);
 
         assertEquals(null, actual);
-        verify(authorRepo,times(1)).getById(anyLong());
-        verify(authorRepo,times(1)).getById(1L);
+        verify(authorRepo, times(1)).getById(anyLong());
+        verify(authorRepo, times(1)).getById(1L);
     }
 
     @Test
@@ -133,6 +134,7 @@ class AuthorsSQLServiceTest {
         verify(authorRepo, times(1)).deleteById(anyLong());
         verify(authorRepo, times(1)).deleteById(1L);
     }
+
     @Test
     void delete_null_success() {
         authorRepo = mock(AuthorRepo.class);
@@ -147,7 +149,7 @@ class AuthorsSQLServiceTest {
     }
 
     @Test
-    void insert_validInput_successOutput() {
+    void insert_valid_success() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
         Author author = new Author();
@@ -170,12 +172,66 @@ class AuthorsSQLServiceTest {
     }
 
     @Test
-    void insert_nullInput_successOutput() {
+    void insert_null_success() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
+
         assertThrows(NullPointerException.class,
                 () -> authorsSQLService.insert(null));
     }
+
+    @Test
+    void insertMany_valid_success() {
+        authorRepo = mock(AuthorRepo.class);
+        authorsSQLService = new AuthorsSQLService(authorRepo);
+        Author author = new Author();
+        Author author1 = new Author();
+        author.setEmail("bumblebe@transformer.ab");
+        author.setFirstName("Yellow");
+        author.setLastName("Car");
+        author.setBirthdate(LocalDate.parse("2020-10-12"));
+        author1.setEmail("napoleon@imperor.fr");
+        author1.setFirstName("Napoleon");
+        author1.setLastName("Bonaparte");
+        author1.setBirthdate(LocalDate.parse("1769-08-15"));
+        when(authorRepo.getByEmail("napoleon@imperor.fr")).thenReturn(author1);
+        when(authorRepo.getByEmail("bumblebe@transformer.ab")).thenReturn(author);
+        List<Author> expectedAuthorList = Arrays.asList(author, author1);
+
+        List<Author> actual = authorsSQLService.insertMany(expectedAuthorList);
+
+        assertEquals(expectedAuthorList, actual);
+        verify(authorRepo, times(2)).getByEmail(any());
+        verify(authorRepo, times(1)).getByEmail("bumblebe@transformer.ab");
+        verify(authorRepo, times(1)).getByEmail("napoleon@imperor.fr");
+        verify(authorRepo, times(2)).insert(anyString(),anyString(),anyString(),any(Date.class));
+        verify(authorRepo, times(1)).insert("Yellow","Car","bumblebe@transformer.ab",Date.valueOf(LocalDate.parse("2020-10-12")));
+        verify(authorRepo, times(1)).insert("Napoleon","Bonaparte","napoleon@imperor.fr",Date.valueOf(LocalDate.parse("1769-08-15")));
+
+    }
+
+    @Test
+    void insertMany_null_success() {
+        authorRepo = mock(AuthorRepo.class);
+        authorsSQLService = new AuthorsSQLService(authorRepo);
+
+        assertThrows(NullPointerException.class,
+                () -> authorsSQLService.insertMany(null));
+    }
+
+    @Test
+    void getGTAge_valid_success() {
+        authorRepo = mock(AuthorRepo.class);
+        authorsSQLService = new AuthorsSQLService(authorRepo);
+
+        Date expected = Date.valueOf(now().minusYears(5));
+        authorsSQLService.getListByAgeGT(5);
+
+        verify(authorRepo, times(1)).getListByAgeGraterThen(any(Date.class));
+        verify(authorRepo, times(1)).getListByAgeGraterThen(expected);
+
+    }
+
 
     @Nested
     class ByFirstNameAndLastNameTests {
