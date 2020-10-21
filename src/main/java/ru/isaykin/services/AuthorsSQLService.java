@@ -51,7 +51,7 @@ public class AuthorsSQLService {
                 selectedAuthors.add(author);
             }
         }
-        return selectedAuthors;
+        return selectedAuthors.size() != 0? selectedAuthors : null;
     }
 
 
@@ -66,7 +66,8 @@ public class AuthorsSQLService {
     }
 
     public ResponseEntity<Author> delete(Long id) {
-        if (id == null) {
+        Author authorCheking = authorRepo.getById(id);
+        if (authorCheking == null) {
             return new ResponseEntity<>(NOT_FOUND);
         }
         authorRepo.deleteById(id);
@@ -106,16 +107,5 @@ public class AuthorsSQLService {
         return insertedAuthors;
     }
 
-    public List<Author> insertManyToSortedAuthors(List<Author> authorList) {
-        List<Author> insertedAuthors = new ArrayList<>();
-        for (Author author : authorList) {
-            authorRepo.insert(author.getFirstName(),
-                    author.getLastName(),
-                    author.getEmail(),
-                    valueOf(author.getBirthdate()));
-            insertedAuthors.add(authorRepo.getByEmail(author.getEmail()));
-        }
-        return insertedAuthors;
-    }
 }
 

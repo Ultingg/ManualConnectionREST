@@ -22,13 +22,20 @@ public class AuthorController {
 
 
     @GetMapping("authors")
-    public Object getListOrGetOneByFirstNameAndLastName(@RequestParam(value = "first_name", required = false) String firstName,
-                                                        @RequestParam(value = "last_name", required = false) String lastName) {
+    public ResponseEntity<Object> getListOrGetOneByFirstNameAndLastName(@RequestParam(value = "first_name", required = false) String firstName,
+                                                                        @RequestParam(value = "last_name", required = false) String lastName) {
+        ResponseEntity<Object> result;
         if (firstName != null || lastName != null) {
-            return authorsSQLService.getListByFirstNameAndLastName(firstName, lastName);
+            List<Author> resultList = authorsSQLService.getListByFirstNameAndLastName(firstName, lastName);
+            if (resultList != null) {
+                result = new ResponseEntity<>(resultList, OK);
+            } else {
+                result = new ResponseEntity<>(NOT_FOUND);
+            }
         } else {
-            return authorsSQLService.getAll();
+            result = new ResponseEntity<>(authorsSQLService.getAll(), OK);
         }
+        return result;
     }
 
 
