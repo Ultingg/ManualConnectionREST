@@ -238,10 +238,10 @@ class AuthorsSQLServiceTest {
         authorsSQLService = new AuthorsSQLService(authorRepo);
 
         Date expected = Date.valueOf(now().minusYears(5));
-        authorsSQLService.getListByAgeGT(5);
+        authorsSQLService.getListByAgeLT(5);
 
-        verify(authorRepo, times(1)).getListByAgeGraterThen(any(Date.class));
-        verify(authorRepo, times(1)).getListByAgeGraterThen(expected);
+        verify(authorRepo, times(1)).getListByAgeLessThen(any(Date.class));
+        verify(authorRepo, times(1)).getListByAgeLessThen(expected);
     }
 
     @Nested
