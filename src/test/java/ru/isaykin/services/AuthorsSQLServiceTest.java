@@ -220,7 +220,20 @@ class AuthorsSQLServiceTest {
     }
 
     @Test
+    @DisplayName("Test of get List of Greater then some age")
     void getGTAge_valid_success() {
+        authorRepo = mock(AuthorRepo.class);
+        authorsSQLService = new AuthorsSQLService(authorRepo);
+
+        Date expected = Date.valueOf(now().plusYears(5));
+        authorsSQLService.getListByAgeGT(5);
+
+        verify(authorRepo, times(1)).getListByAgeGraterThen(any(Date.class));
+        verify(authorRepo, times(1)).getListByAgeGraterThen(expected);
+    }
+    @Test
+    @DisplayName("Test of get List of Less then some age")
+    void getLTAge_valid_success() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
 
@@ -229,9 +242,7 @@ class AuthorsSQLServiceTest {
 
         verify(authorRepo, times(1)).getListByAgeGraterThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeGraterThen(expected);
-
     }
-
 
     @Nested
     class ByFirstNameAndLastNameTests {
@@ -312,7 +323,6 @@ class AuthorsSQLServiceTest {
             verify(authorRepo, times(1)).getAll();
         }
 
-        //TODO: NullPointer если не нашлось ни одного совпадения в базе.
         @Test
         void getListByFirstNameAndLastNameFewAuthors_valid_success2() {
             authorRepo = mock(AuthorRepo.class);
