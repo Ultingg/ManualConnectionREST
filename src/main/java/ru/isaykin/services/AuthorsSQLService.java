@@ -75,7 +75,7 @@ public class AuthorsSQLService {
     }
 
     public List<Author> getListByAgeGT(int age) {
-        Date currentDateMinusYears = valueOf(now().plusYears(age));
+        Date currentDateMinusYears = valueOf(now().minusYears(age));
 
         return authorRepo.getListByAgeGraterThen(currentDateMinusYears);
     }
