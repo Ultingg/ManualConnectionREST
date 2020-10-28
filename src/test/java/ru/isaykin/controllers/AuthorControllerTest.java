@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import ru.isaykin.reader.Author;
-import ru.isaykin.repository.AuthorRepo;
 import ru.isaykin.services.AuthorsSQLService;
 
 import java.time.LocalDate;
@@ -12,15 +11,13 @@ import java.time.LocalDate;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 class AuthorControllerTest {
 
 
     AuthorsSQLService authorsSQLService;
     AuthorController authorController;
-    AuthorRepo authorRepo;
 
     @Nested
     class getAuthorByFirstNameAndLastNameTests {
@@ -89,20 +86,77 @@ class AuthorControllerTest {
         }
         @Test
         void getAuthor_null_success() {
-
-            authorRepo = mock(AuthorRepo.class);
-            authorsSQLService = new AuthorsSQLService(authorRepo);
+            authorsSQLService = mock(AuthorsSQLService.class);
             authorController = new AuthorController(authorsSQLService);
             ResponseEntity<Object> expected = new ResponseEntity<>(NOT_FOUND);
-            when(authorRepo.getAll()).thenReturn(asList(author, author1, author2));
+            when(authorsSQLService.getListByFirstNameAndLastName("Stepan", "Fedorov")).thenReturn(null);
 
             ResponseEntity<Object> actual = authorController.getListOrGetOneByFirstNameAndLastName("Stepan", "Fedorov");
 
             assertEquals(expected, actual);
-//            verify(authorsSQLService.getListByFirstNameAndLastName(anyString(), anyString()));
-            verify(authorsSQLService.getListByFirstNameAndLastName("Stepan", "Fedorov"));
-
+            verify(authorsSQLService, times(1)).getListByFirstNameAndLastName(anyString(), anyString());
+            verify(authorsSQLService, times(1)).getListByFirstNameAndLastName("Stepan", "Fedorov");
         }
     }
 
+    @Test
+    void getAuthorById_valid_success() {
+        authorsSQLService = mock(AuthorsSQLService.class);
+        authorController = new AuthorController(authorsSQLService);
+        ResponseEntity<Author> expected = new ResponseEntity<>(OK);
+        when(authorsSQLService.getOneById(1L)).thenReturn(new ResponseEntity<>(OK));
+
+        ResponseEntity<Author> actual = authorController.getOneAuthor(1L);
+
+        assertEquals(expected, actual);
+        verify(authorsSQLService, times(1)).getOneById(anyLong());
+        verify(authorsSQLService, times(1)).getOneById(1L);
+    }
+    @Test
+    void getAuthorById_null_success() {
+        authorsSQLService = mock(AuthorsSQLService.class);
+        authorController = new AuthorController(authorsSQLService);
+        ResponseEntity<Author> expected = new ResponseEntity<>(NOT_FOUND);
+        when(authorsSQLService.getOneById(1L)).thenReturn(new ResponseEntity<>(NOT_FOUND));
+
+        ResponseEntity<Author> actual = authorController.getOneAuthor(1L);
+
+        assertEquals(expected, actual);
+        verify(authorsSQLService, times(1)).getOneById(anyLong());
+        verify(authorsSQLService, times(1)).getOneById(1L);
+    }
+
+    @Test
+    void insert_null_success() {
+        authorsSQLService = mock(AuthorsSQLService.class);
+        authorController = new AuthorController(authorsSQLService);
+        Author authorNull = null;
+        ResponseEntity<Author> expected = new ResponseEntity<>(NO_CONTENT);
+
+        ResponseEntity<Author> actual = authorController.insert(authorNull);
+
+        assertEquals(expected, actual);
+        verify(authorsSQLService, times(0)).insert(authorNull);
+        verify(authorsSQLService, times(0)).insert(any(Author.class));
+    }
+
+    @Test
+    void insert_valid_success() {
+        authorsSQLService = mock(AuthorsSQLService.class);
+        authorController = new AuthorController(authorsSQLService);
+        Author author = new Author();
+        author.setId(1L);
+        author.setFirstName("Platon");
+        author.setLastName("Swan");
+        author.setEmail("swanoil@ug.ru");
+        author.setBirthdate(LocalDate.of(1985, 10, 22));
+        when(authorsSQLService.insert(author)).thenReturn(author);
+        ResponseEntity<Author> expected = new ResponseEntity<>(author,OK);
+
+        ResponseEntity<Author> actual = authorController.insert(author);
+
+        assertEquals(expected, actual);
+        verify(authorsSQLService, times(1)).insert(author);
+        verify(authorsSQLService, times(1)).insert(any(Author.class));
+    }
 }
