@@ -7,6 +7,7 @@ import ru.isaykin.reader.Author;
 import ru.isaykin.services.AuthorsSQLService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -112,6 +113,7 @@ class AuthorControllerTest {
         verify(authorsSQLService, times(1)).getOneById(anyLong());
         verify(authorsSQLService, times(1)).getOneById(1L);
     }
+
     @Test
     void getAuthorById_null_success() {
         authorsSQLService = mock(AuthorsSQLService.class);
@@ -124,20 +126,6 @@ class AuthorControllerTest {
         assertEquals(expected, actual);
         verify(authorsSQLService, times(1)).getOneById(anyLong());
         verify(authorsSQLService, times(1)).getOneById(1L);
-    }
-
-    @Test
-    void insert_null_success() {
-        authorsSQLService = mock(AuthorsSQLService.class);
-        authorController = new AuthorController(authorsSQLService);
-        Author authorNull = null;
-        ResponseEntity<Author> expected = new ResponseEntity<>(NO_CONTENT);
-
-        ResponseEntity<Author> actual = authorController.insert(authorNull);
-
-        assertEquals(expected, actual);
-        verify(authorsSQLService, times(0)).insert(authorNull);
-        verify(authorsSQLService, times(0)).insert(any(Author.class));
     }
 
     @Test
@@ -159,4 +147,101 @@ class AuthorControllerTest {
         verify(authorsSQLService, times(1)).insert(author);
         verify(authorsSQLService, times(1)).insert(any(Author.class));
     }
+
+    @Test
+    void insert_null_success() {
+        authorsSQLService = mock(AuthorsSQLService.class);
+        authorController = new AuthorController(authorsSQLService);
+        Author authorNull = null;
+        ResponseEntity<Author> expected = new ResponseEntity<>(NO_CONTENT);
+
+        ResponseEntity<Author> actual = authorController.insert(authorNull);
+
+        assertEquals(expected, actual);
+        verify(authorsSQLService, times(0)).insert(authorNull);
+        verify(authorsSQLService, times(0)).insert(any(Author.class));
+    }
+
+
+
+    @Test
+    void createList_valid_success() {
+        authorsSQLService = mock(AuthorsSQLService.class);
+        authorController = new AuthorController(authorsSQLService);
+        Author author = new Author();
+        Author author1 = new Author();
+        author.setId(1L);
+        author.setFirstName("Platon");
+        author.setLastName("Swan");
+        author.setEmail("swanoil@ug.ru");
+        author.setBirthdate(LocalDate.of(1985, 10, 22));
+        author1.setId(2L);
+        author1.setFirstName("Lena");
+        author1.setLastName("Puzzle");
+        author1.setEmail("puzzle@mail.ru");
+        author1.setBirthdate(LocalDate.of(1975, 10, 21));
+        List<Author> authorList = asList(author, author1);
+        when(authorsSQLService.insertMany(authorList)).thenReturn(authorList);
+        ResponseEntity<List<Author>> expected = new ResponseEntity<>(authorList, OK);
+
+        ResponseEntity<List<Author>> actual = authorController.createList(authorList);
+
+        assertEquals(expected, actual);
+        verify(authorsSQLService, times(1)).insertMany(anyList());
+        verify(authorsSQLService, times(1)).insertMany(authorList);
+    }
+
+    @Test
+    void crestList_null_success() {
+        authorsSQLService = mock(AuthorsSQLService.class);
+        authorController = new AuthorController(authorsSQLService);
+        List<Author> authorList = null;
+        ResponseEntity<List<Author>> expected = new ResponseEntity<>(NO_CONTENT);
+
+        ResponseEntity<List<Author>> actual = authorController.createList(authorList);
+
+        assertEquals(expected, actual);
+        verify(authorsSQLService, times(0)).insertMany(anyList());
+        verify(authorsSQLService, times(0)).insertMany(authorList);
+    }
+    @Test
+    void delete_valid_success() {
+        authorsSQLService = mock(AuthorsSQLService.class);
+        authorController = new AuthorController(authorsSQLService);
+        when(authorsSQLService.delete(1L)).thenReturn(new ResponseEntity<>(OK));
+        ResponseEntity<Author> expected = new ResponseEntity<>(OK);
+
+        ResponseEntity<Author> actual = authorController.delete(1L);
+
+        assertEquals(expected, actual);
+        verify(authorsSQLService, times(1)).delete(anyLong());
+        verify(authorsSQLService, times(1)).delete(1L);
+    }
+    @Test
+    void delete_null_success() {
+        authorsSQLService = mock(AuthorsSQLService.class);
+        authorController = new AuthorController(authorsSQLService);
+        when(authorsSQLService.delete(1L)).thenReturn(new ResponseEntity<>(NOT_FOUND));
+        ResponseEntity<Author> expected = new ResponseEntity<>(NOT_FOUND);
+
+        ResponseEntity<Author> actual = authorController.delete(1L);
+
+        assertEquals(expected, actual);
+        verify(authorsSQLService, times(1)).delete(anyLong());
+        verify(authorsSQLService, times(1)).delete(1L);
+    }
+    @Test
+    void updateById_valid_success() {
+        authorsSQLService = mock(AuthorsSQLService.class);
+        authorController = new AuthorController(authorsSQLService);
+        Author author = new Author();
+        author.setId(1L);
+        author.setFirstName("Platon");
+        author.setLastName("Swan");
+        author.setEmail("swanoil@ug.ru");
+        author.setBirthdate(LocalDate.of(1985, 10, 22));
+        ResponseEntity
+
+    }
+
 }
