@@ -35,11 +35,13 @@ public class AuthorsSQLService {
 
     public ResponseEntity<Author> getOneById(Long id) {
         Author author = authorRepo.getById(id);
+        ResponseEntity<Author> result;
         if (author == null) {
-            return new ResponseEntity<>(NOT_FOUND);
+            result = new ResponseEntity<>(NOT_FOUND);
         } else {
-            return new ResponseEntity<>(author, OK);
+            result = new ResponseEntity<>(author, OK);
         }
+        return result;
     }
 
     public List<Author> getListByFirstNameAndLastName(String firstname, String lastname) {
@@ -66,11 +68,14 @@ public class AuthorsSQLService {
 
     public ResponseEntity<Author> delete(Long id) {
         Author authorCheking = authorRepo.getById(id);
+        ResponseEntity<Author> result;
         if (authorCheking == null) {
-            return new ResponseEntity<>(NOT_FOUND);
+            result = new ResponseEntity<>(NOT_FOUND);
+        } else {
+            authorRepo.deleteById(id);
+            result = new ResponseEntity<>(OK);
         }
-        authorRepo.deleteById(id);
-        return new ResponseEntity<>(OK);
+        return result;
     }
 
     public List<Author> getListByAgeGT(int age) {
