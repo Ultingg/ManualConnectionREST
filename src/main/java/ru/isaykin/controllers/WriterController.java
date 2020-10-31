@@ -20,7 +20,7 @@ public class WriterController {
     }
 
     @GetMapping("writers/xlsx")
-    public ResponseEntity<String> writeAllToXlS() {
+    public ResponseEntity<String> writeAllToXLS() {
         ResponseEntity<String> result;
         if (writersService.writeAllToXLS()) {
             result = new ResponseEntity<>("File created", OK);
@@ -31,7 +31,7 @@ public class WriterController {
     }
 
     @GetMapping("writers/xlsx/age/gt/{age}")
-    public ResponseEntity<String> writeAllByGraterAgeToXls(@PathVariable("age") int age) {
+    public ResponseEntity<String> writeAllByGraterAgeToXLS(@PathVariable("age") int age) {
         ResponseEntity<String> result;
         if (writersService.writeAllByAgeGTToXLS(age)) {
             result = new ResponseEntity<>("File created", OK);
@@ -42,7 +42,7 @@ public class WriterController {
     }
 
     @GetMapping("writers/xlsx/age/lt/{age}")
-    public ResponseEntity<String> writeAllByLessAgeToXls(@PathVariable("age") int age) {
+    public ResponseEntity<String> writeAllByLessAgeToXLS(@PathVariable("age") int age) {
         ResponseEntity<String> result;
         if (writersService.writeAllByAgeLTToXLS(age)) {
             result = new ResponseEntity<>("File created", OK);
