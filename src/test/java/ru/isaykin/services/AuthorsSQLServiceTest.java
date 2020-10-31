@@ -225,7 +225,7 @@ class AuthorsSQLServiceTest {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
 
-        Date expected = Date.valueOf(now().plusYears(5));
+        Date expected = Date.valueOf(now().minusYears(5));
         authorsSQLService.getListByAgeGT(5);
 
         verify(authorRepo, times(1)).getListByAgeGraterThen(any(Date.class));

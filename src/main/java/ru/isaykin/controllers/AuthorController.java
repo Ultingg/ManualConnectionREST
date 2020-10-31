@@ -46,13 +46,23 @@ public class AuthorController {
 
 
     @GetMapping("authors/age/gt/{age}")
-    public List<Author> getListByAgeGraterThen(@PathVariable int age) {
-        return authorsSQLService.getListByAgeGT(age);
+    public ResponseEntity<List<Author>> getListByAgeGraterThen(@PathVariable int age) {
+        List<Author> authorList = authorsSQLService.getListByAgeGT(age);
+        if (authorList.isEmpty()) {
+            return new ResponseEntity<>(NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(authorList, OK);
+        }
     }
 
     @GetMapping("authors/age/lt/{age}")
-    public List<Author> getListByAgeLessThen(@PathVariable int age) {
-        return authorsSQLService.getListByAgeLT(age);
+    public ResponseEntity<List<Author>> getListByAgeLessThen(@PathVariable int age) {
+        List<Author> authorList = authorsSQLService.getListByAgeLT(age);
+        if (authorList.isEmpty()) {
+            return new ResponseEntity<>(NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(authorList, OK);
+        }
     }
 
     @PostMapping("authors")

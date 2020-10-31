@@ -22,7 +22,6 @@ import static org.springframework.http.HttpStatus.OK;
 
 public class AuthorsSQLService {
 
-
     private final AuthorRepo authorRepo;
 
 
@@ -51,7 +50,7 @@ public class AuthorsSQLService {
                 selectedAuthors.add(author);
             }
         }
-        return selectedAuthors.size() != 0? selectedAuthors : null;
+        return selectedAuthors.size() != 0 ? selectedAuthors : null;
     }
 
 
