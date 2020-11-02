@@ -117,6 +117,8 @@ class AuthorsSQLServiceTest {
         assertEquals(null, actual);
         verify(authorRepo, times(1)).getById(anyLong());
         verify(authorRepo, times(1)).getById(1L);
+        verify(authorRepo, times(0)).save(authorUpdated);
+        verify(authorRepo, times(0)).save(any());
     }
 
     @Test
@@ -146,6 +148,8 @@ class AuthorsSQLServiceTest {
         assertEquals(expected, actual);
         verify(authorRepo, times(1)).getById(anyLong());
         verify(authorRepo, times(1)).getById(1L);
+        verify(authorRepo, times(0)).deleteById(anyLong());
+        verify(authorRepo, times(0)).deleteById(1L);
     }
 
     @Test
