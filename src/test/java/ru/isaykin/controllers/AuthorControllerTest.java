@@ -58,6 +58,7 @@ class AuthorControllerTest {
             assertEquals(expected, actualOneAythor);
             verify(authorsSQLService, times(1)).getListByFirstNameAndLastName(anyString(), anyString());
             verify(authorsSQLService, times(1)).getListByFirstNameAndLastName("Platon", "Swan");
+            verify(authorsSQLService,times(0)).getAll();
         }
 
         @Test
@@ -72,6 +73,7 @@ class AuthorControllerTest {
             assertEquals(expectedTwo, actualTwoAuthors);
             verify(authorsSQLService, times(1)).getListByFirstNameAndLastName(anyString(), anyString());
             verify(authorsSQLService, times(1)).getListByFirstNameAndLastName("Platon", "Puzzle");
+            verify(authorsSQLService,times(0)).getAll();
         }
 
 
@@ -87,6 +89,7 @@ class AuthorControllerTest {
 
             assertEquals(expectedList, actualList);
             verify(authorsSQLService, times(1)).getAll();
+            verify(authorsSQLService, times(0)).getListByFirstNameAndLastName(anyString(), anyString());
         }
 
         @Test
@@ -101,6 +104,7 @@ class AuthorControllerTest {
             assertEquals(expected, actual);
             verify(authorsSQLService, times(1)).getListByFirstNameAndLastName(anyString(), anyString());
             verify(authorsSQLService, times(1)).getListByFirstNameAndLastName("Stepan", "Fedorov");
+            verify(authorsSQLService, times(0)).getAll();
         }
     }
     @Nested
@@ -365,4 +369,5 @@ class AuthorControllerTest {
         verify(authorsSQLService, times(1)).update(anyLong(), any(Author.class));
         verify(authorsSQLService, times(1)).update(1L, author);
     }
+
 }
