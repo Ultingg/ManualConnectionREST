@@ -31,7 +31,7 @@ class AuthorsSQLServiceTest {
         authorsSQLService = new AuthorsSQLService(authorRepo);
         Author author = new Author();
         author.setId(1L);
-        ResponseEntity<Author> expected = new ResponseEntity<Author>(author, OK);
+        ResponseEntity expected = new ResponseEntity(author, OK);
         when(authorRepo.getById(1L)).thenReturn(author);
 
         ResponseEntity<Author> actual = authorsSQLService.getOneById(1L);
@@ -45,7 +45,7 @@ class AuthorsSQLServiceTest {
     void getById_noExistedId_notFound() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
-        ResponseEntity<Author> expected = new ResponseEntity(NOT_FOUND);
+        ResponseEntity expected = new ResponseEntity(NOT_FOUND);
 
         ResponseEntity<Author> actual = authorsSQLService.getOneById(100L);
 
@@ -126,7 +126,7 @@ class AuthorsSQLServiceTest {
 
         Author actual = authorsSQLService.update(1L, authorUpdated);
 
-        assertEquals(null, actual, "Checking if there is no author in empty List to update");
+        assertNull(actual, "Checking if there is no author in empty List to update");
         verify(authorRepo, times(1)).getById(anyLong());
         verify(authorRepo, times(1)).getById(1L);
         verify(authorRepo, times(0)).save(authorUpdated);
@@ -168,14 +168,14 @@ class AuthorsSQLServiceTest {
     void delete_null_success() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
-//        ResponseEntity<Author> expected = new ResponseEntity<>(NOT_FOUND);
+        ResponseEntity<Author> expected = new ResponseEntity<>(NOT_FOUND);
 //
-//        ResponseEntity<Author> actual = authorsSQLService.delete(null);
+        ResponseEntity<Author> actual = authorsSQLService.delete(null);
 
-        assertThrows(NullPointerException.class,
-                () -> authorsSQLService.delete(null));
+//        assertThrows(NullPointerException.class,
+//                () -> authorsSQLService.delete(null));
 //
-//        assertEquals(expected, actual, "Checking if author with wrong id wasn't found ");
+        assertEquals(expected, actual, "Checking if author with wrong id wasn't found ");
 ////        verify(authorRepo, times(1)).getById(anyLong());
         verify(authorRepo, times(1)).getById(null);
 ////        verify(authorRepo, times(0)).deleteById(anyLong());
@@ -267,6 +267,14 @@ class AuthorsSQLServiceTest {
     }
 
     @Test
+    void getGTAge_null_NPException() {
+        authorRepo = mock(AuthorRepo.class);
+        authorsSQLService = new AuthorsSQLService(authorRepo);
+
+        assertThrows(NullPointerException.class, ()-> authorsSQLService.getListByAgeGT(null));
+    }
+
+    @Test
     @DisplayName("Test of get List of Less then some age")
     void getLTAge_valid_success() {
         authorRepo = mock(AuthorRepo.class);
@@ -277,6 +285,14 @@ class AuthorsSQLServiceTest {
 
         verify(authorRepo, times(1)).getListByAgeLessThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeLessThen(expected);
+    }
+
+    @Test
+    void getLTAge_null_NPException() {
+        authorRepo = mock(AuthorRepo.class);
+        authorsSQLService = new AuthorsSQLService(authorRepo);
+
+        assertThrows(NullPointerException.class, ()-> authorsSQLService.getListByAgeLT(null));
     }
 
     @Nested

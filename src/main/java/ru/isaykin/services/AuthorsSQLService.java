@@ -44,11 +44,11 @@ public class AuthorsSQLService {
         return result;
     }
 
-    public List<Author> getListByFirstNameAndLastNameOrNull(String firstname, String lastname) {
+    public List<Author> getListByFirstNameAndLastNameOrNull(String firstName, String lastName) {
         List<Author> authors = authorRepo.getAll();
         List<Author> selectedAuthors = new ArrayList<>();
         for (Author author : authors) {
-            if ((author.getFirstName().equals(firstname)) || (author.getLastName().equals(lastname))) {
+            if ((author.getFirstName().equals(firstName)) || (author.getLastName().equals(lastName))) {
                 selectedAuthors.add(author);
             }
         }
@@ -84,7 +84,7 @@ public class AuthorsSQLService {
         return authorRepo.getListByAgeGraterThen(currentDateMinusYears);
     }
 
-    public List<Author> getListByAgeLT(Integer age) {
+    public List<Author> getListByAgeLT(Integer age) { // try catch NPException???
         Date currentDateMinusYears = valueOf(now().minusYears(age));
 
         return authorRepo.getListByAgeLessThen(currentDateMinusYears);

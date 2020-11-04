@@ -25,27 +25,27 @@ class AuthorControllerTest {
     @Nested
     class getAuthorByFirstNameAndLastNameTests {
 
-        Author author = new Author();
-        Author author1 = new Author();
-        Author author2 = new Author();
-
-        {
-            author.setId(1L);
-            author.setFirstName("Platon");
-            author.setLastName("Swan");
-            author.setEmail("swanoil@ug.ru");
-            author.setBirthdate(LocalDate.of(1985, 10, 22));
-            author1.setId(2L);
-            author1.setFirstName("Lena");
-            author1.setLastName("Puzzle");
-            author1.setEmail("puzzle@mail.ru");
-            author1.setBirthdate(LocalDate.of(1975, 10, 21));
-            author2.setId(3L);
-            author2.setFirstName("Muhamed");
-            author2.setLastName("Dzhabrailov");
-            author2.setEmail("muhamed97@mail.ru");
-            author2.setBirthdate(LocalDate.of(1997, 05, 2));
-        }
+        Author author = Author.builder()
+                .id(1L)
+                .firstName("Platon")
+                .lastName("Swan")
+                .email("swanoil@ug.ru")
+                .birthdate(LocalDate.of(1985, 10, 22))
+                .build();
+        Author author1 =  Author.builder()
+                .id(2L)
+                .firstName("Lena")
+                .lastName("Puzzle")
+                .email("puzzle@mail.ru")
+                .birthdate(LocalDate.of(1975, 2, 21))
+                .build();
+        Author author2 =  Author.builder()
+                .id(3L)
+                .firstName("Muhamed")
+                .lastName("Dzhabrailov")
+                .email("muhamed97@mail.ru")
+                .birthdate(LocalDate.of(1997, 5, 2))
+                .build();
 
         @Test
         void getAuthor_valid_success() {
@@ -110,35 +110,38 @@ class AuthorControllerTest {
 
     @Nested
     class ListOfAuthorsByAge {
-        Author author = new Author();
-        Author author1 = new Author();
-        Author author2 = new Author();
-        Author author3 = new Author();
+        Author author = Author.builder()
+                .id(1L)
+                .firstName("Platon")
+                .lastName("Swan")
+                .email("swanoil@ug.ru")
+                .birthdate(LocalDate.of(1985, 10, 22))
+                .build();
+        Author author1 =  Author.builder()
+                .id(2L)
+                .firstName("Lena")
+                .lastName("Puzzle")
+                .email("puzzle@mail.ru")
+                .birthdate(LocalDate.of(1975, 2, 21))
+                .build();
+        Author author2 =  Author.builder()
+                .id(3L)
+                .firstName("Thomas")
+                .lastName("Milton")
+                .email("pubmuster@yahoo.com")
+                .birthdate(LocalDate.of(1965, 5, 12))
+                .build();
+        Author author3 =  Author.builder()
+                .id(4L)
+                .firstName("Norma")
+                .lastName("Price")
+                .email("privenorma@tulpan.com")
+                .birthdate(LocalDate.of(1995, 12, 27))
+                .build();
         List<Author> authorListLT35;
         List<Author> authorListGT35;
 
         {
-
-            author.setId(1L);
-            author.setFirstName("Platon");
-            author.setLastName("Swan");
-            author.setEmail("swanoil@ug.ru");
-            author.setBirthdate(LocalDate.of(1985, 10, 22));
-            author1.setId(2L);
-            author1.setFirstName("Lena");
-            author1.setLastName("Puzzle");
-            author1.setEmail("puzzle@mail.ru");
-            author1.setBirthdate(LocalDate.of(1975, 2, 21));
-            author2.setId(3L);
-            author2.setFirstName("Thomas");
-            author2.setLastName("Milton");
-            author2.setEmail("pubmuster@yahoo.com");
-            author2.setBirthdate(LocalDate.of(1965, 5, 12));
-            author3.setId(4L);
-            author3.setFirstName("Norma");
-            author3.setLastName("Price");
-            author3.setEmail("privenorma@tulpan.com");
-            author3.setBirthdate(LocalDate.of(1995, 12, 27));
             authorListLT35 = asList(author, author3);
             authorListGT35 = asList(author1, author2);
 
@@ -174,9 +177,10 @@ class AuthorControllerTest {
         }
 
         @Test
-        void getListByAgeGT_null_success() {
+        void getListByAgeGT_null_NPException() {
             authorsSQLService = mock(AuthorsSQLService.class);
             authorController = new AuthorController(authorsSQLService);
+            when(authorsSQLService.getListByAgeGT(null)).thenThrow(NullPointerException.class);
             assertThrows(NullPointerException.class, () -> authorController.getListByAgeGraterThen(null));
         }
         //TODO: getListByAgeGT null
@@ -211,9 +215,10 @@ class AuthorControllerTest {
         }
 
         @Test
-        void getListByAgeLT_null_success() {
+        void getListByAgeLT_null_NPException() {
             authorsSQLService = mock(AuthorsSQLService.class);
             authorController = new AuthorController(authorsSQLService);
+            when(authorsSQLService.getListByAgeLT(null)).thenThrow(NullPointerException.class);
             assertThrows(NullPointerException.class, () -> authorController.getListByAgeLessThen(null));
         }
         //TODO: getListByAgeLT null

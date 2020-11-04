@@ -1,8 +1,6 @@
 package ru.isaykin.reader;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -10,8 +8,10 @@ import java.time.LocalDate;
 
 
 @Data
+@Builder
 @Table("authors")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Author implements Comparable<Author> {
 
     @Id
