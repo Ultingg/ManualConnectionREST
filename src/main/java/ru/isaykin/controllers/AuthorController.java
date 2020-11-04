@@ -19,7 +19,7 @@ public class AuthorController {
     public AuthorController(AuthorsSQLService authorsSQLService) {
         this.authorsSQLService = authorsSQLService;
     }
-
+//TODO: ADD SPRING VALIDATION
 
     @GetMapping("authors")
     public ResponseEntity<Object> getListOrGetOneByFirstNameAndLastName(@RequestParam(value = "first_name", required = false) String firstName,
@@ -41,29 +41,40 @@ public class AuthorController {
 
     @GetMapping("authors/{id}")
     public ResponseEntity<Author> getOneAuthor(@PathVariable Long id) {
-        return authorsSQLService.getOneById(id);
+        ResponseEntity<Author> responseEntity;
+        if (id != null) {
+            responseEntity = authorsSQLService.getOneById(id);
+        } else {
+            responseEntity = new ResponseEntity<>(NOT_FOUND);
+        }
+        return responseEntity;
     }
 
 
     @GetMapping("authors/age/gt/{age}")
     public ResponseEntity<List<Author>> getListByAgeGraterThen(@PathVariable Integer age) {
         List<Author> authorList = authorsSQLService.getListByAgeGT(age);
+        ResponseEntity<List<Author>> responseEntity;
         if (authorList.isEmpty()) {
-            return new ResponseEntity<>(NOT_FOUND);
+            responseEntity = new ResponseEntity<>(NOT_FOUND);
         } else {
-            return new ResponseEntity<>(authorList, OK);
+            responseEntity = new ResponseEntity<>(authorList, OK);
         }
+        return responseEntity;
     }
 
     @GetMapping("authors/age/lt/{age}")
     public ResponseEntity<List<Author>> getListByAgeLessThen(@PathVariable Integer age) {
         List<Author> authorList = authorsSQLService.getListByAgeLT(age);
+        ResponseEntity<List<Author>> responseEntity;
         if (authorList.isEmpty()) {
-            return new ResponseEntity<>(NOT_FOUND);
+            responseEntity = new ResponseEntity<>(NOT_FOUND);
         } else {
-            return new ResponseEntity<>(authorList, OK);
+            responseEntity = new ResponseEntity<>(authorList, OK);
         }
+        return responseEntity;
     }
+
 
     @PostMapping("authors")
     public ResponseEntity<Author> insert(@RequestBody Author author) {
@@ -75,28 +86,32 @@ public class AuthorController {
             Author author1 = authorsSQLService.insert(author);
             result = new ResponseEntity<>(author1, OK);
         }
-
         return result;
     }
 
     @PostMapping("authors/addlist")
     public ResponseEntity<List<Author>> createList(@RequestBody List<Author> authorList) {
         List<Author> insertedList;
+        ResponseEntity<List<Author>> responseEntity;
         if (authorList == null) {
-            return new ResponseEntity<>(NO_CONTENT);
+            responseEntity = new ResponseEntity<>(NO_CONTENT);
         } else {
             insertedList = authorsSQLService.insertMany(authorList);
-            return new ResponseEntity<>(insertedList, OK);
+            responseEntity = new ResponseEntity<>(insertedList, OK);
         }
+        return responseEntity;
     }
 
 
     @DeleteMapping("authors/{id}")
     public ResponseEntity<Author> delete(@PathVariable Long id) {
-
-
-        return authorsSQLService.delete(id);
-
+        ResponseEntity<Author> responseEntity;
+        if (id != null) {
+            responseEntity = authorsSQLService.delete(id);
+        } else {
+            responseEntity = new ResponseEntity<>(NOT_FOUND);
+        }
+        return responseEntity;
     }
 
     @PutMapping("authors/{id}")

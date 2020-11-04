@@ -19,12 +19,10 @@ public interface AuthorRepo extends CrudRepository<Author, Long> {
 
     Author getById(@NonNull Long id);
 
-
     void deleteById(Long id);
 
     @Query("SELECT * FROM authors WHERE birthdate <= :date")
     List<Author> getListByAgeGraterThen(@Param("date") Date date);
-
 
     @Query("SELECT * FROM authors WHERE birthdate >= :date")
     List<Author> getListByAgeLessThen(@Param("date") Date date);

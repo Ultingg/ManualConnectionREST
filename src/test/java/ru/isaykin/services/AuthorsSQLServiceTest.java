@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.time.LocalDate.now;
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -26,12 +27,12 @@ class AuthorsSQLServiceTest {
 
 
     @Test
-    void getById_valid_success() {
+    void getById_validId_AuthorById() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
         Author author = new Author();
         author.setId(1L);
-        ResponseEntity expected = new ResponseEntity(author, OK);
+        ResponseEntity<Author> expected = new ResponseEntity<>(author, OK);
         when(authorRepo.getById(1L)).thenReturn(author);
 
         ResponseEntity<Author> actual = authorsSQLService.getOneById(1L);
@@ -45,7 +46,7 @@ class AuthorsSQLServiceTest {
     void getById_noExistedId_notFound() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
-        ResponseEntity expected = new ResponseEntity(NOT_FOUND);
+        ResponseEntity<?> expected = new ResponseEntity<>(NOT_FOUND);
 
         ResponseEntity<Author> actual = authorsSQLService.getOneById(100L);
 
@@ -55,10 +56,10 @@ class AuthorsSQLServiceTest {
     }
 
     @Test
-    void getById_null_success() {
+    void getById_null_notFound() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
-        ResponseEntity<Author> expected = new ResponseEntity(NOT_FOUND);
+        ResponseEntity<?> expected = new ResponseEntity<>(NOT_FOUND);
 
         ResponseEntity<Author> actual = authorsSQLService.getOneById(null);
 
@@ -67,7 +68,7 @@ class AuthorsSQLServiceTest {
     }
 
     @Test
-    void getAll_valid_success() {
+    void getAll_validResponse_allList() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
         Author author = new Author();
@@ -82,27 +83,31 @@ class AuthorsSQLServiceTest {
     }
 
     @Test
-    void update_valid_success() {
+    void update_validId_validAuthorById() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
-        Author author = new Author();
-        author.setId(1L);
-        author.setFirstName("Trevor");
-        author.setLastName("Long");
-        author.setBirthdate(LocalDate.of(1975, 05, 13));
-        author.setEmail("longverylong@yahoo.com");
+        Author author = Author.builder()
+                .id(1L)
+                .firstName("Trevor")
+                .lastName("Long")
+                .email("longverylong@yahoo.com")
+                .birthdate(LocalDate.of(1975, 5, 13))
+                .build();
         when(authorRepo.getById(1L)).thenReturn(author);
-        Author authorUpdated = new Author();
-        authorUpdated.setEmail("logan@bp.uk");
-        authorUpdated.setFirstName("Trevor");
-        authorUpdated.setLastName("Logan");
-        authorUpdated.setBirthdate(LocalDate.of(1975, 05, 13));
-        Author expected = new Author();
-        expected.setId(1L);
-        expected.setBirthdate(LocalDate.of(1975, 05, 13));
-        expected.setFirstName("Trevor");
-        expected.setLastName("Logan");
-        expected.setEmail("logan@bp.uk");
+        Author authorUpdated = Author.builder()
+                .id(1L)
+                .firstName("Trevor")
+                .lastName("Long")
+                .email("logan@bp.uk")
+                .birthdate(LocalDate.of(1975, 5, 13))
+                .build();
+        Author expected = Author.builder()
+                .id(1L)
+                .firstName("Trevor")
+                .lastName("Long")
+                .email("logan@bp.uk")
+                .birthdate(LocalDate.of(1975, 5, 13))
+                .build();
 
         Author actual = authorsSQLService.update(1L, authorUpdated);
 
@@ -114,15 +119,17 @@ class AuthorsSQLServiceTest {
     }
 
     @Test
-    void update_null_success() {
+    void update_nullAuthorFromRepo_null() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
         when(authorRepo.getById(1L)).thenReturn(null);
-        Author authorUpdated = new Author();
-        authorUpdated.setEmail("logan@bp.uk");
-        authorUpdated.setFirstName("Trevor");
-        authorUpdated.setLastName("Logan");
-        authorUpdated.setBirthdate(LocalDate.of(1975, 05, 13));
+        Author authorUpdated = Author.builder()
+                .id(0L)
+                .firstName("Trevor")
+                .lastName("Logan")
+                .email("logan@bp.uk")
+                .birthdate(LocalDate.of(1975, 5, 13))
+                .build();
 
         Author actual = authorsSQLService.update(1L, authorUpdated);
 
@@ -134,7 +141,7 @@ class AuthorsSQLServiceTest {
     }
 
     @Test
-    void delete_valid_success() {
+    void delete_validId_OK() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
         ResponseEntity<Author> expected = new ResponseEntity<>(OK);
@@ -169,7 +176,8 @@ class AuthorsSQLServiceTest {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
         ResponseEntity<Author> expected = new ResponseEntity<>(NOT_FOUND);
-//
+        when(authorRepo.getById(null)).thenReturn(null);
+
         ResponseEntity<Author> actual = authorsSQLService.delete(null);
 
 //        assertThrows(NullPointerException.class,
@@ -186,11 +194,12 @@ class AuthorsSQLServiceTest {
     void insert_valid_success() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
-        Author author = new Author();
-        author.setEmail("bumblebe@transformer.ab");
-        author.setFirstName("Yellow");
-        author.setLastName("Car");
-        author.setBirthdate(LocalDate.parse("2020-10-12"));
+        Author author = Author.builder()
+                .firstName("Yellow")
+                .lastName("Car")
+                .email("bumblebe@transformer.ab")
+                .birthdate(LocalDate.parse("2020-10-12"))
+                .build();
         when(authorRepo.getByEmail("bumblebe@transformer.ab")).
                 thenReturn(author);
 
@@ -218,16 +227,20 @@ class AuthorsSQLServiceTest {
     void insertMany_valid_success() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
-        Author author = new Author();
-        Author author1 = new Author();
-        author.setEmail("bumblebe@transformer.ab");
-        author.setFirstName("Yellow");
-        author.setLastName("Car");
-        author.setBirthdate(LocalDate.parse("2020-10-12"));
-        author1.setEmail("napoleon@imperor.fr");
-        author1.setFirstName("Napoleon");
-        author1.setLastName("Bonaparte");
-        author1.setBirthdate(LocalDate.parse("1769-08-15"));
+        Author author = Author.builder()
+                .id(1L)
+                .firstName("Yellow")
+                .lastName("Car")
+                .email("bumblebe@transformer.ab")
+                .birthdate(LocalDate.parse("2020-10-12"))
+                .build();
+        Author author1 = Author.builder()
+                .id(1L)
+                .firstName("Napoleon")
+                .lastName("Bonaparte")
+                .email("napoleon@imperor.fr")
+                .birthdate(LocalDate.parse("1769-08-15"))
+                .build();
         when(authorRepo.getByEmail("napoleon@imperor.fr")).thenReturn(author1);
         when(authorRepo.getByEmail("bumblebe@transformer.ab")).thenReturn(author);
         List<Author> expectedAuthorList = Arrays.asList(author, author1);
@@ -271,7 +284,7 @@ class AuthorsSQLServiceTest {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
 
-        assertThrows(NullPointerException.class, ()-> authorsSQLService.getListByAgeGT(null));
+        assertThrows(NullPointerException.class, () -> authorsSQLService.getListByAgeGT(null));
     }
 
     @Test
@@ -292,37 +305,41 @@ class AuthorsSQLServiceTest {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
 
-        assertThrows(NullPointerException.class, ()-> authorsSQLService.getListByAgeLT(null));
+        assertThrows(NullPointerException.class, () -> authorsSQLService.getListByAgeLT(null));
     }
 
+    @SuppressWarnings("CanBeFinal")
     @Nested
     class ByFirstNameAndLastNameTests {
-        Author author = new Author();
-        Author author1 = new Author();
-        Author author2 = new Author();
+        Author author = Author.builder()
+                .id(1L)
+                .firstName("Yellow")
+                .lastName("Car")
+                .email("bumblebe@transformer.ab")
+                .birthdate(LocalDate.parse("2020-10-12"))
+                .build();
+        Author author1 = Author.builder()
+                .id(1L)
+                .firstName("Napoleon")
+                .lastName("Bonaparte")
+                .email("napoleon@imperor.fr")
+                .birthdate(LocalDate.parse("1769-08-15"))
+                .build();
+        Author author2 = Author.builder()
+                .id(1L)
+                .firstName("Friedrich")
+                .lastName("Wilhelm II")
+                .email("fridrich@imperor.pr")
+                .birthdate(LocalDate.parse("1712-01-24"))
+                .build();
         List<Author> authorList = Arrays.asList(author, author1, author2);
-
-        {
-            author.setEmail("bumblebe@transformer.ab");
-            author.setFirstName("Yellow");
-            author.setLastName("Car");
-            author.setBirthdate(LocalDate.parse("2020-10-12"));
-            author1.setEmail("napoleon@imperor.fr");
-            author1.setFirstName("Napoleon");
-            author1.setLastName("Bonaparte");
-            author1.setBirthdate(LocalDate.parse("1769-08-15"));
-            author2.setEmail("napoleon@imperor.fr");
-            author2.setFirstName("Friedrich");
-            author2.setLastName("Wilhelm II");
-            author2.setBirthdate(LocalDate.parse("1712-01-24"));
-        }
 
         @Test
         @DisplayName("getting List by FirstName")
         void getListByFirstName_valid_success() {
             authorRepo = mock(AuthorRepo.class);
             authorsSQLService = new AuthorsSQLService(authorRepo);
-            List<Author> expected = Arrays.asList(author1);
+            List<Author> expected = singletonList(author1);
             when(authorRepo.getAll()).thenReturn(authorList);
 
             List<Author> actual = authorsSQLService.getListByFirstNameAndLastNameOrNull("Napoleon", "Garic");
@@ -336,7 +353,7 @@ class AuthorsSQLServiceTest {
         void getListByLastName_valid_success() {
             authorRepo = mock(AuthorRepo.class);
             authorsSQLService = new AuthorsSQLService(authorRepo);
-            List<Author> expected = Arrays.asList(author1);
+            List<Author> expected = singletonList(author1);
             when(authorRepo.getAll()).thenReturn(authorList);
 
             List<Author> actual = authorsSQLService.getListByFirstNameAndLastNameOrNull("Romul", "Bonaparte");
@@ -350,7 +367,7 @@ class AuthorsSQLServiceTest {
         void getListByFirstNameAndLastName_valid_success() {
             authorRepo = mock(AuthorRepo.class);
             authorsSQLService = new AuthorsSQLService(authorRepo);
-            List<Author> expected = Arrays.asList(author1);
+            List<Author> expected = singletonList(author1);
             when(authorRepo.getAll()).thenReturn(authorList);
 
             List<Author> actual = authorsSQLService.getListByFirstNameAndLastNameOrNull("Napoleon", "Bonaparte");
@@ -379,13 +396,14 @@ class AuthorsSQLServiceTest {
             authorRepo = mock(AuthorRepo.class);
             authorsSQLService = new AuthorsSQLService(authorRepo);
             List<Author> authorList = Arrays.asList(author, author1, author2);
-            List<Author> expectedList = Arrays.asList(author1, author2);
             when(authorRepo.getAll()).thenReturn(authorList);
 
             List<Author> actual4 = authorsSQLService.getListByFirstNameAndLastNameOrNull("Molly", "Trevis");
+
             assertNull(actual4, "Checking if method returned null");
             verify(authorRepo, times(1)).getAll();
-        } // ВОПРОС: возарвщать null нормально, при условии что в следующем методе он принимается и обрабатывается?
+        }
+        // ВОПРОС: возарвщать null нормально, при условии что в следующем методе он принимается и обрабатывается?
     }
 
 }
