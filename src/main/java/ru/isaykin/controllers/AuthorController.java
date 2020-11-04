@@ -26,7 +26,7 @@ public class AuthorController {
                                                                         @RequestParam(value = "last_name", required = false) String lastName) {
         ResponseEntity<Object> result;
         if (firstName != null || lastName != null) {
-            List<Author> resultList = authorsSQLService.getListByFirstNameAndLastName(firstName, lastName);
+            List<Author> resultList = authorsSQLService.getListByFirstNameAndLastNameOrNull(firstName, lastName);
             if (resultList != null) {
                 result = new ResponseEntity<>(resultList, OK);
             } else {
@@ -46,7 +46,7 @@ public class AuthorController {
 
 
     @GetMapping("authors/age/gt/{age}")
-    public ResponseEntity<List<Author>> getListByAgeGraterThen(@PathVariable int age) {
+    public ResponseEntity<List<Author>> getListByAgeGraterThen(@PathVariable Integer age) {
         List<Author> authorList = authorsSQLService.getListByAgeGT(age);
         if (authorList.isEmpty()) {
             return new ResponseEntity<>(NOT_FOUND);
@@ -56,7 +56,7 @@ public class AuthorController {
     }
 
     @GetMapping("authors/age/lt/{age}")
-    public ResponseEntity<List<Author>> getListByAgeLessThen(@PathVariable int age) {
+    public ResponseEntity<List<Author>> getListByAgeLessThen(@PathVariable Integer age) {
         List<Author> authorList = authorsSQLService.getListByAgeLT(age);
         if (authorList.isEmpty()) {
             return new ResponseEntity<>(NOT_FOUND);

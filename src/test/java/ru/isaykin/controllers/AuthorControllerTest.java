@@ -12,6 +12,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.*;
 
@@ -51,14 +52,14 @@ class AuthorControllerTest {
             authorsSQLService = mock(AuthorsSQLService.class);
             authorController = new AuthorController(authorsSQLService);
             ResponseEntity<Object> expected = new ResponseEntity<>(asList(author), OK);
-            when(authorsSQLService.getListByFirstNameAndLastName("Platon", "Swan")).thenReturn(asList(author));
+            when(authorsSQLService.getListByFirstNameAndLastNameOrNull("Platon", "Swan")).thenReturn(asList(author));
 
             ResponseEntity<Object> actualOneAuthor = authorController.getListOrGetOneByFirstNameAndLastName("Platon", "Swan");
 
             assertEquals(expected, actualOneAuthor, "Checking if correct Author was returned");
-            verify(authorsSQLService, times(1)).getListByFirstNameAndLastName(anyString(), anyString());
-            verify(authorsSQLService, times(1)).getListByFirstNameAndLastName("Platon", "Swan");
-            verify(authorsSQLService,times(0)).getAll();
+            verify(authorsSQLService, times(1)).getListByFirstNameAndLastNameOrNull(anyString(), anyString());
+            verify(authorsSQLService, times(1)).getListByFirstNameAndLastNameOrNull("Platon", "Swan");
+            verify(authorsSQLService, times(0)).getAll();
         }
 
         @Test
@@ -66,16 +67,15 @@ class AuthorControllerTest {
             authorsSQLService = mock(AuthorsSQLService.class);
             authorController = new AuthorController(authorsSQLService);
             ResponseEntity<Object> expectedTwo = new ResponseEntity<>(asList(author, author1), OK);
-            when(authorsSQLService.getListByFirstNameAndLastName("Platon", "Puzzle")).thenReturn(asList(author, author1));
+            when(authorsSQLService.getListByFirstNameAndLastNameOrNull("Platon", "Puzzle")).thenReturn(asList(author, author1));
 
             ResponseEntity<Object> actualTwoAuthors = authorController.getListOrGetOneByFirstNameAndLastName("Platon", "Puzzle");
 
             assertEquals(expectedTwo, actualTwoAuthors, "Checking if correct Authors were returned");
-            verify(authorsSQLService, times(1)).getListByFirstNameAndLastName(anyString(), anyString());
-            verify(authorsSQLService, times(1)).getListByFirstNameAndLastName("Platon", "Puzzle");
-            verify(authorsSQLService,times(0)).getAll();
+            verify(authorsSQLService, times(1)).getListByFirstNameAndLastNameOrNull(anyString(), anyString());
+            verify(authorsSQLService, times(1)).getListByFirstNameAndLastNameOrNull("Platon", "Puzzle");
+            verify(authorsSQLService, times(0)).getAll();
         }
-
 
 
         @Test
@@ -89,7 +89,7 @@ class AuthorControllerTest {
 
             assertEquals(expectedList, actualList, "Checking if correct List of Authors was returned");
             verify(authorsSQLService, times(1)).getAll();
-            verify(authorsSQLService, times(0)).getListByFirstNameAndLastName(anyString(), anyString());
+            verify(authorsSQLService, times(0)).getListByFirstNameAndLastNameOrNull(anyString(), anyString());
         }
 
         @Test
@@ -97,16 +97,17 @@ class AuthorControllerTest {
             authorsSQLService = mock(AuthorsSQLService.class);
             authorController = new AuthorController(authorsSQLService);
             ResponseEntity<Object> expected = new ResponseEntity<>(NOT_FOUND);
-            when(authorsSQLService.getListByFirstNameAndLastName("Stepan", "Fedorov")).thenReturn(null);
+            when(authorsSQLService.getListByFirstNameAndLastNameOrNull("Stepan", "Fedorov")).thenReturn(null);
 
             ResponseEntity<Object> actual = authorController.getListOrGetOneByFirstNameAndLastName("Stepan", "Fedorov");
 
             assertEquals(expected, actual, "Checking if correct response (NOT FOUND) was returned");
-            verify(authorsSQLService, times(1)).getListByFirstNameAndLastName(anyString(), anyString());
-            verify(authorsSQLService, times(1)).getListByFirstNameAndLastName("Stepan", "Fedorov");
+            verify(authorsSQLService, times(1)).getListByFirstNameAndLastNameOrNull(anyString(), anyString());
+            verify(authorsSQLService, times(1)).getListByFirstNameAndLastNameOrNull("Stepan", "Fedorov");
             verify(authorsSQLService, times(0)).getAll();
         }
     }
+
     @Nested
     class ListOfAuthorsByAge {
         Author author = new Author();
@@ -115,6 +116,7 @@ class AuthorControllerTest {
         Author author3 = new Author();
         List<Author> authorListLT35;
         List<Author> authorListGT35;
+
         {
 
             author.setId(1L);
@@ -157,7 +159,7 @@ class AuthorControllerTest {
         }
 
         @Test
-        void getListByAgeGT_notFound_success() {
+        void getListByAgeGT_noExistedAgeRange_notFound() {
             authorsSQLService = mock(AuthorsSQLService.class);
             authorController = new AuthorController(authorsSQLService);
             List<Author> authorListGT35 = new ArrayList<>();
@@ -169,6 +171,13 @@ class AuthorControllerTest {
             assertEquals(expected, actual, "Checking if correct response (NOT FOUND) was returned");
             verify(authorsSQLService, times(1)).getListByAgeGT(35);
             verify(authorsSQLService, times(1)).getListByAgeGT(anyInt());
+        }
+
+        @Test
+        void getListByAgeGT_null_success() {
+            authorsSQLService = mock(AuthorsSQLService.class);
+            authorController = new AuthorController(authorsSQLService);
+            assertThrows(NullPointerException.class, () -> authorController.getListByAgeGraterThen(null));
         }
         //TODO: getListByAgeGT null
 
@@ -185,8 +194,9 @@ class AuthorControllerTest {
             verify(authorsSQLService, times(1)).getListByAgeLT(anyInt());
             verify(authorsSQLService, times(1)).getListByAgeLT(35);
         }
+
         @Test
-        void getListByAgeLT_notFound_success() {
+        void getListByAgeLT_noExistedAgeRange_notFound() {
             authorsSQLService = mock(AuthorsSQLService.class);
             authorController = new AuthorController(authorsSQLService);
             List<Author> authorListLT35 = new ArrayList<>();
@@ -199,8 +209,16 @@ class AuthorControllerTest {
             verify(authorsSQLService, times(1)).getListByAgeLT(anyInt());
             verify(authorsSQLService, times(1)).getListByAgeLT(35);
         }
+
+        @Test
+        void getListByAgeLT_null_success() {
+            authorsSQLService = mock(AuthorsSQLService.class);
+            authorController = new AuthorController(authorsSQLService);
+            assertThrows(NullPointerException.class, () -> authorController.getListByAgeLessThen(null));
+        }
         //TODO: getListByAgeLT null
     }
+
     @Test
     void getAuthorById_valid_success() {
         authorsSQLService = mock(AuthorsSQLService.class);
@@ -217,7 +235,7 @@ class AuthorControllerTest {
     }
 
     @Test
-    void getAuthorById_notFound_success() {
+    void getAuthorById_noExistedId_notFound() {
         authorsSQLService = mock(AuthorsSQLService.class);
         authorController = new AuthorController(authorsSQLService);
         ResponseEntity<Author> expected = new ResponseEntity<>(NOT_FOUND);
@@ -302,7 +320,7 @@ class AuthorControllerTest {
 
         ResponseEntity<List<Author>> actual = authorController.createList(null);
 
-        assertEquals(expected, actual,"Checking if correct response (NO CONTENT) was returned with null as parameter");
+        assertEquals(expected, actual, "Checking if correct response (NO CONTENT) was returned with null as parameter");
         verify(authorsSQLService, times(0)).insertMany(anyList());
         verify(authorsSQLService, times(0)).insertMany(authorList);
     }
@@ -322,7 +340,7 @@ class AuthorControllerTest {
     }
 
     @Test
-    void delete_notFound_success() {
+    void delete_noExistedId_notFound() {
         authorsSQLService = mock(AuthorsSQLService.class);
         authorController = new AuthorController(authorsSQLService);
         when(authorsSQLService.delete(1L)).thenReturn(new ResponseEntity<>(NOT_FOUND));
@@ -356,7 +374,7 @@ class AuthorControllerTest {
     }
 
     @Test
-    void updateById_notFound_success() {
+    void updateById_noExistedId_notFound() {
         authorsSQLService = mock(AuthorsSQLService.class);
         authorController = new AuthorController(authorsSQLService);
         ResponseEntity<Author> expected = new ResponseEntity<>(NOT_MODIFIED);

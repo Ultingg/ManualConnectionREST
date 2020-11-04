@@ -13,8 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.time.LocalDate.now;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
@@ -43,7 +42,7 @@ class AuthorsSQLServiceTest {
     }
 
     @Test
-    void getById_notFound_success() {
+    void getById_noExistedId_notFound() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
         ResponseEntity<Author> expected = new ResponseEntity(NOT_FOUND);
@@ -151,7 +150,7 @@ class AuthorsSQLServiceTest {
     }
 
     @Test
-    void delete_notValid_success() {
+    void delete_noExistedId_notFound() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
         ResponseEntity<Author> expected = new ResponseEntity<>(NOT_FOUND);
@@ -207,7 +206,7 @@ class AuthorsSQLServiceTest {
     }
 
     @Test
-    void insert_null_success() {
+    void insert_null_NPException() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
 
@@ -246,7 +245,7 @@ class AuthorsSQLServiceTest {
     }
 
     @Test
-    void insertMany_null_success() {
+    void insertMany_null_NPException() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
 
@@ -310,7 +309,7 @@ class AuthorsSQLServiceTest {
             List<Author> expected = Arrays.asList(author1);
             when(authorRepo.getAll()).thenReturn(authorList);
 
-            List<Author> actual = authorsSQLService.getListByFirstNameAndLastName("Napoleon", "Garic");
+            List<Author> actual = authorsSQLService.getListByFirstNameAndLastNameOrNull("Napoleon", "Garic");
 
             assertEquals(expected, actual, "Checking searching by firstName");
             verify(authorRepo, times(1)).getAll();
@@ -324,7 +323,7 @@ class AuthorsSQLServiceTest {
             List<Author> expected = Arrays.asList(author1);
             when(authorRepo.getAll()).thenReturn(authorList);
 
-            List<Author> actual = authorsSQLService.getListByFirstNameAndLastName("Romul", "Bonaparte");
+            List<Author> actual = authorsSQLService.getListByFirstNameAndLastNameOrNull("Romul", "Bonaparte");
 
             assertEquals(expected, actual, "Checking searching by LastName");
             verify(authorRepo, times(1)).getAll();
@@ -338,7 +337,7 @@ class AuthorsSQLServiceTest {
             List<Author> expected = Arrays.asList(author1);
             when(authorRepo.getAll()).thenReturn(authorList);
 
-            List<Author> actual = authorsSQLService.getListByFirstNameAndLastName("Napoleon", "Bonaparte");
+            List<Author> actual = authorsSQLService.getListByFirstNameAndLastNameOrNull("Napoleon", "Bonaparte");
 
             assertEquals(expected, actual, "Checking searching by FirstName and LastName");
             verify(authorRepo, times(1)).getAll();
@@ -353,25 +352,24 @@ class AuthorsSQLServiceTest {
             List<Author> expectedList = Arrays.asList(author1, author2);
             when(authorRepo.getAll()).thenReturn(authorList);
 
-            List<Author> actual4 = authorsSQLService.getListByFirstNameAndLastName("Friedrich", "Bonaparte");
+            List<Author> actual4 = authorsSQLService.getListByFirstNameAndLastNameOrNull("Friedrich", "Bonaparte");
 
-            assertEquals(expectedList, actual4, "Checking searching by firstName of few authors");
+            assertEquals(expectedList, actual4, "Checking searching by firstName of List of two authors");
             verify(authorRepo, times(1)).getAll();
         }
 
         @Test
-        void getListByFirstNameAndLastNameFewAuthors_valid_success2() {
+        void getListByFirstNameAndLastNameFewAuthors_notExistedNames_null() {
             authorRepo = mock(AuthorRepo.class);
             authorsSQLService = new AuthorsSQLService(authorRepo);
             List<Author> authorList = Arrays.asList(author, author1, author2);
             List<Author> expectedList = Arrays.asList(author1, author2);
             when(authorRepo.getAll()).thenReturn(authorList);
 
-            List<Author> actual4 = authorsSQLService.getListByFirstNameAndLastName("LOh", "Pidr");
-//            assertThrows(NullPointerException.class, () -> authorsSQLService.getListByFirstNameAndLastName("LOh", "Pidr"));
-            assertEquals(null, actual4, "Checking searching by firstName of few authors");
+            List<Author> actual4 = authorsSQLService.getListByFirstNameAndLastNameOrNull("Molly", "Trevis");
+            assertNull(actual4, "Checking if method returned null");
             verify(authorRepo, times(1)).getAll();
-        }
+        } // ВОПРОС: возарвщать null нормально, при условии что в следующем методе он принимается и обрабатывается?
     }
 
 }

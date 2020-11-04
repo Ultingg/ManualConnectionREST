@@ -44,7 +44,7 @@ public class AuthorsSQLService {
         return result;
     }
 
-    public List<Author> getListByFirstNameAndLastName(String firstname, String lastname) {
+    public List<Author> getListByFirstNameAndLastNameOrNull(String firstname, String lastname) {
         List<Author> authors = authorRepo.getAll();
         List<Author> selectedAuthors = new ArrayList<>();
         for (Author author : authors) {
@@ -67,9 +67,9 @@ public class AuthorsSQLService {
     }
 
     public ResponseEntity<Author> delete(Long id) {
-        Author authorCheking = authorRepo.getById(id);
+        Author authorChecking = authorRepo.getById(id);
         ResponseEntity<Author> result;
-        if (authorCheking == null) {
+        if (authorChecking == null) {
             result = new ResponseEntity<>(NOT_FOUND);
         } else {
             authorRepo.deleteById(id);
@@ -78,13 +78,13 @@ public class AuthorsSQLService {
         return result;
     }
 
-    public List<Author> getListByAgeGT(int age) {
+    public List<Author> getListByAgeGT(Integer age) {
         Date currentDateMinusYears = valueOf(now().minusYears(age));
 
         return authorRepo.getListByAgeGraterThen(currentDateMinusYears);
     }
 
-    public List<Author> getListByAgeLT(int age) {
+    public List<Author> getListByAgeLT(Integer age) {
         Date currentDateMinusYears = valueOf(now().minusYears(age));
 
         return authorRepo.getListByAgeLessThen(currentDateMinusYears);
