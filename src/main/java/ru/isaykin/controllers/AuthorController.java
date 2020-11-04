@@ -53,26 +53,35 @@ public class AuthorController {
 
     @GetMapping("authors/age/gt/{age}")
     public ResponseEntity<List<Author>> getListByAgeGraterThen(@PathVariable Integer age) {
-        List<Author> authorList = authorsSQLService.getListByAgeGT(age);
         ResponseEntity<List<Author>> responseEntity;
-        if (authorList.isEmpty()) {
+        if (age != null) {
+            List<Author> authorList = authorsSQLService.getListByAgeGT(age);
+            if (authorList.isEmpty()) {
+                responseEntity = new ResponseEntity<>(NOT_FOUND);
+            } else {
+                responseEntity = new ResponseEntity<>(authorList, OK);
+            }
+        }else {
             responseEntity = new ResponseEntity<>(NOT_FOUND);
-        } else {
-            responseEntity = new ResponseEntity<>(authorList, OK);
         }
         return responseEntity;
     }
 
     @GetMapping("authors/age/lt/{age}")
     public ResponseEntity<List<Author>> getListByAgeLessThen(@PathVariable Integer age) {
-        List<Author> authorList = authorsSQLService.getListByAgeLT(age);
         ResponseEntity<List<Author>> responseEntity;
-        if (authorList.isEmpty()) {
-            responseEntity = new ResponseEntity<>(NOT_FOUND);
+        if (age != null) {
+            List<Author> authorList = authorsSQLService.getListByAgeLT(age);
+
+            if (authorList.isEmpty()) {
+                responseEntity = new ResponseEntity<>(NOT_FOUND);
+            } else {
+                responseEntity = new ResponseEntity<>(authorList, OK);
+            }
         } else {
-            responseEntity = new ResponseEntity<>(authorList, OK);
+            responseEntity = new ResponseEntity<>(NOT_FOUND);
         }
-        return responseEntity;
+            return responseEntity;
     }
 
 

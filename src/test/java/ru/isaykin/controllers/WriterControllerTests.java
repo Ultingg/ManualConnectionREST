@@ -21,7 +21,7 @@ public class WriterControllerTests {
     }
 
     @Test
-    void writeAllToCSV_valid_success() {
+    void writeAllToCSV_valid_Ok() {
         ResponseEntity<String> expected = new ResponseEntity<>("File created", OK);
         when(writersService.writeAllToCSV()).thenReturn(true);
 
@@ -32,7 +32,7 @@ public class WriterControllerTests {
     }
 
     @Test
-    void writeAllToCSV_notValid_success() {
+    void writeAllToCSV_notValid_notFound() {
         ResponseEntity<String> expected = new ResponseEntity<>("NO DATA FOUND", NOT_FOUND);
         when(writersService.writeAllToCSV()).thenReturn(false);
 
@@ -43,7 +43,7 @@ public class WriterControllerTests {
     }
 
     @Test
-    void writeAllToXLS_valid_success() {
+    void writeAllToXLS_valid_Ok() {
         ResponseEntity<String> expected = new ResponseEntity<>("File created", OK);
         when(writersService.writeAllToXLS()).thenReturn(true);
 
@@ -54,7 +54,7 @@ public class WriterControllerTests {
     }
 
     @Test
-    void writeAllToXLS_notValid_success() {
+    void writeAllToXLS_notValid_notFound() {
         ResponseEntity<String> expected = new ResponseEntity<>("NO DATA FOUND", NOT_FOUND);
         when(writersService.writeAllToXLS()).thenReturn(false);
 
@@ -65,7 +65,7 @@ public class WriterControllerTests {
     }
 
     @Test
-    void writeAllByGraterAgeToXLS_valid_success() {
+    void writeAllByGraterAgeToXLS_valid_Ok() {
         ResponseEntity<String> expected = new ResponseEntity<>("File created", OK);
         when(writersService.writeAllByAgeGTToXLS(20)).thenReturn(true);
 
@@ -89,7 +89,7 @@ public class WriterControllerTests {
     }
 
     @Test
-    void writeAllByGraterAgeToCSV_valid_success() {
+    void writeAllByGraterAgeToCSV_validAgeRange_Ok() {
         ResponseEntity<String> expected = new ResponseEntity<>("File created", OK);
         when(writersService.writeAllByAgeGTToCSV(20)).thenReturn(true);
 
@@ -113,7 +113,7 @@ public class WriterControllerTests {
     }
 
     @Test
-    void writeAllByLessAgeToXLS_valid_success() {
+    void writeAllByLessAgeToXLS_validAgeRange_Ok() {
         ResponseEntity<String> expected = new ResponseEntity<>("File created", OK);
         when(writersService.writeAllByAgeLTToXLS(20)).thenReturn(true);
 
@@ -137,7 +137,7 @@ public class WriterControllerTests {
     }
 
     @Test
-    void writeAllByLessAgeToCSV_valid_success() {
+    void writeAllByLessAgeToCSV_validAgeRange_Ok() {
         ResponseEntity<String> expected = new ResponseEntity<>("File created", OK);
         when(writersService.writeAllByAgeLTToCSV(20)).thenReturn(true);
 

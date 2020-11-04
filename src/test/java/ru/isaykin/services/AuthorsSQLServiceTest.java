@@ -180,18 +180,15 @@ class AuthorsSQLServiceTest {
 
         ResponseEntity<Author> actual = authorsSQLService.delete(null);
 
-//        assertThrows(NullPointerException.class,
-//                () -> authorsSQLService.delete(null));
-//
         assertEquals(expected, actual, "Checking if author with wrong id wasn't found ");
-////        verify(authorRepo, times(1)).getById(anyLong());
         verify(authorRepo, times(1)).getById(null);
-////        verify(authorRepo, times(0)).deleteById(anyLong());
         verify(authorRepo, times(0)).deleteById(null);
+        verify(authorRepo, times(1)).getById(any());
+        verify(authorRepo, times(0)).deleteById(any());
     }
 
     @Test
-    void insert_valid_success() {
+    void insert_validAuthor_validAuthor() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
         Author author = Author.builder()
@@ -224,7 +221,7 @@ class AuthorsSQLServiceTest {
     }
 
     @Test
-    void insertMany_valid_success() {
+    void insertMany_validListOfAuthors_validListOfAuthors() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
         Author author = Author.builder()
@@ -268,7 +265,7 @@ class AuthorsSQLServiceTest {
 
     @Test
     @DisplayName("Test of get List of Greater then some age")
-    void getGTAge_valid_success() {
+    void getGTAge_validAgeRange_validListOfAuthors() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
 
@@ -289,7 +286,7 @@ class AuthorsSQLServiceTest {
 
     @Test
     @DisplayName("Test of get List of Less then some age")
-    void getLTAge_valid_success() {
+    void getLTAge_validAgeRange_validListOfAuthors() {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
 
@@ -308,9 +305,8 @@ class AuthorsSQLServiceTest {
         assertThrows(NullPointerException.class, () -> authorsSQLService.getListByAgeLT(null));
     }
 
-    @SuppressWarnings("CanBeFinal")
     @Nested
-    class ByFirstNameAndLastNameTests {
+    final class ByFirstNameAndLastNameTests {
         Author author = Author.builder()
                 .id(1L)
                 .firstName("Yellow")
@@ -336,7 +332,7 @@ class AuthorsSQLServiceTest {
 
         @Test
         @DisplayName("getting List by FirstName")
-        void getListByFirstName_valid_success() {
+        void getListByFirstName_validName_validListWithOneAuthor() {
             authorRepo = mock(AuthorRepo.class);
             authorsSQLService = new AuthorsSQLService(authorRepo);
             List<Author> expected = singletonList(author1);
@@ -350,7 +346,7 @@ class AuthorsSQLServiceTest {
 
         @Test
         @DisplayName("getting List by LastName")
-        void getListByLastName_valid_success() {
+        void getListByLastName_validName_validListWithOneAuthor() {
             authorRepo = mock(AuthorRepo.class);
             authorsSQLService = new AuthorsSQLService(authorRepo);
             List<Author> expected = singletonList(author1);
@@ -364,7 +360,7 @@ class AuthorsSQLServiceTest {
 
         @Test
         @DisplayName("getting List by FirstName and LastName")
-        void getListByFirstNameAndLastName_valid_success() {
+        void getListByFirstNameAndLastName_validNames_validListOfAuthors() {
             authorRepo = mock(AuthorRepo.class);
             authorsSQLService = new AuthorsSQLService(authorRepo);
             List<Author> expected = singletonList(author1);
@@ -378,7 +374,7 @@ class AuthorsSQLServiceTest {
 
         @Test
         @DisplayName("getting List of few by FirstName and LastName")
-        void getListByFirstNameAndLastNameFewAuthors_valid_success() {
+        void getListByFirstNameAndLastNameFewAuthors_validNames_validListOfAuthors() {
             authorRepo = mock(AuthorRepo.class);
             authorsSQLService = new AuthorsSQLService(authorRepo);
             List<Author> authorList = Arrays.asList(author, author1, author2);
@@ -403,7 +399,6 @@ class AuthorsSQLServiceTest {
             assertNull(actual4, "Checking if method returned null");
             verify(authorRepo, times(1)).getAll();
         }
-        // ВОПРОС: возарвщать null нормально, при условии что в следующем методе он принимается и обрабатывается?
     }
 
 }

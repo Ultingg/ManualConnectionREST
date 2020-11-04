@@ -32,7 +32,7 @@ class WritersServiceTest {
     }
 
     @Test
-    void writeAllToXLS_valid_success() {
+    void writeAllToXLS_validList_trueCreatedFile() {
         Author author1 = new Author();
         Author author2 = new Author();
         List<Author> authorList = Arrays.asList(author1, author2);
@@ -47,7 +47,7 @@ class WritersServiceTest {
     }
 
     @Test
-    void writeAllToXLS_EmptyList_False() {
+    void writeAllToXLS_emptyList_falseNotCreatedFile() {
         List<Author> authorList = new ArrayList<>();
         when(authorRepo.getAll()).thenReturn(authorList);
 
@@ -58,7 +58,7 @@ class WritersServiceTest {
     }
 
     @Test
-    void writeAllToCSV_valid_success() {
+    void writeAllToCSV_validList_trueCreatedFile() {
         Author author1 = new Author();
         Author author2 = new Author();
         List<Author> authorList = Arrays.asList(author1, author2);
@@ -73,7 +73,7 @@ class WritersServiceTest {
     }
 
     @Test
-    void writeAllToCSV_EmptyList_False() {
+    void writeAllToCSV_emptyList_falseNotCreatedFile() {
         List<Author> authorList = new ArrayList<>();
         when(authorRepo.getAll()).thenReturn(authorList);
 
@@ -84,7 +84,7 @@ class WritersServiceTest {
     }
 
     @Test
-    void AgeGreaterThenCSV_valid_success() {
+    void ageGreaterThenCSV_validList_trueCreatedFile() {
         Author author1 = new Author();
         Author author2 = new Author();
         List<Author> authorList = Arrays.asList(author1, author2);
@@ -99,7 +99,7 @@ class WritersServiceTest {
     }
 
     @Test
-    void AgeGreaterThenXLS_valid_success() {
+    void ageGreaterThenXLS_validList_trueCreatedFile() {
         Author author1 = new Author();
         Author author2 = new Author();
         List<Author> authorList = Arrays.asList(author1, author2);
@@ -114,7 +114,7 @@ class WritersServiceTest {
     }
 
     @Test
-    void AgeGreaterThenXLS_EmptyList_False() {
+    void ageGreaterThenXLS_emptyList_falseNotCreatedFile() {
         List<Author> authorList = new ArrayList<>();
         when(authorRepo.getListByAgeGraterThen(any(Date.class))).thenReturn(authorList);
 
@@ -126,7 +126,7 @@ class WritersServiceTest {
     }
 
     @Test
-    void AgeGreaterThenCSV_EmptyList_False() {
+    void ageGreaterThenCSV_emptyList_falseNotCreatedFile() {
         List<Author> authorList = new ArrayList<>();
         when(authorRepo.getListByAgeGraterThen(any(Date.class))).thenReturn(authorList);
 
@@ -138,7 +138,7 @@ class WritersServiceTest {
     }
 
     @Test
-    void AgeLessThenCSV_valid_success() {
+    void ageLessThenCSV_validList_trueCreatedFile() {
         Author author1 = new Author();
         Author author2 = new Author();
         List<Author> authorList = Arrays.asList(author1, author2);
@@ -153,7 +153,7 @@ class WritersServiceTest {
     }
 
     @Test
-    void AgeLessThenXLS_valid_success() {
+    void ageLessThenXLS_validList_trueCreatedFile() {
         Author author1 = new Author();
         Author author2 = new Author();
         List<Author> authorList = Arrays.asList(author1, author2);
@@ -168,7 +168,7 @@ class WritersServiceTest {
     }
 
     @Test
-    void AgeLessThenCSV_EmptyList_False() {
+    void ageLessThenCSV_emptyList_falseNotCreatedFile() {
         List<Author> authorList = new ArrayList<>();
         when(authorRepo.getListByAgeLessThen(any(Date.class))).thenReturn(authorList);
 
@@ -180,7 +180,7 @@ class WritersServiceTest {
     }
 
     @Test
-    void AgeLessThenXLS_EmptyList_False() {
+    void ageLessThenXLS_emptyList_falseNotCreatedFile() {
         List<Author> authorList = new ArrayList<>();
         when(authorRepo.getListByAgeLessThen(any(Date.class))).thenReturn(authorList);
 
