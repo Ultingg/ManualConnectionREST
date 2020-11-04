@@ -35,13 +35,13 @@ class WritersServiceTest {
 
         boolean actual = writersService.writeAllToXLS();
 
-        assertTrue(actual);
+        assertTrue(actual, "Checking if writeAllToXLS gets True");
         verify(authorRepo, times(1)).getAll();
         verify(xlsWriter, times(1)).writeToXLS(anyList());
         verify(xlsWriter, times(1)).writeToXLS(authorList);
     }
     @Test
-    void writeAllToXLS_null_success() {
+    void writeAllToXLS_notValid_success() {
         authorRepo = mock(AuthorRepo.class);
         xlsWriter = mock(XLSWriter.class);
         csvWriter = mock(CSVWriter.class);
@@ -51,7 +51,7 @@ class WritersServiceTest {
 
         boolean actual = writersService.writeAllToXLS();
 
-        assertFalse(actual);
+        assertFalse(actual, "Checking if writeAllToXLS gets False");
         verify(authorRepo, times(1)).getAll();
     }
 
@@ -68,13 +68,13 @@ class WritersServiceTest {
 
         boolean actual = writersService.writeAllToCSV();
 
-        assertTrue(actual);
+        assertTrue(actual, "Checking if writeAllToCSV gets True");
         verify(authorRepo, times(1)).getAll();
         verify(csvWriter, times(1)).writeToCSV(anyList());
         verify(csvWriter, times(1)).writeToCSV(authorList);
     }
     @Test
-    void writeAllToCSV_null_success() {
+    void writeAllToCSV_notValid_success() {
         authorRepo = mock(AuthorRepo.class);
         xlsWriter = mock(XLSWriter.class);
         csvWriter = mock(CSVWriter.class);
@@ -84,7 +84,7 @@ class WritersServiceTest {
 
         boolean actual = writersService.writeAllToCSV();
 
-        assertFalse(actual);
+        assertFalse(actual, "Checking if writeAllToCSV gets False");
         verify(authorRepo, times(1)).getAll();
     }
     @Test
@@ -99,7 +99,7 @@ class WritersServiceTest {
         when(authorRepo.getListByAgeGraterThen(any(Date.class))).thenReturn(authorList);
         boolean actual = writersService.writeAllByAgeGTToCSV(10);
 
-        assertTrue(actual);
+        assertTrue(actual,"Checking if writeAllByAgeGTToCSV gets True");
 
         verify(authorRepo, times(1)).getListByAgeGraterThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeGraterThen(Date.valueOf(LocalDate.now().minusYears(10)));
@@ -118,13 +118,13 @@ class WritersServiceTest {
 
         boolean actual = writersService.writeAllByAgeGTToXLS(10);
 
-        assertTrue(actual);
+        assertTrue(actual, "Checking if writeAllByAgeGTToXLS gets True");
         verify(authorRepo, times(1)).getListByAgeGraterThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeGraterThen(Date.valueOf(LocalDate.now().minusYears(10)));
         verify(xlsWriter, times(1)).writeToXLS(authorList);
     }
     @Test
-    void AgeGreaterThenXLS_null_success() {
+    void AgeGreaterThenXLS_notValid_success() {
         authorRepo = mock(AuthorRepo.class);
         xlsWriter = mock(XLSWriter.class);
         csvWriter = mock(CSVWriter.class);
@@ -134,12 +134,12 @@ class WritersServiceTest {
 
         boolean actual = writersService.writeAllByAgeGTToXLS(10);
 
-        assertFalse(actual);
+        assertFalse(actual, "Checking if writeAllByAgeGTToXLS gets False");
         verify(authorRepo, times(1)).getListByAgeGraterThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeGraterThen(Date.valueOf(LocalDate.now().minusYears(10)));
     }
     @Test
-    void AgeGreaterThenCSV_null_success() {
+    void AgeGreaterThenCSV_notValid_success() {
         authorRepo = mock(AuthorRepo.class);
         xlsWriter = mock(XLSWriter.class);
         csvWriter = mock(CSVWriter.class);
@@ -149,7 +149,7 @@ class WritersServiceTest {
 
         boolean actual = writersService.writeAllByAgeGTToCSV(10);
 
-        assertFalse(actual);
+        assertFalse(actual, "Checking if writeAllByAgeGTToCSV gets False");
         verify(authorRepo, times(1)).getListByAgeGraterThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeGraterThen(Date.valueOf(LocalDate.now().minusYears(10)));
     }
@@ -165,7 +165,7 @@ class WritersServiceTest {
         when(authorRepo.getListByAgeLessThen(any(Date.class))).thenReturn(authorList);
         boolean actual = writersService.writeAllByAgeLTToCSV(10);
 
-        assertTrue(actual);
+        assertTrue(actual, "Checking if writeAllByAgeLTToCSV gets True");
 
         verify(authorRepo, times(1)).getListByAgeLessThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeLessThen(Date.valueOf(LocalDate.now().minusYears(10)));
@@ -183,14 +183,14 @@ class WritersServiceTest {
         when(authorRepo.getListByAgeLessThen(any(Date.class))).thenReturn(authorList);
         boolean actual = writersService.writeAllByAgeLTToXLS(10);
 
-        assertTrue(actual);
+        assertTrue(actual, "Checking if writeAllByAgeGTToXLS gets True ");
 
         verify(authorRepo, times(1)).getListByAgeLessThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeLessThen(Date.valueOf(LocalDate.now().minusYears(10)));
         verify(xlsWriter, times(1)).writeToXLS(authorList);
     }
     @Test
-    void AgeLessThenCSV_null_success() {
+    void AgeLessThenCSV_notValid_success() {
         authorRepo = mock(AuthorRepo.class);
         xlsWriter = mock(XLSWriter.class);
         csvWriter = mock(CSVWriter.class);
@@ -200,12 +200,12 @@ class WritersServiceTest {
 
         boolean actual = writersService.writeAllByAgeLTToCSV(10);
 
-        assertFalse(actual);
+        assertFalse(actual, "Checking if writeAllByAgeGTToCSV gets False");
         verify(authorRepo, times(1)).getListByAgeLessThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeLessThen(Date.valueOf(LocalDate.now().minusYears(10)));
     }
     @Test
-    void AgeLessThenXLS_null_success() {
+    void AgeLessThenXLS_notValid_success() {
         authorRepo = mock(AuthorRepo.class);
         xlsWriter = mock(XLSWriter.class);
         csvWriter = mock(CSVWriter.class);
@@ -215,7 +215,7 @@ class WritersServiceTest {
 
         boolean actual = writersService.writeAllByAgeLTToXLS(10);
 
-        assertFalse(actual);
+        assertFalse(actual, "Checking if writeAllByAgeGTToXLS gets False");
         verify(authorRepo, times(1)).getListByAgeLessThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeLessThen(Date.valueOf(LocalDate.now().minusYears(10)));
     }

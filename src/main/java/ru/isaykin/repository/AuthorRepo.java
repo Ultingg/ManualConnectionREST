@@ -13,7 +13,6 @@ import ru.isaykin.reader.Author;
 import java.sql.Date;
 import java.util.List;
 
-//TODO: сделать отдельный кастомный репозиторий для запросов
 @Component
 @Repository
 public interface AuthorRepo extends CrudRepository<Author, Long> {

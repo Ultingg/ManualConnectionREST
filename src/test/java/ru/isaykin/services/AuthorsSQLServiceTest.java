@@ -25,6 +25,7 @@ class AuthorsSQLServiceTest {
     private AuthorRepo authorRepo;
     private AuthorsSQLService authorsSQLService;
 
+
     @Test
     void getById_valid_success() {
         authorRepo = mock(AuthorRepo.class);

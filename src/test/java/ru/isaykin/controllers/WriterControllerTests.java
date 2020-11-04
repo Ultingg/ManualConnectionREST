@@ -27,7 +27,7 @@ public class WriterControllerTests {
 
         ResponseEntity<String> actual = writerController.writeAllToCSV();
 
-        assertEquals(expected, actual);
+        assertEquals(expected, actual, "Checking if response is correct and CSV file created");
         verify(writersService, times(1)).writeAllToCSV();
     }
     @Test
@@ -37,7 +37,7 @@ public class WriterControllerTests {
 
         ResponseEntity<String> actual = writerController.writeAllToCSV();
 
-        assertEquals(expected, actual);
+        assertEquals(expected, actual, "Checking if response is not correct and CSV file wasn't created");
         verify(writersService, times(1)).writeAllToCSV();
     }
     @Test
@@ -47,7 +47,7 @@ public class WriterControllerTests {
 
         ResponseEntity<String> actual = writerController.writeAllToXLS();
 
-        assertEquals(expected, actual);
+        assertEquals(expected, actual, "Checking if response is correct and XLS file created");
         verify(writersService, times(1)).writeAllToXLS();
     }
     @Test
@@ -57,7 +57,7 @@ public class WriterControllerTests {
 
         ResponseEntity<String> actual = writerController.writeAllToXLS();
 
-        assertEquals(expected, actual);
+        assertEquals(expected, actual, "Checking if response is not correct and XLS file wasn't created");
         verify(writersService, times(1)).writeAllToXLS();
     }
     @Test
@@ -67,7 +67,7 @@ public class WriterControllerTests {
 
         ResponseEntity<String> actual = writerController.writeAllByGraterAgeToXLS(20);
 
-        assertEquals(expected, actual);
+        assertEquals(expected, actual, "Checking if response is correct and XLS file created");
         verify(writersService, times(1)).writeAllByAgeGTToXLS(20);
         verify(writersService, times(1)).writeAllByAgeGTToXLS(anyInt());
     }
@@ -78,7 +78,7 @@ public class WriterControllerTests {
 
         ResponseEntity<String> actual = writerController.writeAllByGraterAgeToXLS(20);
 
-        assertEquals(expected, actual);
+        assertEquals(expected, actual, "Checking if response is correct and XLS file created");
         verify(writersService, times(1)).writeAllByAgeGTToXLS(20);
         verify(writersService, times(1)).writeAllByAgeGTToXLS(anyInt());
     }
@@ -89,7 +89,7 @@ public class WriterControllerTests {
 
         ResponseEntity<String> actual = writerController.writeAllByGraterAgeToCSV(20);
 
-        assertEquals(expected, actual);
+        assertEquals(expected, actual, "Checking if response is correct and CSV file created");
         verify(writersService, times(1)).writeAllByAgeGTToCSV(20);
         verify(writersService, times(1)).writeAllByAgeGTToCSV(anyInt());
     }
@@ -100,7 +100,7 @@ public class WriterControllerTests {
 
         ResponseEntity<String> actual = writerController.writeAllByGraterAgeToCSV(20);
 
-        assertEquals(expected, actual);
+        assertEquals(expected, actual, "Checking if response is correct and CSV file created");
         verify(writersService, times(1)).writeAllByAgeGTToCSV(20);
         verify(writersService, times(1)).writeAllByAgeGTToCSV(anyInt());
     }
@@ -112,7 +112,7 @@ public class WriterControllerTests {
 
         ResponseEntity<String> actual = writerController.writeAllByLessAgeToXLS(20);
 
-        assertEquals(expected, actual);
+        assertEquals(expected, actual, "Checking if response is correct and XLS file created");
         verify(writersService, times(1)).writeAllByAgeLTToXLS(20);
         verify(writersService, times(1)).writeAllByAgeLTToXLS(anyInt());
     }
@@ -123,7 +123,7 @@ public class WriterControllerTests {
 
         ResponseEntity<String> actual = writerController.writeAllByLessAgeToXLS(20);
 
-        assertEquals(expected, actual);
+        assertEquals(expected, actual, "Checking if response is correct and XLS file created");
         verify(writersService, times(1)).writeAllByAgeLTToXLS(20);
         verify(writersService, times(1)).writeAllByAgeLTToXLS(anyInt());
     }
@@ -135,7 +135,7 @@ public class WriterControllerTests {
 
         ResponseEntity<String> actual = writerController.writeAllByLessAgeToCSV(20);
 
-        assertEquals(expected, actual);
+        assertEquals(expected, actual, "Checking if response is correct and CSV file created");
         verify(writersService, times(1)).writeAllByAgeLTToCSV(20);
         verify(writersService, times(1)).writeAllByAgeLTToCSV(anyInt());
     }
@@ -146,7 +146,7 @@ public class WriterControllerTests {
 
         ResponseEntity<String> actual = writerController.writeAllByLessAgeToCSV(20);
 
-        assertEquals(expected, actual);
+        assertEquals(expected, actual, "Checking if response is correct and CSV file created");
         verify(writersService, times(1)).writeAllByAgeLTToCSV(20);
         verify(writersService, times(1)).writeAllByAgeLTToCSV(anyInt());
     }
