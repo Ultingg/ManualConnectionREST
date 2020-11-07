@@ -46,47 +46,50 @@ public class WritersService {
 
     public boolean writeAllByAgeGTToXLS(int age) {
         List<Author> authorList = authorRepo.getListByAgeGraterThen(ageToDateConverter(age));
+        boolean result = true;
         if (!authorList.isEmpty()) {
             xlsWriter.writeToXLS(authorList);
-            return true;
         } else {
-            return false;
+            result = false;
         }
+        return result;
     }
 
     public boolean writeAllByAgeLTToXLS(int age) {
         List<Author> authorList = authorRepo.getListByAgeLessThen(ageToDateConverter(age));
+        boolean result = true;
         if (!authorList.isEmpty()) {
             xlsWriter.writeToXLS(authorList);
-            return true;
         } else {
-            return false;
+            result = false;
         }
+        return result;
     }
 
 
     public boolean writeAllByAgeLTToCSV(int age) {
         List<Author> authorList = authorRepo.getListByAgeLessThen(ageToDateConverter(age));
+        boolean result = true;
         if (!authorList.isEmpty()) {
             csvWriter.writeToCSV(authorList);
-            return true;
         } else {
-            return false;
+            result = false;
         }
+        return result;
     }
 
     public boolean writeAllByAgeGTToCSV(int age) {
         List<Author> authorList = authorRepo.getListByAgeGraterThen(ageToDateConverter(age));
+        boolean result = true;
         if (!authorList.isEmpty()) {
             csvWriter.writeToCSV(authorList);
-            return true;
         } else {
-            return false;
+            result = false;
         }
+        return result;
     }
 
     private Date ageToDateConverter(int age) {
-        return Date.
-                valueOf(LocalDate.now().minusYears(age));
+        return Date.valueOf(LocalDate.now().minusYears(age));
     }
 }

@@ -8,10 +8,10 @@ import java.time.LocalDate;
 
 
 @Data
-@Setter
-@Getter
+@Builder
 @Table("authors")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Author implements Comparable<Author> {
 
     @Id

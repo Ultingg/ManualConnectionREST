@@ -1,5 +1,6 @@
 package ru.isaykin.services;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.isaykin.reader.Author;
 import ru.isaykin.repository.AuthorRepo;
@@ -22,200 +23,170 @@ class WritersServiceTest {
     private XLSWriter xlsWriter;
     private CSVWriter csvWriter;
 
-    @Test
-    void writeAllToXLS_valid_success() {
-        Author author1 = new Author();
-        Author author2 = new Author();
+    @BeforeEach
+    void setUp() {
         authorRepo = mock(AuthorRepo.class);
         xlsWriter = mock(XLSWriter.class);
         csvWriter = mock(CSVWriter.class);
-        writersService = new WritersService(authorRepo, xlsWriter,csvWriter);
-        List<Author> authorList = Arrays.asList(author1,author2);
+        writersService = new WritersService(authorRepo, xlsWriter, csvWriter);
+    }
+
+    @Test
+    void writeAllToXLS_validList_trueCreatedFile() {
+        Author author1 = new Author();
+        Author author2 = new Author();
+        List<Author> authorList = Arrays.asList(author1, author2);
         when(authorRepo.getAll()).thenReturn(authorList);
 
         boolean actual = writersService.writeAllToXLS();
 
-        assertTrue(actual);
+        assertTrue(actual, "Checking if writeAllToXLS gets True");
         verify(authorRepo, times(1)).getAll();
         verify(xlsWriter, times(1)).writeToXLS(anyList());
         verify(xlsWriter, times(1)).writeToXLS(authorList);
     }
+
     @Test
-    void writeAllToXLS_null_success() {
-        authorRepo = mock(AuthorRepo.class);
-        xlsWriter = mock(XLSWriter.class);
-        csvWriter = mock(CSVWriter.class);
-        writersService = new WritersService(authorRepo, xlsWriter,csvWriter);
+    void writeAllToXLS_emptyList_falseNotCreatedFile() {
         List<Author> authorList = new ArrayList<>();
         when(authorRepo.getAll()).thenReturn(authorList);
 
         boolean actual = writersService.writeAllToXLS();
 
-        assertFalse(actual);
+        assertFalse(actual, "Checking if writeAllToXLS gets False");
         verify(authorRepo, times(1)).getAll();
     }
 
     @Test
-    void writeAllToCSV_valid_success() {
+    void writeAllToCSV_validList_trueCreatedFile() {
         Author author1 = new Author();
         Author author2 = new Author();
-        authorRepo = mock(AuthorRepo.class);
-        xlsWriter = mock(XLSWriter.class);
-        csvWriter = mock(CSVWriter.class);
-        writersService = new WritersService(authorRepo, xlsWriter,csvWriter);
-        List<Author> authorList = Arrays.asList(author1,author2);
+        List<Author> authorList = Arrays.asList(author1, author2);
         when(authorRepo.getAll()).thenReturn(authorList);
 
         boolean actual = writersService.writeAllToCSV();
 
-        assertTrue(actual);
+        assertTrue(actual, "Checking if writeAllToCSV gets True");
         verify(authorRepo, times(1)).getAll();
         verify(csvWriter, times(1)).writeToCSV(anyList());
         verify(csvWriter, times(1)).writeToCSV(authorList);
     }
+
     @Test
-    void writeAllToCSV_null_success() {
-        authorRepo = mock(AuthorRepo.class);
-        xlsWriter = mock(XLSWriter.class);
-        csvWriter = mock(CSVWriter.class);
-        writersService = new WritersService(authorRepo, xlsWriter,csvWriter);
+    void writeAllToCSV_emptyList_falseNotCreatedFile() {
         List<Author> authorList = new ArrayList<>();
         when(authorRepo.getAll()).thenReturn(authorList);
 
         boolean actual = writersService.writeAllToCSV();
 
-        assertFalse(actual);
+        assertFalse(actual, "Checking if writeAllToCSV gets False");
         verify(authorRepo, times(1)).getAll();
     }
+
     @Test
-    void AgeGreaterThenCSV_valid_success() {
+    void ageGreaterThenCSV_validList_trueCreatedFile() {
         Author author1 = new Author();
         Author author2 = new Author();
-        authorRepo = mock(AuthorRepo.class);
-        xlsWriter = mock(XLSWriter.class);
-        csvWriter = mock(CSVWriter.class);
-        writersService = new WritersService(authorRepo, xlsWriter,csvWriter);
-        List<Author> authorList = Arrays.asList(author1,author2);
+        List<Author> authorList = Arrays.asList(author1, author2);
         when(authorRepo.getListByAgeGraterThen(any(Date.class))).thenReturn(authorList);
         boolean actual = writersService.writeAllByAgeGTToCSV(10);
 
-        assertTrue(actual);
+        assertTrue(actual, "Checking if writeAllByAgeGTToCSV gets True");
 
         verify(authorRepo, times(1)).getListByAgeGraterThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeGraterThen(Date.valueOf(LocalDate.now().minusYears(10)));
         verify(csvWriter, times(1)).writeToCSV(authorList);
     }
+
     @Test
-    void AgeGreaterThenXLS_valid_success() {
+    void ageGreaterThenXLS_validList_trueCreatedFile() {
         Author author1 = new Author();
         Author author2 = new Author();
-        authorRepo = mock(AuthorRepo.class);
-        xlsWriter = mock(XLSWriter.class);
-        csvWriter = mock(CSVWriter.class);
-        writersService = new WritersService(authorRepo, xlsWriter,csvWriter);
-        List<Author> authorList = Arrays.asList(author1,author2);
+        List<Author> authorList = Arrays.asList(author1, author2);
         when(authorRepo.getListByAgeGraterThen(any(Date.class))).thenReturn(authorList);
 
         boolean actual = writersService.writeAllByAgeGTToXLS(10);
 
-        assertTrue(actual);
+        assertTrue(actual, "Checking if writeAllByAgeGTToXLS gets True");
         verify(authorRepo, times(1)).getListByAgeGraterThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeGraterThen(Date.valueOf(LocalDate.now().minusYears(10)));
         verify(xlsWriter, times(1)).writeToXLS(authorList);
     }
+
     @Test
-    void AgeGreaterThenXLS_null_success() {
-        authorRepo = mock(AuthorRepo.class);
-        xlsWriter = mock(XLSWriter.class);
-        csvWriter = mock(CSVWriter.class);
-        writersService = new WritersService(authorRepo, xlsWriter,csvWriter);
+    void ageGreaterThenXLS_emptyList_falseNotCreatedFile() {
         List<Author> authorList = new ArrayList<>();
         when(authorRepo.getListByAgeGraterThen(any(Date.class))).thenReturn(authorList);
 
         boolean actual = writersService.writeAllByAgeGTToXLS(10);
 
-        assertFalse(actual);
+        assertFalse(actual, "Checking if write AllByAgeGTToXLS gets False, when get empty List");
         verify(authorRepo, times(1)).getListByAgeGraterThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeGraterThen(Date.valueOf(LocalDate.now().minusYears(10)));
     }
+
     @Test
-    void AgeGreaterThenCSV_null_success() {
-        authorRepo = mock(AuthorRepo.class);
-        xlsWriter = mock(XLSWriter.class);
-        csvWriter = mock(CSVWriter.class);
-        writersService = new WritersService(authorRepo, xlsWriter,csvWriter);
+    void ageGreaterThenCSV_emptyList_falseNotCreatedFile() {
         List<Author> authorList = new ArrayList<>();
         when(authorRepo.getListByAgeGraterThen(any(Date.class))).thenReturn(authorList);
 
         boolean actual = writersService.writeAllByAgeGTToCSV(10);
 
-        assertFalse(actual);
+        assertFalse(actual, "Checking if writeAllByAgeGTToCSV gets False, when get empty List");
         verify(authorRepo, times(1)).getListByAgeGraterThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeGraterThen(Date.valueOf(LocalDate.now().minusYears(10)));
     }
+
     @Test
-    void AgeLessThenCSV_valid_success() {
+    void ageLessThenCSV_validList_trueCreatedFile() {
         Author author1 = new Author();
         Author author2 = new Author();
-        authorRepo = mock(AuthorRepo.class);
-        xlsWriter = mock(XLSWriter.class);
-        csvWriter = mock(CSVWriter.class);
-        writersService = new WritersService(authorRepo, xlsWriter,csvWriter);
-        List<Author> authorList = Arrays.asList(author1,author2);
+        List<Author> authorList = Arrays.asList(author1, author2);
         when(authorRepo.getListByAgeLessThen(any(Date.class))).thenReturn(authorList);
         boolean actual = writersService.writeAllByAgeLTToCSV(10);
 
-        assertTrue(actual);
+        assertTrue(actual, "Checking if writeAllByAgeLTToCSV gets True");
 
         verify(authorRepo, times(1)).getListByAgeLessThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeLessThen(Date.valueOf(LocalDate.now().minusYears(10)));
         verify(csvWriter, times(1)).writeToCSV(authorList);
     }
+
     @Test
-    void AgeLessThenXLS_valid_success() {
+    void ageLessThenXLS_validList_trueCreatedFile() {
         Author author1 = new Author();
         Author author2 = new Author();
-        authorRepo = mock(AuthorRepo.class);
-        xlsWriter = mock(XLSWriter.class);
-        csvWriter = mock(CSVWriter.class);
-        writersService = new WritersService(authorRepo, xlsWriter,csvWriter);
-        List<Author> authorList = Arrays.asList(author1,author2);
+        List<Author> authorList = Arrays.asList(author1, author2);
         when(authorRepo.getListByAgeLessThen(any(Date.class))).thenReturn(authorList);
         boolean actual = writersService.writeAllByAgeLTToXLS(10);
 
-        assertTrue(actual);
+        assertTrue(actual, "Checking if writeAllByAgeGTToXLS gets True ");
 
         verify(authorRepo, times(1)).getListByAgeLessThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeLessThen(Date.valueOf(LocalDate.now().minusYears(10)));
         verify(xlsWriter, times(1)).writeToXLS(authorList);
     }
+
     @Test
-    void AgeLessThenCSV_null_success() {
-        authorRepo = mock(AuthorRepo.class);
-        xlsWriter = mock(XLSWriter.class);
-        csvWriter = mock(CSVWriter.class);
-        writersService = new WritersService(authorRepo, xlsWriter,csvWriter);
+    void ageLessThenCSV_emptyList_falseNotCreatedFile() {
         List<Author> authorList = new ArrayList<>();
         when(authorRepo.getListByAgeLessThen(any(Date.class))).thenReturn(authorList);
 
         boolean actual = writersService.writeAllByAgeLTToCSV(10);
 
-        assertFalse(actual);
+        assertFalse(actual, "Checking if writeAllByAgeGTToCSV gets False, when get empty List");
         verify(authorRepo, times(1)).getListByAgeLessThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeLessThen(Date.valueOf(LocalDate.now().minusYears(10)));
     }
+
     @Test
-    void AgeLessThenXLS_null_success() {
-        authorRepo = mock(AuthorRepo.class);
-        xlsWriter = mock(XLSWriter.class);
-        csvWriter = mock(CSVWriter.class);
-        writersService = new WritersService(authorRepo, xlsWriter,csvWriter);
+    void ageLessThenXLS_emptyList_falseNotCreatedFile() {
         List<Author> authorList = new ArrayList<>();
         when(authorRepo.getListByAgeLessThen(any(Date.class))).thenReturn(authorList);
 
         boolean actual = writersService.writeAllByAgeLTToXLS(10);
 
-        assertFalse(actual);
+        assertFalse(actual, "Checking if writeAllByAgeGTToXLS gets False, when get empty List");
         verify(authorRepo, times(1)).getListByAgeLessThen(any(Date.class));
         verify(authorRepo, times(1)).getListByAgeLessThen(Date.valueOf(LocalDate.now().minusYears(10)));
     }
