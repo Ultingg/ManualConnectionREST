@@ -24,7 +24,6 @@ public class Author implements Comparable<Author> {
     @NonNull
     private String lastName;
 
-
     @NonNull
     private String email;
 
@@ -36,6 +35,4 @@ public class Author implements Comparable<Author> {
     public int compareTo(Author o) {
         return firstName.compareTo(o.firstName);
     }
-
-
 }
