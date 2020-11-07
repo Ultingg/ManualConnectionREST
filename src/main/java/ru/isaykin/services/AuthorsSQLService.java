@@ -41,6 +41,7 @@ public class AuthorsSQLService {
         } else {
             result = new ResponseEntity<>(author, OK);
         }
+
         return result;
     }
 
