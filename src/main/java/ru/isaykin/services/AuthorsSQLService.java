@@ -86,7 +86,7 @@ public class AuthorsSQLService {
         return authorRepo.getListByAgeGraterThen(currentDateMinusYears);
     }
 
-    public List<Author> getListByAgeLT(Integer age) { // try catch NPException???
+    public List<Author> getListByAgeLT(Integer age) {
         Date currentDateMinusYears = valueOf(now().minusYears(age));
 
         return authorRepo.getListByAgeLessThen(currentDateMinusYears);
