@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.isaykin.reader.Author;
+import ru.isaykin.reader.AuthorList;
 import ru.isaykin.repository.AuthorRepo;
 
 import java.sql.Date;
@@ -100,8 +101,8 @@ public class AuthorsSQLService {
         return authorRepo.getByEmail(author.getEmail());
     }
 
-    public List<Author> insertMany(List<Author> authorList) {
-        List<Author> insertedAuthors = new ArrayList<>();
+    public AuthorList<Author> insertMany(AuthorList<Author> authorList) {
+        AuthorList<Author> insertedAuthors = new AuthorList<>();
         for (Author author : authorList) {
             authorRepo.insert(author.getFirstName(),
                     author.getLastName(),
@@ -109,7 +110,9 @@ public class AuthorsSQLService {
                     valueOf(author.getBirthdate()));
             insertedAuthors.add(authorRepo.getByEmail(author.getEmail()));
         }
-        return insertedAuthors;
+        authorList.clear();
+        authorList.addAll(insertedAuthors);
+        return authorList;
     }
 
 }

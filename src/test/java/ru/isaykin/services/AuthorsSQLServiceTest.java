@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import ru.isaykin.reader.Author;
+import ru.isaykin.reader.AuthorList;
 import ru.isaykin.repository.AuthorRepo;
 
 import java.sql.Date;
@@ -241,9 +242,11 @@ class AuthorsSQLServiceTest {
                 .build();
         when(authorRepo.getByEmail("napoleon@imperor.fr")).thenReturn(author1);
         when(authorRepo.getByEmail("bumblebe@transformer.ab")).thenReturn(author);
-        List<Author> expectedAuthorList = Arrays.asList(author, author1);
+        AuthorList<Author> expectedAuthorList = new AuthorList<>();
+        expectedAuthorList.add(author);
+        expectedAuthorList.add(author1);
 
-        List<Author> actual = authorsSQLService.insertMany(expectedAuthorList);
+        AuthorList<Author> actual = authorsSQLService.insertMany(expectedAuthorList);
 
         assertEquals(expectedAuthorList, actual, "Checking if there were inserted right list of authors");
         verify(authorRepo, times(2)).getByEmail(any());

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import ru.isaykin.reader.Author;
+import ru.isaykin.reader.AuthorList;
 import ru.isaykin.services.AuthorsSQLService;
 
 import java.time.LocalDate;
@@ -107,6 +108,7 @@ class AuthorControllerTest {
         }
     }
 
+    @SuppressWarnings("CanBeFinal")
     @Nested
     class ListOfAuthorsByAge {
         Author author = Author.builder()
@@ -326,14 +328,16 @@ class AuthorControllerTest {
                 .email("puzzle@mail.ru")
                 .birthdate(LocalDate.of(1975, 10, 21))
                 .build();
-        List<Author> authorList = asList(author, author1);
+        AuthorList<Author> authorList = new AuthorList<>();
+        authorList.add(author);
+        authorList.add(author1);
         when(authorsSQLService.insertMany(authorList)).thenReturn(authorList);
-        ResponseEntity<List<Author>> expected = new ResponseEntity<>(authorList, OK);
+        ResponseEntity<AuthorList<Author>> expected = new ResponseEntity<>(authorList, OK);
 
-        ResponseEntity<List<Author>> actual = authorController.createList(authorList);
+        ResponseEntity<AuthorList<Author>> actual = authorController.createList(authorList);
 
         assertEquals(expected, actual, "Checking if correct List was created and correct response (OK)");
-        verify(authorsSQLService, times(1)).insertMany(anyList());
+        verify(authorsSQLService, times(1)).insertMany(any());
         verify(authorsSQLService, times(1)).insertMany(authorList);
     }
 
@@ -341,12 +345,12 @@ class AuthorControllerTest {
     void crestList_null_noContent() {
         authorsSQLService = mock(AuthorsSQLService.class);
         authorController = new AuthorController(authorsSQLService);
-        ResponseEntity<List<Author>> expected = new ResponseEntity<>(NO_CONTENT);
+        ResponseEntity<AuthorList<Author>> expected = new ResponseEntity<>(NO_CONTENT);
 
-        ResponseEntity<List<Author>> actual = authorController.createList(null);
+        ResponseEntity<AuthorList<Author>> actual = authorController.createList(null);
 
         assertEquals(expected, actual, "Checking if correct response (NO CONTENT) was returned with null as parameter");
-        verify(authorsSQLService, times(0)).insertMany(anyList());
+        verify(authorsSQLService, times(0)).insertMany(any());
         verify(authorsSQLService, times(0)).insertMany(null);
     }
 

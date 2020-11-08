@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.isaykin.reader.Author;
+import ru.isaykin.reader.AuthorList;
 import ru.isaykin.services.AuthorsSQLService;
 
 import javax.validation.Valid;
@@ -100,9 +101,9 @@ public class AuthorController {
     }
 
     @PostMapping("authors/addlist")
-    public ResponseEntity<List<Author>> createList(@RequestBody List<Author> authorList) {
-        List<Author> insertedList;
-        ResponseEntity<List<Author>> responseEntity;
+    public ResponseEntity<AuthorList<Author>> createList(@Valid @RequestBody AuthorList<Author> authorList) {
+        AuthorList<Author> insertedList;
+        ResponseEntity<AuthorList<Author>> responseEntity;
         if (authorList == null) {
             responseEntity = new ResponseEntity<>(NO_CONTENT);
         } else {
@@ -126,7 +127,7 @@ public class AuthorController {
 
     @PutMapping("authors/{id}")
     public ResponseEntity<Author> updateById(@PathVariable Long id,
-                                             @RequestBody Author author) {
+                                             @Valid @RequestBody Author author) {
         ResponseEntity<Author> result;
         Author updatedAuthor = authorsSQLService.update(id, author);
         if (updatedAuthor == null) {
