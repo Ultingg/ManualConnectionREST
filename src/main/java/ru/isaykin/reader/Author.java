@@ -1,9 +1,15 @@
 package ru.isaykin.reader;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 
@@ -15,20 +21,18 @@ import java.time.LocalDate;
 public class Author implements Comparable<Author> {
 
     @Id
-    @NonNull
     private Long id;
 
-    @NonNull
+    @Size(min = 2, message = "Minimal size of first name is 2 characters.")
     private String firstName;
 
-    @NonNull
+    @Size(min = 2, message = "Minimal size of last name is 2 characters.")
     private String lastName;
 
-    @NonNull
+    @Email(message = "Enter correct email address.")
     private String email;
 
-
-    @NonNull
+    @Past(message = "Birth date cannot be in future.")
     private LocalDate birthdate;
 
     @Override

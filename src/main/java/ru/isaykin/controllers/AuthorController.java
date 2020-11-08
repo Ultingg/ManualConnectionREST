@@ -1,11 +1,13 @@
 package ru.isaykin.controllers;
 
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.isaykin.reader.Author;
 import ru.isaykin.services.AuthorsSQLService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
@@ -61,7 +63,7 @@ public class AuthorController {
             } else {
                 responseEntity = new ResponseEntity<>(authorList, OK);
             }
-        }else {
+        } else {
             responseEntity = new ResponseEntity<>(NOT_FOUND);
         }
         return responseEntity;
@@ -81,14 +83,13 @@ public class AuthorController {
         } else {
             responseEntity = new ResponseEntity<>(NOT_FOUND);
         }
-            return responseEntity;
+        return responseEntity;
     }
 
 
-    @PostMapping("authors")
-    public ResponseEntity<Author> insert(@RequestBody Author author) {
+    @PostMapping(value = "authors", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Author> insert(@Valid @RequestBody Author author) {
         ResponseEntity<Author> result;
-
         if (author == null) {
             result = new ResponseEntity<>(NO_CONTENT);
         } else {

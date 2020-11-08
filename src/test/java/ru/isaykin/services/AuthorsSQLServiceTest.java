@@ -192,6 +192,7 @@ class AuthorsSQLServiceTest {
         authorRepo = mock(AuthorRepo.class);
         authorsSQLService = new AuthorsSQLService(authorRepo);
         Author author = Author.builder()
+                .id(1L)
                 .firstName("Yellow")
                 .lastName("Car")
                 .email("bumblebe@transformer.ab")
