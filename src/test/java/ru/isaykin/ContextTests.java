@@ -12,9 +12,11 @@ import ru.isaykin.services.AuthorsSQLService;
 
 import java.time.LocalDate;
 
+import static java.sql.Date.valueOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.OK;
 
 @SpringBootTest
@@ -63,6 +65,29 @@ public class ContextTests {
     }
 
     @Test
+    void mockService() {
+        authorsSQLService = mock(AuthorsSQLService.class);
+        authorController = new AuthorController(authorsSQLService);
+        Author author = Author.builder()
+                .id(101L)
+                .firstName("Roman")
+                .lastName("Zubarev")
+                .email("zubar@example.da")
+                .birthdate(LocalDate.parse("1998-01-23"))
+                .build();
+
+        when(authorsSQLService.insert(author)).thenReturn(author);
+        ResponseEntity<?> expectedResponse = new ResponseEntity<>(author, OK);
+
+        ResponseEntity<?> actualResponse = authorController.insert(author);
+        assertEquals(expectedResponse, actualResponse);
+
+        verify(authorsSQLService, times(1)).insert(author);
+        verify(authorsSQLService, times(1)).insert(any(Author.class));
+    }
+
+
+    @Test
     public void create() {
         Author author = Author.builder()
                 .id(101L)
@@ -79,7 +104,23 @@ public class ContextTests {
 
         assertEquals(expectedResponse, actualResponse);
         assertEquals(expectedFind, actualFind);
+    }
 
+    @Test
+    void repoTest() {
+        Author expectedAuthor = Author.builder()
+                .id(101L)
+                .firstName("Roman")
+                .lastName("Zubarev")
+                .email("zubar@example.da")
+                .birthdate(LocalDate.parse("1998-01-23"))
+                .build();
+        authorRepo.insert("Roman", "Zubarev","zubar@example.da", valueOf(LocalDate.parse("1998-01-23")));
+
+
+        Author actual = authorRepo.getById(101L);
+
+        assertEquals(expectedAuthor,actual);
 
     }
 }
