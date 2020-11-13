@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.isaykin.controllers.AuthorController;
 import ru.isaykin.reader.Author;
 import ru.isaykin.repository.AuthorRepo;
@@ -17,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
 @SpringBootTest
@@ -34,6 +36,37 @@ public class ContextTests {
         assertThat(authorController).isNotNull();
         assertThat(authorRepo).isNotNull();
         assertThat(authorsSQLService).isNotNull();
+    }
+@Test
+void exceptionCatcher() {
+    Author author = Author.builder()
+            .id(101L)
+            .firstName("")
+            .lastName("Z")
+            .email("badnamemail.net")
+            .birthdate(LocalDate.parse("1973-07-13"))
+            .build();
+
+    assertThrows(MethodArgumentNotValidException.class, ()->authorController.insert(author));
+
+}
+
+    @Test
+    void throwMeAMassage() {
+        authorController = new AuthorController(authorsSQLService);
+        Author author = Author.builder()
+                .id(101L)
+                .firstName("")
+                .lastName("Z")
+                .email("badname@mail.net")
+                .birthdate(LocalDate.parse("1973-07-13"))
+                .build();
+        ResponseEntity<?> expected = new ResponseEntity<>(BAD_REQUEST);
+
+        ResponseEntity<?> actual = authorController.insert(author);
+
+        assertEquals(expected, actual);
+
     }
 
     @Test

@@ -7,7 +7,6 @@ spring:
     initialization-mode: always
 
 
-
   servlet:
     multipart:
       enabled: true

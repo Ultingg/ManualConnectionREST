@@ -23,10 +23,10 @@ public class Author implements Comparable<Author> {
     @Id
     private Long id;
 
-    @Size(min = 2, message = "Minimal size of first name is 2 characters.")
+    @Size(min = 3, message = "Minimal size of first name is 2 characters.")
     private String firstName;
 
-    @Size(min = 2, message = "Minimal size of last name is 2 characters.")
+    @Size(min = 3, message = "Minimal size of last name is 2 characters.")
     private String lastName;
 
     @Email(message = "Enter correct email address.")

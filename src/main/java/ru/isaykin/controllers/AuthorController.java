@@ -1,7 +1,6 @@
 package ru.isaykin.controllers;
 
 
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.isaykin.reader.Author;
@@ -88,7 +87,7 @@ public class AuthorController {
     }
 
 
-    @PostMapping(value = "authors", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "authors")
     public ResponseEntity<Author> insert(@Valid @RequestBody Author author) {
         ResponseEntity<Author> result;
         if (author == null) {
