@@ -7,7 +7,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.isaykin.controllers.AuthorController;
-import ru.isaykin.controllers.AuthorExceptionHendler;
+import ru.isaykin.controllers.AuthorExceptionHandler;
 import ru.isaykin.reader.Author;
 import ru.isaykin.repository.AuthorRepo;
 import ru.isaykin.services.AuthorsSQLService;
@@ -32,14 +32,14 @@ public class ContextTests {
     @Autowired
     private AuthorsSQLService authorsSQLService;
     @Autowired
-    AuthorExceptionHendler authorExceptionHendler;
+    AuthorExceptionHandler authorExceptionHandler;
 
     @Test
     public void contextLoads() throws Exception {
         assertThat(authorController).isNotNull();
         assertThat(authorRepo).isNotNull();
         assertThat(authorsSQLService).isNotNull();
-        assertThat(authorExceptionHendler).isNotNull();
+        assertThat(authorExceptionHandler).isNotNull();
     }
 
     @Test

@@ -1,6 +1,7 @@
 package ru.isaykin.controllers;
 
 
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @ControllerAdvice
-public class AuthorExceptionHendler extends ResponseEntityExceptionHandler {
+public class AuthorExceptionHandler extends ResponseEntityExceptionHandler {
 
 
 
@@ -39,7 +40,7 @@ public class AuthorExceptionHendler extends ResponseEntityExceptionHandler {
         List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(x -> x.getDefaultMessage())
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
 
         body.put("errors", errors);
