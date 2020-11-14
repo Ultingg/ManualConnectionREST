@@ -7,6 +7,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.isaykin.controllers.AuthorController;
+import ru.isaykin.controllers.AuthorExceptionHendler;
 import ru.isaykin.reader.Author;
 import ru.isaykin.repository.AuthorRepo;
 import ru.isaykin.services.AuthorsSQLService;
@@ -30,26 +31,30 @@ public class ContextTests {
     private AuthorRepo authorRepo;
     @Autowired
     private AuthorsSQLService authorsSQLService;
+    @Autowired
+    AuthorExceptionHendler authorExceptionHendler;
 
     @Test
     public void contextLoads() throws Exception {
         assertThat(authorController).isNotNull();
         assertThat(authorRepo).isNotNull();
         assertThat(authorsSQLService).isNotNull();
+        assertThat(authorExceptionHendler).isNotNull();
     }
-@Test
-void exceptionCatcher() {
-    Author author = Author.builder()
-            .id(101L)
-            .firstName("")
-            .lastName("Z")
-            .email("badnamemail.net")
-            .birthdate(LocalDate.parse("1973-07-13"))
-            .build();
 
-    assertThrows(MethodArgumentNotValidException.class, ()->authorController.insert(author));
+    @Test
+    void exceptionCatcher() {
+        Author author = Author.builder()
+                .id(101L)
+                .firstName("n")
+                .lastName("Z")
+                .email("badnamemail.net")
+                .birthdate(LocalDate.parse("1973-07-13"))
+                .build();
 
-}
+        assertThrows(MethodArgumentNotValidException.class, () -> authorController.insert(author));
+
+    }
 
     @Test
     void throwMeAMassage() {
@@ -84,6 +89,7 @@ void exceptionCatcher() {
 
         assertEquals(expected, actual);
     }
+
     @Test
     public void Insert_DuplicateEmailAuthor_DuplicateException() {
         Author author = Author.builder()
@@ -94,7 +100,7 @@ void exceptionCatcher() {
                 .birthdate(LocalDate.parse("1973-07-13"))
                 .build();
 
-        assertThrows(DuplicateKeyException.class,()->authorController.insert(author));
+        assertThrows(DuplicateKeyException.class, () -> authorController.insert(author));
     }
 
     @Test
@@ -148,12 +154,12 @@ void exceptionCatcher() {
                 .email("zubar@example.da")
                 .birthdate(LocalDate.parse("1998-01-23"))
                 .build();
-        authorRepo.insert("Roman", "Zubarev","zubar@example.da", valueOf(LocalDate.parse("1998-01-23")));
+        authorRepo.insert("Roman", "Zubarev", "zubar@example.da", valueOf(LocalDate.parse("1998-01-23")));
 
 
         Author actual = authorRepo.getById(101L);
 
-        assertEquals(expectedAuthor,actual);
+        assertEquals(expectedAuthor, actual);
 
     }
 }
