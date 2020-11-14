@@ -1,13 +1,18 @@
 package ru.isaykin;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.isaykin.controllers.AuthorController;
-import ru.isaykin.controllers.AuthorExceptionHandler;
 import ru.isaykin.reader.Author;
 import ru.isaykin.repository.AuthorRepo;
 import ru.isaykin.services.AuthorsSQLService;
@@ -21,8 +26,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
+@AutoConfigureMockMvc
 public class ContextTests {
 
     @Autowired
@@ -32,14 +41,41 @@ public class ContextTests {
     @Autowired
     private AuthorsSQLService authorsSQLService;
     @Autowired
-    AuthorExceptionHandler authorExceptionHandler;
+    private ObjectMapper objectMapper;
+    @Autowired
+    private MockMvc mvc;
 
     @Test
     public void contextLoads() throws Exception {
         assertThat(authorController).isNotNull();
         assertThat(authorRepo).isNotNull();
         assertThat(authorsSQLService).isNotNull();
-        assertThat(authorExceptionHandler).isNotNull();
+    }
+
+    @Test
+    void insertTest() throws Exception {
+
+        Author author = Author.builder()
+                .id(101L)
+                .firstName("")
+                .lastName("Z")
+                .email("badnamemail.net")
+                .birthdate(LocalDate.parse("1973-07-13"))
+                .build();
+
+        mvc.perform(post("/authors").content(objectMapper
+                .writeValueAsString(author))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(mvcResult -> mvcResult.getResolvedException().getClass().equals(MethodArgumentNotValidException.class));
+
+
+//        ResponseEntity<?> expected = new ResponseEntity<>(BAD_REQUEST);
+//
+//        ResponseEntity<?> response = authorController.insert(author);
+//
+//        assertEquals(expected, response);
+
     }
 
     @Test
@@ -64,7 +100,7 @@ public class ContextTests {
                 .firstName("")
                 .lastName("Z")
                 .email("badname@mail.net")
-                .birthdate(LocalDate.parse("1973-07-13"))
+                .birthdate(LocalDate.parse("2973-07-13"))
                 .build();
         ResponseEntity<?> expected = new ResponseEntity<>(BAD_REQUEST);
 
@@ -148,16 +184,16 @@ public class ContextTests {
     @Test
     void repoTest() {
         Author expectedAuthor = Author.builder()
-                .id(101L)
+                .id(102L)
                 .firstName("Roman")
                 .lastName("Zubarev")
-                .email("zubar@example.da")
+                .email("zubar@33example.da")
                 .birthdate(LocalDate.parse("1998-01-23"))
                 .build();
-        authorRepo.insert("Roman", "Zubarev", "zubar@example.da", valueOf(LocalDate.parse("1998-01-23")));
+        authorRepo.insert("Roman", "Zubarev", "zubar@33example.da", valueOf(LocalDate.parse("1998-01-23")));
 
 
-        Author actual = authorRepo.getById(101L);
+        Author actual = authorRepo.getById(102L);
 
         assertEquals(expectedAuthor, actual);
 
