@@ -19,13 +19,13 @@ import ru.isaykin.repository.AuthorRepo;
 import ru.isaykin.services.AuthorsSQLService;
 
 import java.sql.Date;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 
 import static java.sql.Date.valueOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -71,8 +71,8 @@ public class ContextController {
         verify(authorRepo, times(1)).getByEmail(anyString());
         verify(authorRepo, times(1)).getByEmail("commrade@profkom.ussr");
         verify(authorRepo, times(1)).getByEmail(anyString());
-        verify(authorRepo, times(1)).insert("Valera","Tovarish","commrade@profkom.ussr", valueOf(LocalDate.parse("1933-10-17")));
-        verify(authorRepo, times(1)).insert(anyString(),anyString(),anyString(), any(Date.class));
+        verify(authorRepo, times(1)).insert("Valera", "Tovarish", "commrade@profkom.ussr", valueOf(LocalDate.parse("1933-10-17")));
+        verify(authorRepo, times(1)).insert(anyString(), anyString(), anyString(), any(Date.class));
     }
 
     @Test
@@ -94,24 +94,73 @@ public class ContextController {
                 })
                 .andExpect(mvcResult -> assertTrue(mvcResult.getResolvedException() instanceof MethodArgumentNotValidException));
     }
+
+
     @Test
-    void insert_inValidAuthor_400BadRequestAndDuplicationEmailSQL() throws Exception {
+    void update_ValidAuthor_200OKUpdatedAuthor() throws Exception {
         Author author = Author.builder()
                 .id(1L)
                 .firstName("Victor")
+                .lastName("Turner")
+                .email("commrade@profkom.ussr")
+                .birthdate(LocalDate.parse("1833-10-17"))
+                .build();
+        Author authorUpdate = Author.builder()
+                .id(1L)
+                .firstName("Petr")
+                .lastName("Turner")
+                .email("commrade@profkom.ussr")
+                .birthdate(LocalDate.parse("1833-10-17"))
+                .build();
+        when(authorRepo.getById(1L)).thenReturn(author);
+
+        mvc.perform(put("/authors/{id}", 1L)
+                .content(objectMapper.writeValueAsString(authorUpdate))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(authorUpdate)));
+
+        verify(authorRepo, times(1)).getById(1L);
+        verify(authorRepo, times(1)).getById(anyLong());
+        verify(authorRepo, times(1)).save(any(Author.class));
+        verify(authorRepo, times(1)).save(authorUpdate);
+    }
+
+    @Test
+    void update_InValidAuthor_400BadRequest() throws Exception {
+        Author authorUpdate = Author.builder()
+                .id(1L)
+                .firstName("Petr")
                 .lastName("Tu")
                 .email("commrade@profkom.ussr")
                 .birthdate(LocalDate.parse("1833-10-17"))
                 .build();
 
-        mvc.perform(post("/authors")
-                .content(objectMapper.writeValueAsString(author))
+        mvc.perform(put("/authors/{id}", 1L)
+                .content(objectMapper.writeValueAsString(authorUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(mvcResult -> {
-                    mvcResult.getResolvedException().getClass().equals(SQLIntegrityConstraintViolationException.class);
+                    mvcResult.getResolvedException().getClass().equals(MethodArgumentNotValidException.class);
                 })
-                .andExpect(mvcResult -> assertTrue(mvcResult.getResolvedException() instanceof SQLIntegrityConstraintViolationException));
+                .andExpect(mvcResult -> assertTrue(mvcResult.getResolvedException() instanceof MethodArgumentNotValidException));
+    }
+
+    @Test
+    void update_null_NotModified() throws Exception {
+        Author authorUpdate = Author.builder()
+                .id(1L)
+                .firstName("Petr")
+                .lastName("Turner")
+                .email("commrade@profkom.ussr")
+                .birthdate(LocalDate.parse("1833-10-17"))
+                .build();
+        when(authorRepo.getById(1L)).thenReturn(null);
+
+        mvc.perform(put("/authors/{id}", 1L)
+        .content(objectMapper.writeValueAsString(authorUpdate))
+        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotModified());
     }
 
 
