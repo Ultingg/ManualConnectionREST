@@ -4,8 +4,10 @@ package ru.isaykin.controllers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.isaykin.reader.Author;
+import ru.isaykin.reader.AuthorList;
 import ru.isaykin.services.AuthorsSQLService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
@@ -61,7 +63,7 @@ public class AuthorController {
             } else {
                 responseEntity = new ResponseEntity<>(authorList, OK);
             }
-        }else {
+        } else {
             responseEntity = new ResponseEntity<>(NOT_FOUND);
         }
         return responseEntity;
@@ -81,14 +83,13 @@ public class AuthorController {
         } else {
             responseEntity = new ResponseEntity<>(NOT_FOUND);
         }
-            return responseEntity;
+        return responseEntity;
     }
 
 
-    @PostMapping("authors")
-    public ResponseEntity<Author> insert(@RequestBody Author author) {
+    @PostMapping(value = "authors")
+    public ResponseEntity<Author> insert(@Valid @RequestBody Author author) {
         ResponseEntity<Author> result;
-
         if (author == null) {
             result = new ResponseEntity<>(NO_CONTENT);
         } else {
@@ -99,9 +100,9 @@ public class AuthorController {
     }
 
     @PostMapping("authors/addlist")
-    public ResponseEntity<List<Author>> createList(@RequestBody List<Author> authorList) {
-        List<Author> insertedList;
-        ResponseEntity<List<Author>> responseEntity;
+    public ResponseEntity<AuthorList<Author>> createList(@Valid @RequestBody AuthorList<Author> authorList) {
+        AuthorList<Author> insertedList;
+        ResponseEntity<AuthorList<Author>> responseEntity;
         if (authorList == null) {
             responseEntity = new ResponseEntity<>(NO_CONTENT);
         } else {
@@ -125,7 +126,7 @@ public class AuthorController {
 
     @PutMapping("authors/{id}")
     public ResponseEntity<Author> updateById(@PathVariable Long id,
-                                             @RequestBody Author author) {
+                                             @Valid @RequestBody Author author) {
         ResponseEntity<Author> result;
         Author updatedAuthor = authorsSQLService.update(id, author);
         if (updatedAuthor == null) {

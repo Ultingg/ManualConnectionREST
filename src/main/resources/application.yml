@@ -1,11 +1,10 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/redakzia
+    url: jdbc:mysql://localhost:3306/redakzia?serverTimezone=UTC
     username: root
     password: 9999
     driver-class-name: com.mysql.cj.jdbc.Driver
     initialization-mode: always
-
 
 
   servlet:
