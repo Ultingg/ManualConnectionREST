@@ -2,7 +2,6 @@ package ru.isaykin.contextTests;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 import static java.sql.Date.valueOf;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -47,9 +47,9 @@ public class ContextControllerTest {
 
     @Test
     void contextLaunch() {
-        Assertions.assertThat(authorController).isNotNull();
-        Assertions.assertThat(authorsSQLService).isNotNull();
-        Assertions.assertThat(authorRepo).isNotNull();
+        assertThat(authorController).isNotNull();
+        assertThat(authorsSQLService).isNotNull();
+        assertThat(authorRepo).isNotNull();
     }
 
     @Test
