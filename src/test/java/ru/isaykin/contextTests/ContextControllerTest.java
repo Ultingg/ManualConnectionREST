@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ContextController {
+public class ContextControllerTest {
 
     @MockBean
     private AuthorRepo authorRepo;
