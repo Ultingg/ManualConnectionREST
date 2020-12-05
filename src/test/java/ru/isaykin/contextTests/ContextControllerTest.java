@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,6 +23,7 @@ import static java.sql.Date.valueOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -65,7 +65,7 @@ public class ContextControllerTest {
 
         mvc.perform(post("/authors")
                 .content(objectMapper.writeValueAsString(author))
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(author)));
         verify(authorRepo, times(1)).getByEmail(anyString());
@@ -87,7 +87,7 @@ public class ContextControllerTest {
 
         mvc.perform(post("/authors")
                 .content(objectMapper.writeValueAsString(author))
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(mvcResult -> {
                     mvcResult.getResolvedException().getClass().equals(MethodArgumentNotValidException.class);
@@ -116,7 +116,7 @@ public class ContextControllerTest {
 
         mvc.perform(put("/authors/{id}", 1L)
                 .content(objectMapper.writeValueAsString(authorUpdate))
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(authorUpdate)));
 
@@ -138,7 +138,7 @@ public class ContextControllerTest {
 
         mvc.perform(put("/authors/{id}", 1L)
                 .content(objectMapper.writeValueAsString(authorUpdate))
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(mvcResult -> {
                     mvcResult.getResolvedException().getClass().equals(MethodArgumentNotValidException.class);
@@ -159,7 +159,7 @@ public class ContextControllerTest {
 
         mvc.perform(put("/authors/{id}", 1L)
         .content(objectMapper.writeValueAsString(authorUpdate))
-        .contentType(MediaType.APPLICATION_JSON))
+        .contentType(APPLICATION_JSON))
                 .andExpect(status().isNotModified());
     }
 
