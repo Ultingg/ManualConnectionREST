@@ -1,4 +1,4 @@
-**ManualConnectionREST** it is pet-project with using next technologies:
+**ManualConnectionREST**  is pet-project with using next technologies:
  
  Spring Boot,
  Spring Data JDBC,
