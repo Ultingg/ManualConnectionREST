@@ -1,7 +1,7 @@
 
 Database: 
 You should create database 'redakzia' on your MySQL server (CREATE DATABASE redakzia;)
-or change it's name in application.yml in url string for hte name of existing database;
+or change it's name in application.yml in url string for the name of existing database;
 
 User: 
 create user 'root' with all privileges. 
