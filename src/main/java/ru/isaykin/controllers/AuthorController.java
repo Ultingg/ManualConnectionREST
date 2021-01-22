@@ -21,7 +21,6 @@ public class AuthorController {
     public AuthorController(AuthorsSQLService authorsSQLService) {
         this.authorsSQLService = authorsSQLService;
     }
-//TODO: ADD SPRING VALIDATION
 
     @GetMapping("authors")
     public ResponseEntity<Object> getListOrGetOneByFirstNameAndLastName(@RequestParam(value = "first_name", required = false) String firstName,
