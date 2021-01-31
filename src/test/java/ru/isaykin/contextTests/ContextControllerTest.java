@@ -12,7 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.isaykin.controllers.AuthorController;
-import ru.isaykin.reader.Author;
+import ru.isaykin.model.Author;
 import ru.isaykin.repository.AuthorRepo;
 import ru.isaykin.services.AuthorsSQLService;
 

@@ -10,7 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.isaykin.reader.Author;
+import ru.isaykin.model.Author;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -2,7 +2,7 @@ package ru.isaykin.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.isaykin.reader.Author;
+import ru.isaykin.model.Author;
 import ru.isaykin.repository.AuthorRepo;
 import ru.isaykin.writer.CSVWriter;
 import ru.isaykin.writer.XLSWriter;

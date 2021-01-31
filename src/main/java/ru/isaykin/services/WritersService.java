@@ -2,7 +2,7 @@ package ru.isaykin.services;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import ru.isaykin.reader.Author;
+import ru.isaykin.model.Author;
 import ru.isaykin.repository.AuthorRepo;
 import ru.isaykin.writer.CSVWriter;
 import ru.isaykin.writer.XLSWriter;

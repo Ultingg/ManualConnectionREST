@@ -1,4 +1,4 @@
-package ru.isaykin.reader;
+package ru.isaykin.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +15,7 @@ import java.time.LocalDate;
 
 @Data
 @Builder
-@Table("authors")
+@Table("AUTHORS")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Author implements Comparable<Author> {

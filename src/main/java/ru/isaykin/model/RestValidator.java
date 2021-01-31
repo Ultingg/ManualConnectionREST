@@ -1,4 +1,4 @@
-package ru.isaykin.reader;
+package ru.isaykin.model;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

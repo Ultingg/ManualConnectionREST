@@ -3,8 +3,8 @@ package ru.isaykin.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.isaykin.reader.Author;
-import ru.isaykin.reader.AuthorList;
+import ru.isaykin.model.Author;
+import ru.isaykin.model.AuthorList;
 import ru.isaykin.services.AuthorsSQLService;
 
 import javax.validation.Valid;

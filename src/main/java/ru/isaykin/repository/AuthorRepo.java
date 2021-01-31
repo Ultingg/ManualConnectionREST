@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import ru.isaykin.reader.Author;
+import ru.isaykin.model.Author;
 
 import java.sql.Date;
 import java.util.List;

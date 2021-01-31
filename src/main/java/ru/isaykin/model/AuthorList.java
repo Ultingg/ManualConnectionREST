@@ -1,4 +1,4 @@
-package ru.isaykin.reader;
+package ru.isaykin.model;
 
 import javax.validation.Valid;
 import java.util.*;
