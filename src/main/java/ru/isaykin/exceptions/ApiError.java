@@ -85,7 +85,7 @@ public class ApiError {
         fieldValidationErrors.add(subError);
     }
 
-    public List<FieldValidationError> getFieledValidationErrors() {
+    public List<FieldValidationError> getFieldValidationErrors() {
         return fieldValidationErrors;
     }
 
