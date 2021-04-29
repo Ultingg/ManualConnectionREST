@@ -19,7 +19,6 @@ public class ApiError {
     private HttpStatus status;
     private String message;
     private  String help;
-//    private String debugMessage;
 
     private List<FieldValidationError> fieldValidationErrors;
 
@@ -30,7 +29,6 @@ public class ApiError {
         this.message = message;
         timestamp = LocalDateTime.now();
     }
-
 
     void addValidationErrors(List<FieldError> fieldErrors) {
         fieldErrors.forEach(error -> {
@@ -51,11 +49,4 @@ public class ApiError {
         fieldValidationErrors.add(subError);
     }
 
-    public List<FieldValidationError> getFieldValidationErrors() {
-        return fieldValidationErrors;
-    }
-
-    public void setFieldValidationErrors(List<FieldValidationError> apiValidationErrors) {
-        this.fieldValidationErrors = apiValidationErrors;
-    }
 }
