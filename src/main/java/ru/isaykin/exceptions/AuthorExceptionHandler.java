@@ -34,7 +34,7 @@ public class AuthorExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleDuplicateException(SQLIntegrityConstraintViolationException exception, WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", new Date());
-        body.put("status", INTERNAL_SERVER_ERROR.value());
+        body.put("status", INTERNAL_SERVER_ERROR.toString());
         body.put("errors", exception.getMessage());
 
 

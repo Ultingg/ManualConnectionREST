@@ -32,8 +32,9 @@ public class FieldValidationError {
             case "birthdate":
                 result = "Please enter correct birth date of author";
                 break;
+
             default:
-                result = "call to technical support";
+                result = "Please enter email in that form: myemailname@email.ru";
                 break;
         }
 
