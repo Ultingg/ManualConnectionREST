@@ -81,7 +81,7 @@ public class AuthorController {
 
 
     @PostMapping(value = "authors")
-    public ResponseEntity<Author> insert(@Valid @RequestBody Author author) {
+    public ResponseEntity<Author> insert(@Valid @RequestBody Author author)  {
         ResponseEntity<Author> result;
         if (author == null) {
             result = new ResponseEntity<>(NO_CONTENT);

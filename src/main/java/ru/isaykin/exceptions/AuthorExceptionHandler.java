@@ -1,6 +1,7 @@
 package ru.isaykin.exceptions;
 
 
+import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,8 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ControllerAdvice
 public class AuthorExceptionHandler extends ResponseEntityExceptionHandler {
@@ -31,24 +33,17 @@ public class AuthorExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<Object> handleDuplicateException(SQLIntegrityConstraintViolationException exception, WebRequest request) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", new Date());
-        body.put("status", INTERNAL_SERVER_ERROR.toString());
-        body.put("errors", exception.getMessage());
-
-
-        return new ResponseEntity<>(
-                body, INTERNAL_SERVER_ERROR);
+    @ExceptionHandler(DbActionExecutionException.class)
+    public ResponseEntity<Object> handleDuplicateException(DbActionExecutionException exception, WebRequest request) {
+        SQLIntegrityConstraintViolationException sqlException = unwrapCause(SQLIntegrityConstraintViolationException.class, exception);
+            return getResponseEntityWithBody(BAD_REQUEST, sqlException);
     }
-
-    @ExceptionHandler(value = AuthorNotFoundException.class)
-    public ResponseEntity<Object> handleAuthorNotFoundException(AuthorNotFoundException exception) {
-        return getResponseEntityWithBody(NOT_FOUND, exception);
-
+    private static <T> T unwrapCause(Class<T> clazz, Throwable e) {
+        while (!clazz.isInstance(e) && e.getCause() != null && e != e.getCause()) {
+            e = e.getCause();
+        }
+        return clazz.isInstance(e) ? clazz.cast(e) : null;
     }
-
     private ResponseEntity<Object> getResponseEntityWithBody(HttpStatus status, Exception exception) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", new Date());
@@ -58,11 +53,20 @@ public class AuthorExceptionHandler extends ResponseEntityExceptionHandler {
                 body, status);
     }
 
+    @ExceptionHandler(value = AuthorNotFoundException.class)
+    public ResponseEntity<Object> handleAuthorNotFoundException(AuthorNotFoundException exception) {
+        return getResponseEntityWithBody(NOT_FOUND, exception);
+
+    }
+
+
+
     @ExceptionHandler(value = IllegalArgumentException.class)
     public ResponseEntity<Object> handleAuthorNotFoundException(IllegalArgumentException exception) {
         return getResponseEntityWithBody(BAD_REQUEST, exception);
 
     }
+
 
 
 }

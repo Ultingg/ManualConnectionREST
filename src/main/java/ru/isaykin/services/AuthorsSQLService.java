@@ -68,9 +68,20 @@ public class AuthorsSQLService {
         return authorRepo.getListByAgeLessThen(currentDateMinusYears);
     }
 
-    public Author insertAuthor(Author author) {
-        return authorRepo.save(author);
+    public Author insertAuthor(Author author)  {
+        Author result = null;
 
+             result = authorRepo.save(author);
+
+
+        return result;
+
+    }
+    public static <T> T unwrapCause(Class<T> clazz, Throwable e) {
+        while (!clazz.isInstance(e) && e.getCause() != null && e != e.getCause()) {
+            e = e.getCause();
+        }
+        return clazz.isInstance(e) ? clazz.cast(e) : null;
     }
 
     public List<Author> insertMany(List<Author> authorList) {
