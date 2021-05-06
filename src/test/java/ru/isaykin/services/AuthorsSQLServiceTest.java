@@ -99,10 +99,10 @@ class AuthorsSQLServiceTest {
     }
 
     @Test
-    void update_nullAuthorFromRepo_AuthotNotFoundException() {
+    void update_nullAuthorFromRepo_AuthorNotFoundException() {
         when(authorRepo.existsById(1L)).thenReturn(false);
 
-        assertThrows(AuthorNotFoundException.class, () -> authorsSQLService.update(1l, new Author()));
+        assertThrows(AuthorNotFoundException.class, () -> authorsSQLService.update(1L, new Author()));
         verify(authorRepo, times(1)).existsById(anyLong());
         verify(authorRepo, times(1)).existsById(1L);
         verify(authorRepo, times(0)).save(any());

@@ -28,7 +28,7 @@ public class AuthorExceptionHandler extends ResponseEntityExceptionHandler {
         ApiError apiError = new ApiError(status, "method arg not valid", ex);
         apiError.addValidationErrors(ex.getBindingResult().getFieldErrors());
 
-        return new ResponseEntity<Object>(apiError, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = SQLIntegrityConstraintViolationException.class)

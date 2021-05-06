@@ -22,20 +22,14 @@ public class FieldValidationError {
     public void helpSwitcher() {
         String result;
 
-        switch (field) {
-            case "firstName":
-                result = "Please enter correct first name of author";
-                break;
-            case "lastName":
-                result = "Please enter correct last name of author";
-                break;
-            case "birthdate":
-                result = "Please enter correct birth date of author";
-                break;
-
-            default:
-                result = "Please enter email in that form: myemailname@email.ru";
-                break;
+        if ("firstName".equals(field)) {
+            result = "Please enter correct first name of author";
+        } else if ("lastName".equals(field)) {
+            result = "Please enter correct last name of author";
+        } else if ("birthdate".equals(field)) {
+            result = "Please enter correct birth date of author";
+        } else {
+            result = "Please enter email in that form: myemailname@email.ru";
         }
 
 

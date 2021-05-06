@@ -91,9 +91,6 @@ public class ContextControllerTest {
                 .content(objectMapper.writeValueAsString(author))
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(mvcResult -> {
-                    mvcResult.getResolvedException().getClass().equals(MethodArgumentNotValidException.class);
-                })
                 .andExpect(mvcResult -> assertTrue(mvcResult.getResolvedException() instanceof MethodArgumentNotValidException));
     }
 
@@ -141,9 +138,6 @@ public class ContextControllerTest {
                 .content(objectMapper.writeValueAsString(authorUpdate))
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(mvcResult -> {
-                    mvcResult.getResolvedException().getClass().equals(MethodArgumentNotValidException.class);
-                })
                 .andExpect(mvcResult -> assertTrue(mvcResult.getResolvedException() instanceof MethodArgumentNotValidException));
     }
 
