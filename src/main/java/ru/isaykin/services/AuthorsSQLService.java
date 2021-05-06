@@ -1,9 +1,9 @@
 package ru.isaykin.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import ru.isaykin.exceptions.AuthorNotFoundException;
 import ru.isaykin.model.Author;
 import ru.isaykin.model.AuthorList;
 import ru.isaykin.repository.AuthorRepo;
@@ -14,8 +14,6 @@ import java.util.List;
 
 import static java.sql.Date.valueOf;
 import static java.time.LocalDate.now;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
 @Service
@@ -34,15 +32,9 @@ public class AuthorsSQLService {
         return authorRepo.getAll();
     }
 
-    public ResponseEntity<Author> getOneById(Long id) {
-        Author author = authorRepo.getById(id);
-        ResponseEntity<Author> result;
-        if (author == null) {
-            result = new ResponseEntity<>(NOT_FOUND);
-        } else {
-            result = new ResponseEntity<>(author, OK);
-        }
-
+    public Author getOneById(Long id) {
+        Author result = authorRepo.findById(id)
+                .orElseThrow(()-> new AuthorNotFoundException("Author not found."));
         return result;
     }
 
@@ -68,16 +60,11 @@ public class AuthorsSQLService {
         return authorToUpdate;
     }
 
-    public ResponseEntity<Author> delete(Long id) {
-        Author authorChecking = authorRepo.getById(id);
-        ResponseEntity<Author> result;
-        if (authorChecking == null) {
-            result = new ResponseEntity<>(NOT_FOUND);
-        } else {
+    public void deleteById(Long id) {
+       if(!authorRepo.existsById(id)) {
+           throw new AuthorNotFoundException("Author not found.");
+       }
             authorRepo.deleteById(id);
-            result = new ResponseEntity<>(OK);
-        }
-        return result;
     }
 
     public List<Author> getListByAgeGT(Integer age) {
@@ -92,7 +79,7 @@ public class AuthorsSQLService {
         return authorRepo.getListByAgeLessThen(currentDateMinusYears);
     }
 
-    public Author insert(Author author) {
+    public Author insertAuthor(Author author) {
         authorRepo.insert(author.getFirstName(),
                 author.getLastName(),
                 author.getEmail(),

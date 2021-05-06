@@ -42,13 +42,8 @@ public class AuthorController {
 
     @GetMapping("authors/{id}")
     public ResponseEntity<Author> getOneAuthor(@PathVariable Long id) {
-        ResponseEntity<Author> responseEntity;
-        if (id != null) {
-            responseEntity = authorsSQLService.getOneById(id);
-        } else {
-            responseEntity = new ResponseEntity<>(NOT_FOUND);
-        }
-        return responseEntity;
+        Author author = authorsSQLService.getOneById(id);
+        return new ResponseEntity<>(author, OK);
     }
 
 
@@ -92,7 +87,7 @@ public class AuthorController {
         if (author == null) {
             result = new ResponseEntity<>(NO_CONTENT);
         } else {
-            Author author1 = authorsSQLService.insert(author);
+            Author author1 = authorsSQLService.insertAuthor(author);
             result = new ResponseEntity<>(author1, OK);
         }
         return result;
@@ -114,13 +109,8 @@ public class AuthorController {
 
     @DeleteMapping("authors/{id}")
     public ResponseEntity<Author> delete(@PathVariable Long id) {
-        ResponseEntity<Author> responseEntity;
-        if (id != null) {
-            responseEntity = authorsSQLService.delete(id);
-        } else {
-            responseEntity = new ResponseEntity<>(NOT_FOUND);
-        }
-        return responseEntity;
+        authorsSQLService.deleteById(id);
+        return new ResponseEntity<>(NO_CONTENT);
     }
 
     @PutMapping("authors/{id}")
