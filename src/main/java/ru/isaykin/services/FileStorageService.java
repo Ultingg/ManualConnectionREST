@@ -19,16 +19,13 @@ public class FileStorageService {
 
     private final Path fileStorageLocation;
 
-
     public FileStorageService(FileStorageProperties fileStorageProperties) {
         fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
-
         try {
             Files.createDirectories(fileStorageLocation);
         } catch (IOException e) {
             log.error("Could not create the directory where the uploaded files will be stored." + e.getMessage());
         }
-
     }
 
     public Resource loadFileAsResource(String fileName) {

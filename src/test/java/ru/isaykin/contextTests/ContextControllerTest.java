@@ -16,10 +16,8 @@ import ru.isaykin.model.Author;
 import ru.isaykin.repository.AuthorRepo;
 import ru.isaykin.services.AuthorsSQLService;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
-import static java.sql.Date.valueOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -45,6 +43,7 @@ public class ContextControllerTest {
     @Autowired
     private MockMvc mvc;
 
+
     @Test
     void contextLaunch() {
         assertThat(authorController).isNotNull();
@@ -52,27 +51,30 @@ public class ContextControllerTest {
         assertThat(authorRepo).isNotNull();
     }
 
+
     @Test
     void insert_validAuthor_200OKAuthor() throws Exception {
         Author author = Author.builder()
+                .firstName("Valera")
+                .lastName("Tovarish")
+                .email("commrade@profkom.ussr")
+                .birthdate(LocalDate.parse("1933-10-17"))
+                .build();
+        Author authorFromDB = Author.builder()
                 .id(1L)
                 .firstName("Valera")
                 .lastName("Tovarish")
                 .email("commrade@profkom.ussr")
                 .birthdate(LocalDate.parse("1933-10-17"))
                 .build();
-        when(authorRepo.getByEmail("commrade@profkom.ussr")).thenReturn(author);
+        when(authorRepo.save(any(Author.class))).thenReturn(authorFromDB);
 
         mvc.perform(post("/authors")
                 .content(objectMapper.writeValueAsString(author))
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(author)));
-        verify(authorRepo, times(1)).getByEmail(anyString());
-        verify(authorRepo, times(1)).getByEmail("commrade@profkom.ussr");
-        verify(authorRepo, times(1)).getByEmail(anyString());
-        verify(authorRepo, times(1)).insert("Valera", "Tovarish", "commrade@profkom.ussr", valueOf(LocalDate.parse("1933-10-17")));
-        verify(authorRepo, times(1)).insert(anyString(), anyString(), anyString(), any(Date.class));
+                .andExpect(content().json(objectMapper.writeValueAsString(authorFromDB)));
+        verify(authorRepo, times(1)).save(any(Author.class));
     }
 
     @Test
@@ -99,8 +101,7 @@ public class ContextControllerTest {
     @Test
     void update_ValidAuthor_200OKUpdatedAuthor() throws Exception {
         Author author = Author.builder()
-                .id(1L)
-                .firstName("Victor")
+                .firstName("Petr")
                 .lastName("Turner")
                 .email("commrade@profkom.ussr")
                 .birthdate(LocalDate.parse("1833-10-17"))
@@ -112,16 +113,16 @@ public class ContextControllerTest {
                 .email("commrade@profkom.ussr")
                 .birthdate(LocalDate.parse("1833-10-17"))
                 .build();
-        when(authorRepo.getById(1L)).thenReturn(author);
-
+        when(authorRepo.existsById(1L)).thenReturn(true);
+        when(authorRepo.save(any(Author.class))).thenReturn(authorUpdate);
         mvc.perform(put("/authors/{id}", 1L)
-                .content(objectMapper.writeValueAsString(authorUpdate))
+                .content(objectMapper.writeValueAsString(author))
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(authorUpdate)));
 
-        verify(authorRepo, times(1)).getById(1L);
-        verify(authorRepo, times(1)).getById(anyLong());
+        verify(authorRepo, times(1)).existsById(1L);
+        verify(authorRepo, times(1)).existsById(anyLong());
         verify(authorRepo, times(1)).save(any(Author.class));
         verify(authorRepo, times(1)).save(authorUpdate);
     }
@@ -147,7 +148,7 @@ public class ContextControllerTest {
     }
 
     @Test
-    void update_null_NotModified() throws Exception {
+    void update_null_NotFound() throws Exception {
         Author authorUpdate = Author.builder()
                 .id(1L)
                 .firstName("Petr")
@@ -155,13 +156,14 @@ public class ContextControllerTest {
                 .email("commrade@profkom.ussr")
                 .birthdate(LocalDate.parse("1833-10-17"))
                 .build();
-        when(authorRepo.getById(1L)).thenReturn(null);
+        when(authorRepo.existsById(1L)).thenReturn(false);
 
         mvc.perform(put("/authors/{id}", 1L)
-        .content(objectMapper.writeValueAsString(authorUpdate))
-        .contentType(APPLICATION_JSON))
-                .andExpect(status().isNotModified());
+                .content(objectMapper.writeValueAsString(authorUpdate))
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
+
 
 
 }

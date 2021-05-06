@@ -18,10 +18,9 @@ public class ApiError {
     private LocalDateTime timestamp;
     private HttpStatus status;
     private String message;
-    private  String help;
+    private String help;
 
     private List<FieldValidationError> fieldValidationErrors;
-
 
 
     ApiError(HttpStatus status, String message, Throwable ex) {

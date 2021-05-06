@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import ru.isaykin.model.Author;
-import ru.isaykin.model.AuthorList;
 import ru.isaykin.services.AuthorsSQLService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -267,44 +267,45 @@ class AuthorControllerTest {
 
 
     @Test
-    void createList_validListOfAuthors_validListOfAuthors() {
-        Author author = Author.builder()
+    void insertList_validListOfAuthors_validListOfAuthors() {
+        Author authorExpected = Author.builder()
                 .id(1L)
-                .firstName("Platon")
-                .lastName("Swan")
-                .email("swanoil@ug.ru")
-                .birthdate(LocalDate.of(1985, 10, 22))
+                .firstName("Yellow")
+                .lastName("Car")
+                .email("bumblebe@transformer.ab")
+                .birthdate(LocalDate.parse("2020-10-12"))
+                .build();
+        Author authorExpected2 = Author.builder()
+                .id(1L)
+                .firstName("Napoleon")
+                .lastName("Bonaparte")
+                .email("napoleon@imperor.fr")
+                .birthdate(LocalDate.parse("1769-08-15"))
+                .build();
+        List<Author> authorListExpected = Arrays.asList(authorExpected, authorExpected2);
+        Author author = Author.builder()
+                .firstName("Yellow")
+                .lastName("Car")
+                .email("bumblebe@transformer.ab")
+                .birthdate(LocalDate.parse("2020-10-12"))
                 .build();
         Author author1 = Author.builder()
-                .id(2L)
-                .firstName("Lena")
-                .lastName("Puzzle")
-                .email("puzzle@mail.ru")
-                .birthdate(LocalDate.of(1975, 10, 21))
+                .firstName("Napoleon")
+                .lastName("Bonaparte")
+                .email("napoleon@imperor.fr")
+                .birthdate(LocalDate.parse("1769-08-15"))
                 .build();
-        AuthorList<Author> authorList = new AuthorList<>();
-        authorList.add(author);
-        authorList.add(author1);
-        when(authorsSQLService.insertMany(authorList)).thenReturn(authorList);
-        ResponseEntity<AuthorList<Author>> expected = new ResponseEntity<>(authorList, OK);
+        List<Author> authorList = Arrays.asList(author, author1);
+        when(authorsSQLService.insertMany(authorList)).thenReturn(authorListExpected);
+        ResponseEntity<List<Author>> expected = new ResponseEntity<>(authorListExpected, OK);
 
-        ResponseEntity<AuthorList<Author>> actual = authorController.createList(authorList);
+        ResponseEntity<List<Author>> actual = authorController.insertList(authorList);
 
         assertEquals(expected, actual, "Checking if correct List was created and correct response (OK)");
         verify(authorsSQLService, times(1)).insertMany(any());
         verify(authorsSQLService, times(1)).insertMany(authorList);
     }
 
-    @Test
-    void crestList_null_noContent() {
-        ResponseEntity<AuthorList<Author>> expected = new ResponseEntity<>(NO_CONTENT);
-
-        ResponseEntity<AuthorList<Author>> actual = authorController.createList(null);
-
-        assertEquals(expected, actual, "Checking if correct response (NO CONTENT) was returned with null as parameter");
-        verify(authorsSQLService, times(0)).insertMany(any());
-        verify(authorsSQLService, times(0)).insertMany(null);
-    }
 
     @Test
     void delete_validId_NO_CONTENT() {

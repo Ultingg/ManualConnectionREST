@@ -30,6 +30,7 @@ public class AuthorExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<Object>(apiError, HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(value = SQLIntegrityConstraintViolationException.class)
     public ResponseEntity<Object> handleDuplicateException(SQLIntegrityConstraintViolationException exception, WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
@@ -44,9 +45,10 @@ public class AuthorExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = AuthorNotFoundException.class)
     public ResponseEntity<Object> handleAuthorNotFoundException(AuthorNotFoundException exception) {
-        return  getResponseEntityWithBody(NOT_FOUND, exception);
+        return getResponseEntityWithBody(NOT_FOUND, exception);
 
     }
+
     private ResponseEntity<Object> getResponseEntityWithBody(HttpStatus status, Exception exception) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", new Date());
@@ -63,4 +65,4 @@ public class AuthorExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    }
+}

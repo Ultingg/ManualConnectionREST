@@ -4,7 +4,6 @@ package ru.isaykin.controllers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.isaykin.model.Author;
-import ru.isaykin.model.AuthorList;
 import ru.isaykin.services.AuthorsSQLService;
 
 import javax.validation.Valid;
@@ -94,16 +93,9 @@ public class AuthorController {
     }
 
     @PostMapping("authors/addlist")
-    public ResponseEntity<AuthorList<Author>> createList(@Valid @RequestBody AuthorList<Author> authorList) {
-        AuthorList<Author> insertedList;
-        ResponseEntity<AuthorList<Author>> responseEntity;
-        if (authorList == null) {
-            responseEntity = new ResponseEntity<>(NO_CONTENT);
-        } else {
-            insertedList = authorsSQLService.insertMany(authorList);
-            responseEntity = new ResponseEntity<>(insertedList, OK);
-        }
-        return responseEntity;
+    public ResponseEntity<List<Author>> insertList(@Valid @RequestBody List<Author> authorList) {
+        List<Author> insertedList = authorsSQLService.insertMany(authorList);
+        return new ResponseEntity<>(insertedList, OK);
     }
 
 

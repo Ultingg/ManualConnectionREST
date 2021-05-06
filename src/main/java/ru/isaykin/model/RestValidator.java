@@ -17,15 +17,14 @@ public class RestValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         Author author = (Author) o;
-        if (checkInputString(author.getFirstName())){
-            errors.rejectValue("firstName","firstName is empty");
+        if (checkInputString(author.getFirstName())) {
+            errors.rejectValue("firstName", "firstName is empty");
         }
-        if (checkInputString(author.getLastName())){
-            errors.rejectValue("lastName","lastName is empty");
+        if (checkInputString(author.getLastName())) {
+            errors.rejectValue("lastName", "lastName is empty");
         }
 
     }
-
 
 
     private boolean checkInputString(String input) {
