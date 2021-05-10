@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import ru.isaykin.exceptions.AuthorNotFoundException;
+import ru.isaykin.exceptions.IllegalArgumentAuthorException;
 import ru.isaykin.model.Author;
 import ru.isaykin.repository.AuthorRepo;
 
@@ -159,6 +160,13 @@ class AuthorsSQLServiceTest {
 
         assertEquals(expected, author, "Checking if the right author was inserted into list");
         verify(authorRepo, times(1)).save(any(Author.class));
+    }
+
+    @Test
+    void insert_null_IllegalArgumentAuthorException() {
+        assertThrows(IllegalArgumentAuthorException.class,()->authorsSQLService.insertAuthor(null));
+        verify(authorRepo,times(0)).save(any());
+        verify(authorRepo,times(0)).save(null);
     }
 
     @Test

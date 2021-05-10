@@ -59,10 +59,8 @@ public class AuthorExceptionHandler extends ResponseEntityExceptionHandler {
 
     }
 
-
-
-    @ExceptionHandler(value = IllegalArgumentException.class)
-    public ResponseEntity<Object> handleAuthorNotFoundException(IllegalArgumentException exception) {
+    @ExceptionHandler(value = IllegalArgumentAuthorException.class)
+    public ResponseEntity<Object> handleAuthorNotFoundException(IllegalArgumentAuthorException exception) {
         return getResponseEntityWithBody(BAD_REQUEST, exception);
 
     }

@@ -81,15 +81,9 @@ public class AuthorController {
 
 
     @PostMapping(value = "authors")
-    public ResponseEntity<Author> insert(@Valid @RequestBody Author author)  {
-        ResponseEntity<Author> result;
-        if (author == null) {
-            result = new ResponseEntity<>(NO_CONTENT);
-        } else {
-            Author author1 = authorsSQLService.insertAuthor(author);
-            result = new ResponseEntity<>(author1, OK);
-        }
-        return result;
+    public ResponseEntity<Author> insert(@Valid @RequestBody Author author) {
+        Author author1 = authorsSQLService.insertAuthor(author);
+        return new ResponseEntity<>(author1, OK);
     }
 
     @PostMapping("authors/addlist")

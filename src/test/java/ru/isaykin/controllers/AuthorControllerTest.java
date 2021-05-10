@@ -254,16 +254,6 @@ class AuthorControllerTest {
         verify(authorsSQLService, times(1)).insertAuthor(any(Author.class));
     }
 
-    @Test
-    void insert_nullId_noContent() {
-        ResponseEntity<Author> expected = new ResponseEntity<>(NO_CONTENT);
-
-        ResponseEntity<Author> actual = authorController.insert(null);
-
-        assertEquals(expected, actual, "Checking if correct response (NO CONTENT) returned with null as parameter");
-        verify(authorsSQLService, times(0)).insertAuthor(null);
-        verify(authorsSQLService, times(0)).insertAuthor(any(Author.class));
-    }
 
 
     @Test

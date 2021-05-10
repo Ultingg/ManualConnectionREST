@@ -3,6 +3,7 @@ package ru.isaykin.services;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.isaykin.exceptions.AuthorNotFoundException;
+import ru.isaykin.exceptions.IllegalArgumentAuthorException;
 import ru.isaykin.model.Author;
 import ru.isaykin.repository.AuthorRepo;
 
@@ -69,19 +70,18 @@ public class AuthorsSQLService {
     }
 
     public Author insertAuthor(Author author)  {
-        Author result = null;
-
-             result = authorRepo.save(author);
-
+        if(author == null) {
+            throw  new IllegalArgumentAuthorException("You send illegal argument. Wrong argument could't be inserted to database.");
+        }
+        Author result;
+        try {
+            result = authorRepo.save(author);
+        } catch (IllegalArgumentException exception) {
+            throw  new IllegalArgumentAuthorException("You send illegal argument. Wrong argument could't be inserted to database.");
+        }
 
         return result;
 
-    }
-    public static <T> T unwrapCause(Class<T> clazz, Throwable e) {
-        while (!clazz.isInstance(e) && e.getCause() != null && e != e.getCause()) {
-            e = e.getCause();
-        }
-        return clazz.isInstance(e) ? clazz.cast(e) : null;
     }
 
     public List<Author> insertMany(List<Author> authorList) {
