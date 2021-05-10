@@ -16,7 +16,8 @@ import java.util.List;
 
 import static java.time.LocalDate.now;
 import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class AuthorsSQLServiceTest {
@@ -210,33 +211,51 @@ class AuthorsSQLServiceTest {
     @Test
     @DisplayName("Test of get List of Greater then some age")
     void getGTAge_validAgeRange_validListOfAuthors() {
-        Date expected = Date.valueOf(now().minusYears(5));
-        authorsSQLService.getListByAgeGT(5);
+        List<Author> expected = Arrays.asList(new Author(), new Author());
+        Date someDate = Date.valueOf(now().minusYears(5));
+        when(authorRepo.getListByAgeGraterThen(any(Date.class))).thenReturn(expected);
 
+        List<Author> actual =  authorsSQLService.getListByAgeGT(5);
+
+        assertEquals(expected, actual);
         verify(authorRepo, times(1)).getListByAgeGraterThen(any(Date.class));
-        verify(authorRepo, times(1)).getListByAgeGraterThen(expected);
+        verify(authorRepo, times(1)).getListByAgeGraterThen(someDate);
     }
 
     @Test
-    void getGTAge_null_NPException() {
-
-        assertThrows(NullPointerException.class, () -> authorsSQLService.getListByAgeGT(null));
+    void getGTAge_null_IllegalArgumentAuthorException() {
+        assertThrows(IllegalArgumentAuthorException.class, () -> authorsSQLService.getListByAgeGT(null));
+        verify(authorRepo, times(0)).getListByAgeGraterThen(any(Date.class));
+    }
+    @Test
+    void getGTAge_invalid_IllegalArgumentAuthorException() {
+        assertThrows(IllegalArgumentAuthorException.class, () -> authorsSQLService.getListByAgeGT(-10));
+        verify(authorRepo, times(0)).getListByAgeGraterThen(any(Date.class));
     }
 
     @Test
     @DisplayName("Test of get List of Less then some age")
     void getLTAge_validAgeRange_validListOfAuthors() {
-        Date expected = Date.valueOf(now().minusYears(5));
-        authorsSQLService.getListByAgeLT(5);
+        List<Author> expected = Arrays.asList(new Author(), new Author());
+        Date someDate = Date.valueOf(now().minusYears(5));
+        when(authorRepo.getListByAgeLessThen(any(Date.class))).thenReturn(expected);
 
+        List<Author> actual  =  authorsSQLService.getListByAgeLT(5);
+
+        assertEquals(expected, actual);
         verify(authorRepo, times(1)).getListByAgeLessThen(any(Date.class));
-        verify(authorRepo, times(1)).getListByAgeLessThen(expected);
+        verify(authorRepo, times(1)).getListByAgeLessThen(someDate);
     }
 
     @Test
-    void getLTAge_null_NPException() {
-
-        assertThrows(NullPointerException.class, () -> authorsSQLService.getListByAgeLT(null));
+    void getLTAge_null_IllegalArgumentAuthorException() {
+        assertThrows(IllegalArgumentAuthorException.class, () -> authorsSQLService.getListByAgeLT(null));
+        verify(authorRepo, times(0)).getListByAgeLessThen(any(Date.class));
+    }
+    @Test
+    void getLTAge_invalid_IllegalArgumentAuthorException() {
+        assertThrows(IllegalArgumentAuthorException.class, () -> authorsSQLService.getListByAgeLT(-1));
+        verify(authorRepo, times(0)).getListByAgeLessThen(any(Date.class));
     }
 
     @Nested
@@ -307,20 +326,19 @@ class AuthorsSQLServiceTest {
             List<Author> expectedList = Arrays.asList(author1, author2);
             when(authorRepo.findAll()).thenReturn(authorList);
 
-            List<Author> actual4 = authorsSQLService.getListByFirstNameAndLastNameOrNull("Friedrich", "Bonaparte");
+            List<Author> actual = authorsSQLService.getListByFirstNameAndLastNameOrNull("Friedrich", "Bonaparte");
 
-            assertEquals(expectedList, actual4, "Checking searching by firstName of List of two authors");
+            assertEquals(expectedList, actual, "Checking searching by firstName of List of two authors");
             verify(authorRepo, times(1)).findAll();
         }
 
         @Test
-        void getListByFirstNameAndLastNameFewAuthors_notExistedNames_null() {
+        void getListByFirstNameAndLastNameFewAuthors_notExistedNames_AuthorNotFoundException() {
             List<Author> authorList = Arrays.asList(author, author1, author2);
             when(authorRepo.findAll()).thenReturn(authorList);
 
-            List<Author> actual4 = authorsSQLService.getListByFirstNameAndLastNameOrNull("Molly", "Trevis");
-
-            assertNull(actual4, "Checking if method returned null");
+            assertThrows(AuthorNotFoundException.class,()->authorsSQLService.getListByFirstNameAndLastNameOrNull("Molly", "Trevis")
+            ,"Checking throwing of AuthorNotFoundException when searching not existing names.");
             verify(authorRepo, times(1)).findAll();
         }
     }

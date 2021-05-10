@@ -36,17 +36,24 @@ public class AuthorsSQLService {
     }
 
     public List<Author> getListByFirstNameAndLastNameOrNull(String firstName, String lastName) {
+        List<Author> selectedAuthors = new ArrayList<>();
+        if (firstName == null && lastName == null) {
+            authorRepo.findAll().iterator().forEachRemaining(selectedAuthors::add);
+        } else {
         List<Author> authors = new ArrayList<>();
         authorRepo.findAll().iterator().forEachRemaining(authors::add);
-        List<Author> selectedAuthors = authors.stream()
+        selectedAuthors = authors.stream()
                 .filter(author -> author.getFirstName().equals(firstName) || author.getLastName().equals(lastName))
                 .collect(Collectors.toList());
-        return selectedAuthors.size() != 0 ? selectedAuthors : null;
+        if (selectedAuthors.isEmpty()) {
+            throw new AuthorNotFoundException("Authors not found.");
+        }}
+        return selectedAuthors;
     }
 
 
     public Author update(Long id, Author authorToUpdate) {
-        if(!authorRepo.existsById(id)) throw  new AuthorNotFoundException("Author not found");
+        if (!authorRepo.existsById(id)) throw new AuthorNotFoundException("Author not found");
         authorToUpdate.setId(id);
         authorRepo.save(authorToUpdate);
         return authorToUpdate;
@@ -60,24 +67,38 @@ public class AuthorsSQLService {
     }
 
     public List<Author> getListByAgeGT(Integer age) {
+        if (age == null || age < 0) {
+            throw new IllegalArgumentAuthorException("You've sent illegal argument. Age is not correct");
+        }
         Date currentDateMinusYears = valueOf(now().minusYears(age));
-        return authorRepo.getListByAgeGraterThen(currentDateMinusYears);
+        List<Author> resultList = authorRepo.getListByAgeGraterThen(currentDateMinusYears);
+        if (resultList.isEmpty()) {
+            throw new AuthorNotFoundException("Authors not found.");
+        }
+        return resultList;
     }
 
     public List<Author> getListByAgeLT(Integer age) {
+        if (age == null || age < 0) {
+            throw new IllegalArgumentAuthorException("You've sent illegal argument. Age is not correct");
+        }
         Date currentDateMinusYears = valueOf(now().minusYears(age));
-        return authorRepo.getListByAgeLessThen(currentDateMinusYears);
+        List<Author> resultList = authorRepo.getListByAgeLessThen(currentDateMinusYears);
+        if (resultList.isEmpty()) {
+            throw new AuthorNotFoundException("Author not found.");
+        }
+        return resultList;
     }
 
-    public Author insertAuthor(Author author)  {
-        if(author == null) {
-            throw  new IllegalArgumentAuthorException("You send illegal argument. Wrong argument could't be inserted to database.");
+    public Author insertAuthor(Author author) {
+        if (author == null) {
+            throw new IllegalArgumentAuthorException("You've sent illegal argument. Wrong argument could't be inserted to database.");
         }
         Author result;
         try {
             result = authorRepo.save(author);
         } catch (IllegalArgumentException exception) {
-            throw  new IllegalArgumentAuthorException("You send illegal argument. Wrong argument could't be inserted to database.");
+            throw new IllegalArgumentAuthorException("You've sent illegal argument. Wrong argument could't be inserted to database.");
         }
 
         return result;

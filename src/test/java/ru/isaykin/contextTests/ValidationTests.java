@@ -52,7 +52,7 @@ public class ValidationTests {
     @Test
     void validation_invalidFirstName_notValidData() throws Exception {
         Author author = Author.builder()
-                .firstName("V")
+                .firstName("123")
                 .lastName("Tovarish")
                 .email("commrade@profkom.ussr")
                 .birthdate(LocalDate.parse("1933-10-17"))

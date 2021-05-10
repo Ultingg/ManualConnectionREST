@@ -2,6 +2,7 @@ package ru.isaykin.services;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import ru.isaykin.exceptions.AuthorNotFoundException;
 import ru.isaykin.model.Author;
 import ru.isaykin.repository.AuthorRepo;
 import ru.isaykin.writer.CSVWriter;
@@ -9,6 +10,7 @@ import ru.isaykin.writer.XLSWriter;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,24 +26,22 @@ public class WritersService {
         this.csvWriter = csvWriter;
     }
 
-    public boolean writeAllToXLS() {
-        List<Author> authorList = authorRepo.getAll();
-        if (!authorList.isEmpty()) {
-            xlsWriter.writeToXLS(authorList);
-            return true;
-        } else {
-            return false;
+    public void writeAllToXLS() {
+        List<Author> authorList = new ArrayList<>();
+        authorRepo.findAll().iterator().forEachRemaining(authorList::add);
+        if (authorList.isEmpty()) {
+            throw  new AuthorNotFoundException("Authors not found.");
         }
+            xlsWriter.writeToXLS(authorList);
     }
 
-    public boolean writeAllToCSV() {
-        List<Author> authorList = authorRepo.getAll();
-        if (!authorList.isEmpty()) {
-            csvWriter.writeToCSV(authorList);
-            return true;
-        } else {
-            return false;
+    public void writeAllToCSV() {
+        List<Author> authorList = new ArrayList<>();
+        authorRepo.findAll().iterator().forEachRemaining(authorList::add);
+        if (authorList.isEmpty()) {
+            throw  new AuthorNotFoundException("Authors not found.");
         }
+            csvWriter.writeToCSV(authorList);
     }
 
     public boolean writeAllByAgeGTToXLS(int age) {

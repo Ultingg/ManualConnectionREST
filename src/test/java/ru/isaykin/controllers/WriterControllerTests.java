@@ -7,7 +7,6 @@ import ru.isaykin.services.WritersService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 public class WriterControllerTests {
@@ -22,45 +21,13 @@ public class WriterControllerTests {
 
     @Test
     void writeAllToCSV_valid_Ok() {
-        ResponseEntity<String> expected = new ResponseEntity<>("File created", OK);
-        when(writersService.writeAllToCSV()).thenReturn(true);
-
-        ResponseEntity<String> actual = writerController.writeAllToCSV();
-
-        assertEquals(expected, actual, "Checking if response is correct and CSV file created");
-        verify(writersService, times(1)).writeAllToCSV();
-    }
-
-    @Test
-    void writeAllToCSV_notValid_notFound() {
-        ResponseEntity<String> expected = new ResponseEntity<>("NO DATA FOUND", NOT_FOUND);
-        when(writersService.writeAllToCSV()).thenReturn(false);
-
-        ResponseEntity<String> actual = writerController.writeAllToCSV();
-
-        assertEquals(expected, actual, "Checking if response is not correct and CSV file wasn't created");
+        writerController.writeAllToCSV();
         verify(writersService, times(1)).writeAllToCSV();
     }
 
     @Test
     void writeAllToXLS_valid_Ok() {
-        ResponseEntity<String> expected = new ResponseEntity<>("File created", OK);
-        when(writersService.writeAllToXLS()).thenReturn(true);
-
-        ResponseEntity<String> actual = writerController.writeAllToXLS();
-
-        assertEquals(expected, actual, "Checking if response is correct and XLS file created");
-        verify(writersService, times(1)).writeAllToXLS();
-    }
-
-    @Test
-    void writeAllToXLS_notValid_notFound() {
-        ResponseEntity<String> expected = new ResponseEntity<>("NO DATA FOUND", NOT_FOUND);
-        when(writersService.writeAllToXLS()).thenReturn(false);
-
-        ResponseEntity<String> actual = writerController.writeAllToXLS();
-
-        assertEquals(expected, actual, "Checking if response is not correct and XLS file wasn't created");
+        writersService.writeAllToXLS();
         verify(writersService, times(1)).writeAllToXLS();
     }
 
@@ -68,18 +35,6 @@ public class WriterControllerTests {
     void writeAllByGraterAgeToXLS_valid_Ok() {
         ResponseEntity<String> expected = new ResponseEntity<>("File created", OK);
         when(writersService.writeAllByAgeGTToXLS(20)).thenReturn(true);
-
-        ResponseEntity<String> actual = writerController.writeAllByGraterAgeToXLS(20);
-
-        assertEquals(expected, actual, "Checking if response is correct and XLS file created");
-        verify(writersService, times(1)).writeAllByAgeGTToXLS(20);
-        verify(writersService, times(1)).writeAllByAgeGTToXLS(anyInt());
-    }
-
-    @Test
-    void writeAllByGraterAgeToXLS_noExistedAgeRange_notFound() {
-        ResponseEntity<String> expected = new ResponseEntity<>("NO DATA FOUND", NOT_FOUND);
-        when(writersService.writeAllByAgeGTToXLS(20)).thenReturn(false);
 
         ResponseEntity<String> actual = writerController.writeAllByGraterAgeToXLS(20);
 
@@ -101,18 +56,6 @@ public class WriterControllerTests {
     }
 
     @Test
-    void writeAllByGraterAgeToCSV_noExistedAgeRange_notFound() {
-        ResponseEntity<String> expected = new ResponseEntity<>("NO DATA FOUND", NOT_FOUND);
-        when(writersService.writeAllByAgeGTToCSV(20)).thenReturn(false);
-
-        ResponseEntity<String> actual = writerController.writeAllByGraterAgeToCSV(20);
-
-        assertEquals(expected, actual, "Checking if response is correct and CSV file created");
-        verify(writersService, times(1)).writeAllByAgeGTToCSV(20);
-        verify(writersService, times(1)).writeAllByAgeGTToCSV(anyInt());
-    }
-
-    @Test
     void writeAllByLessAgeToXLS_validAgeRange_Ok() {
         ResponseEntity<String> expected = new ResponseEntity<>("File created", OK);
         when(writersService.writeAllByAgeLTToXLS(20)).thenReturn(true);
@@ -125,33 +68,9 @@ public class WriterControllerTests {
     }
 
     @Test
-    void writeAllByLessAgeToXLS_noExistedAgeRange_notFound() {
-        ResponseEntity<String> expected = new ResponseEntity<>("NO DATA FOUND", NOT_FOUND);
-        when(writersService.writeAllByAgeLTToXLS(20)).thenReturn(false);
-
-        ResponseEntity<String> actual = writerController.writeAllByLessAgeToXLS(20);
-
-        assertEquals(expected, actual, "Checking if response is correct and XLS file created");
-        verify(writersService, times(1)).writeAllByAgeLTToXLS(20);
-        verify(writersService, times(1)).writeAllByAgeLTToXLS(anyInt());
-    }
-
-    @Test
     void writeAllByLessAgeToCSV_validAgeRange_Ok() {
         ResponseEntity<String> expected = new ResponseEntity<>("File created", OK);
         when(writersService.writeAllByAgeLTToCSV(20)).thenReturn(true);
-
-        ResponseEntity<String> actual = writerController.writeAllByLessAgeToCSV(20);
-
-        assertEquals(expected, actual, "Checking if response is correct and CSV file created");
-        verify(writersService, times(1)).writeAllByAgeLTToCSV(20);
-        verify(writersService, times(1)).writeAllByAgeLTToCSV(anyInt());
-    }
-
-    @Test
-    void writeAllByLessAgeToCSV_noExistedAgeRange_notFound() {
-        ResponseEntity<String> expected = new ResponseEntity<>("NO DATA FOUND", NOT_FOUND);
-        when(writersService.writeAllByAgeLTToCSV(20)).thenReturn(false);
 
         ResponseEntity<String> actual = writerController.writeAllByLessAgeToCSV(20);
 

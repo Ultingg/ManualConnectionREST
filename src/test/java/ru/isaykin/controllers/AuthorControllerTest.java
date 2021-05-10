@@ -8,7 +8,6 @@ import ru.isaykin.model.Author;
 import ru.isaykin.services.AuthorsSQLService;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,7 +15,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 class AuthorControllerTest {
 
@@ -85,27 +85,14 @@ class AuthorControllerTest {
         @Test
         void getListOfAuthors_listOfValidAuthors_listOfValidAuthors() {
             ResponseEntity<?> expectedList = new ResponseEntity<>(asList(author, author1, author2), OK);
-            when(authorsSQLService.getAll()).thenReturn(asList(author, author1, author2));
+            when(authorsSQLService.getListByFirstNameAndLastNameOrNull(null,null)).thenReturn(asList(author, author1, author2));
 
             ResponseEntity<Object> actualList = authorController.getListOrGetOneByFirstNameAndLastName(null, null);
 
             assertEquals(expectedList, actualList, "Checking if correct List of Authors was returned");
-            verify(authorsSQLService, times(1)).getAll();
-            verify(authorsSQLService, times(0)).getListByFirstNameAndLastNameOrNull(anyString(), anyString());
+            verify(authorsSQLService, times(1)).getListByFirstNameAndLastNameOrNull(null, null);
         }
 
-        @Test
-        void getAuthor_null_notFound() {
-            ResponseEntity<?> expected = new ResponseEntity<>(NOT_FOUND);
-            when(authorsSQLService.getListByFirstNameAndLastNameOrNull("Stepan", "Fedorov")).thenReturn(null);
-
-            ResponseEntity<Object> actual = authorController.getListOrGetOneByFirstNameAndLastName("Stepan", "Fedorov");
-
-            assertEquals(expected, actual, "Checking if correct response (NOT FOUND) was returned");
-            verify(authorsSQLService, times(1)).getListByFirstNameAndLastNameOrNull(anyString(), anyString());
-            verify(authorsSQLService, times(1)).getListByFirstNameAndLastNameOrNull("Stepan", "Fedorov");
-            verify(authorsSQLService, times(0)).getAll();
-        }
     }
 
     @SuppressWarnings("CanBeFinal")
@@ -161,30 +148,6 @@ class AuthorControllerTest {
         }
 
         @Test
-        void getListByAgeGT_noExistedAgeRange_notFound() {
-            List<Author> authorListGT35 = new ArrayList<>();
-            when(authorsSQLService.getListByAgeGT(35)).thenReturn(authorListGT35);
-            ResponseEntity<List<Author>> expected = new ResponseEntity<>(NOT_FOUND);
-
-            ResponseEntity<List<Author>> actual = authorController.getListByAgeGraterThen(35);
-
-            assertEquals(expected, actual, "Checking if correct response (NOT FOUND) was returned");
-            verify(authorsSQLService, times(1)).getListByAgeGT(35);
-            verify(authorsSQLService, times(1)).getListByAgeGT(anyInt());
-        }
-
-        @Test
-        void getListByAgeGT_null_notFound() {
-            ResponseEntity<List<Author>> expected = new ResponseEntity<>(NOT_FOUND);
-
-            ResponseEntity<List<Author>> actual = authorController.getListByAgeGraterThen(null);
-
-            assertEquals(expected, actual, "Checking correct response (NOT FOUND) for null as parameter");
-            verify(authorsSQLService,times(0)).getListByAgeGT(any());
-            verify(authorsSQLService,times(0)).getListByAgeGT(null);
-        }
-
-        @Test
         void getListByAgeLT_validAge_validListOfAuthors() {
             ResponseEntity<List<Author>> expected = new ResponseEntity<>(authorListLT35, OK);
             when(authorsSQLService.getListByAgeLT(35)).thenReturn(authorListLT35);
@@ -194,30 +157,6 @@ class AuthorControllerTest {
             assertEquals(expected, actual, "Checking if correct List of Authors was returned");
             verify(authorsSQLService, times(1)).getListByAgeLT(anyInt());
             verify(authorsSQLService, times(1)).getListByAgeLT(35);
-        }
-
-        @Test
-        void getListByAgeLT_noExistedAgeRange_notFound() {
-            List<Author> authorListLT35 = new ArrayList<>();
-            when(authorsSQLService.getListByAgeLT(35)).thenReturn(authorListLT35);
-            ResponseEntity<List<Author>> expected = new ResponseEntity<>(NOT_FOUND);
-
-            ResponseEntity<List<Author>> actual = authorController.getListByAgeLessThen(35);
-
-            assertEquals(expected, actual, "Checking if correct response (NOT FOUND) was returned");
-            verify(authorsSQLService, times(1)).getListByAgeLT(anyInt());
-            verify(authorsSQLService, times(1)).getListByAgeLT(35);
-        }
-
-        @Test
-        void getListByAgeLT_null_notFound() {
-            ResponseEntity<List<Author>> expected = new ResponseEntity<>(NOT_FOUND);
-
-            ResponseEntity<List<Author>> actual = authorController.getListByAgeLessThen(null);
-
-            assertEquals(expected, actual, "Checking correct response (NOT FOUND) for null as parameter");
-            verify(authorsSQLService, times(0)).getListByAgeGT(any());
-            verify(authorsSQLService, times(0)).getListByAgeLT(null);
         }
     }
 
@@ -324,22 +263,4 @@ class AuthorControllerTest {
         verify(authorsSQLService, times(1)).update(anyLong(), any(Author.class));
         verify(authorsSQLService, times(1)).update(1L, author1);
     }
-
-    @Test
-    void updateById_noExistedId_notFound() {
-        ResponseEntity<Author> expected = new ResponseEntity<>(NOT_MODIFIED);
-        Author author = new Author();
-        author.setFirstName("Pole");
-        author.setLastName("Swan");
-        author.setEmail("swanoil@ug.ru");
-        author.setBirthdate(LocalDate.of(1985, 10, 22));
-        when(authorsSQLService.update(1L, author)).thenReturn(null);
-
-        ResponseEntity<Author> actual = authorController.updateById(1L, author);
-
-        assertEquals(expected, actual, "Checking if correct response (NOT MODIFIED) was returned id author wasn't found in List");
-        verify(authorsSQLService, times(1)).update(anyLong(), any(Author.class));
-        verify(authorsSQLService, times(1)).update(1L, author);
-    }
-
 }

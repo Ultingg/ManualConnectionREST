@@ -21,13 +21,8 @@ public class WriterController {
 
     @GetMapping("writers/xlsx")
     public ResponseEntity<String> writeAllToXLS() {
-        ResponseEntity<String> result;
-        if (writersService.writeAllToXLS()) {
-            result = new ResponseEntity<>("File created", OK);
-        } else {
-            result = new ResponseEntity<>("NO DATA FOUND", NOT_FOUND);
-        }
-        return result;
+        writersService.writeAllToXLS();
+        return new ResponseEntity<>("File created", OK);
     }
 
     @GetMapping("writers/xlsx/age/gt/{age}")
@@ -54,13 +49,8 @@ public class WriterController {
 
     @GetMapping("writers/csv")
     public ResponseEntity<String> writeAllToCSV() {
-        ResponseEntity<String> result;
-        if (writersService.writeAllToCSV()) {
-            result = new ResponseEntity<>("File created", OK);
-        } else {
-            result = new ResponseEntity<>("NO DATA FOUND", NOT_FOUND);
-        }
-        return result;
+        writersService.writeAllToCSV();
+        return new ResponseEntity<>("File created", OK);
     }
 
     @GetMapping("writers/csv/age/lt/{age}")
