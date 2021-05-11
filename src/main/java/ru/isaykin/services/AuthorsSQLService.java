@@ -40,14 +40,15 @@ public class AuthorsSQLService {
         if (firstName == null && lastName == null) {
             authorRepo.findAll().iterator().forEachRemaining(selectedAuthors::add);
         } else {
-        List<Author> authors = new ArrayList<>();
-        authorRepo.findAll().iterator().forEachRemaining(authors::add);
-        selectedAuthors = authors.stream()
-                .filter(author -> author.getFirstName().equals(firstName) || author.getLastName().equals(lastName))
-                .collect(Collectors.toList());
-        if (selectedAuthors.isEmpty()) {
-            throw new AuthorNotFoundException("Authors not found.");
-        }}
+            List<Author> authors = new ArrayList<>();
+            authorRepo.findAll().iterator().forEachRemaining(authors::add);
+            selectedAuthors = authors.stream()
+                    .filter(author -> author.getFirstName().equals(firstName) || author.getLastName().equals(lastName))
+                    .collect(Collectors.toList());
+            if (selectedAuthors.isEmpty()) {
+                throw new AuthorNotFoundException("Authors not found.");
+            }
+        }
         return selectedAuthors;
     }
 

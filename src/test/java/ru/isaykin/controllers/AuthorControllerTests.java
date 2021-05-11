@@ -18,14 +18,14 @@ import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
-class AuthorControllerTest {
+class AuthorControllerTests {
 
     AuthorsSQLService authorsSQLService;
     AuthorController authorController;
 
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         authorsSQLService = mock(AuthorsSQLService.class);
         authorController = new AuthorController(authorsSQLService);
     }
@@ -85,7 +85,7 @@ class AuthorControllerTest {
         @Test
         void getListOfAuthors_listOfValidAuthors_listOfValidAuthors() {
             ResponseEntity<?> expectedList = new ResponseEntity<>(asList(author, author1, author2), OK);
-            when(authorsSQLService.getListByFirstNameAndLastNameOrNull(null,null)).thenReturn(asList(author, author1, author2));
+            when(authorsSQLService.getListByFirstNameAndLastNameOrNull(null, null)).thenReturn(asList(author, author1, author2));
 
             ResponseEntity<Object> actualList = authorController.getListOrGetOneByFirstNameAndLastName(null, null);
 
@@ -192,7 +192,6 @@ class AuthorControllerTest {
         verify(authorsSQLService, times(1)).insertAuthor(author);
         verify(authorsSQLService, times(1)).insertAuthor(any(Author.class));
     }
-
 
 
     @Test

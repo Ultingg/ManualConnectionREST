@@ -36,14 +36,16 @@ public class AuthorExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DbActionExecutionException.class)
     public ResponseEntity<Object> handleDuplicateException(DbActionExecutionException exception, WebRequest request) {
         SQLIntegrityConstraintViolationException sqlException = unwrapCause(SQLIntegrityConstraintViolationException.class, exception);
-            return getResponseEntityWithBody(BAD_REQUEST, sqlException);
+        return getResponseEntityWithBody(BAD_REQUEST, sqlException);
     }
+
     private static <T> T unwrapCause(Class<T> clazz, Throwable e) {
         while (!clazz.isInstance(e) && e.getCause() != null && e != e.getCause()) {
             e = e.getCause();
         }
         return clazz.isInstance(e) ? clazz.cast(e) : null;
     }
+
     private ResponseEntity<Object> getResponseEntityWithBody(HttpStatus status, Exception exception) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", new Date());
@@ -64,7 +66,6 @@ public class AuthorExceptionHandler extends ResponseEntityExceptionHandler {
         return getResponseEntityWithBody(BAD_REQUEST, exception);
 
     }
-
 
 
 }

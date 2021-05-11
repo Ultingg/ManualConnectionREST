@@ -30,63 +30,51 @@ public class WritersService {
         List<Author> authorList = new ArrayList<>();
         authorRepo.findAll().iterator().forEachRemaining(authorList::add);
         if (authorList.isEmpty()) {
-            throw  new AuthorNotFoundException("Authors not found.");
+            throw new AuthorNotFoundException("Authors not found. File not created.");
         }
-            xlsWriter.writeToXLS(authorList);
+        xlsWriter.writeToXLS(authorList);
     }
 
     public void writeAllToCSV() {
         List<Author> authorList = new ArrayList<>();
         authorRepo.findAll().iterator().forEachRemaining(authorList::add);
         if (authorList.isEmpty()) {
-            throw  new AuthorNotFoundException("Authors not found.");
+            throw new AuthorNotFoundException("Authors not found. File not created.");
         }
-            csvWriter.writeToCSV(authorList);
+        csvWriter.writeToCSV(authorList);
     }
 
-    public boolean writeAllByAgeGTToXLS(int age) {
+    public void writeAllByAgeGTToXLS(int age) {
         List<Author> authorList = authorRepo.getListByAgeGraterThen(ageToDateConverter(age));
-        boolean result = true;
-        if (!authorList.isEmpty()) {
-            xlsWriter.writeToXLS(authorList);
-        } else {
-            result = false;
+        if (authorList.isEmpty()) {
+            throw new AuthorNotFoundException("Authors not found. File not created.");
         }
-        return result;
+        xlsWriter.writeToXLS(authorList);
     }
 
-    public boolean writeAllByAgeLTToXLS(int age) {
+    public void writeAllByAgeLTToXLS(int age) {
         List<Author> authorList = authorRepo.getListByAgeLessThen(ageToDateConverter(age));
-        boolean result = true;
-        if (!authorList.isEmpty()) {
-            xlsWriter.writeToXLS(authorList);
-        } else {
-            result = false;
+        if (authorList.isEmpty()) {
+            throw new AuthorNotFoundException("Authors not found. File not created.");
         }
-        return result;
+        xlsWriter.writeToXLS(authorList);
     }
 
 
-    public boolean writeAllByAgeLTToCSV(int age) {
+    public void writeAllByAgeLTToCSV(int age) {
         List<Author> authorList = authorRepo.getListByAgeLessThen(ageToDateConverter(age));
-        boolean result = true;
-        if (!authorList.isEmpty()) {
-            csvWriter.writeToCSV(authorList);
-        } else {
-            result = false;
+        if (authorList.isEmpty()) {
+            throw new AuthorNotFoundException("Authors not found. File not created.");
         }
-        return result;
+        csvWriter.writeToCSV(authorList);
     }
 
-    public boolean writeAllByAgeGTToCSV(int age) {
+    public void writeAllByAgeGTToCSV(int age) {
         List<Author> authorList = authorRepo.getListByAgeGraterThen(ageToDateConverter(age));
-        boolean result = true;
-        if (!authorList.isEmpty()) {
-            csvWriter.writeToCSV(authorList);
-        } else {
-            result = false;
+        if (authorList.isEmpty()) {
+            throw new AuthorNotFoundException("Authors not found. File not created.");
         }
-        return result;
+        csvWriter.writeToCSV(authorList);
     }
 
     private Date ageToDateConverter(int age) {

@@ -34,7 +34,6 @@ public class WriterControllerTests {
     @Test
     void writeAllByGraterAgeToXLS_valid_Ok() {
         ResponseEntity<String> expected = new ResponseEntity<>("File created", OK);
-        when(writersService.writeAllByAgeGTToXLS(20)).thenReturn(true);
 
         ResponseEntity<String> actual = writerController.writeAllByGraterAgeToXLS(20);
 
@@ -46,7 +45,6 @@ public class WriterControllerTests {
     @Test
     void writeAllByGraterAgeToCSV_validAgeRange_Ok() {
         ResponseEntity<String> expected = new ResponseEntity<>("File created", OK);
-        when(writersService.writeAllByAgeGTToCSV(20)).thenReturn(true);
 
         ResponseEntity<String> actual = writerController.writeAllByGraterAgeToCSV(20);
 
@@ -58,7 +56,6 @@ public class WriterControllerTests {
     @Test
     void writeAllByLessAgeToXLS_validAgeRange_Ok() {
         ResponseEntity<String> expected = new ResponseEntity<>("File created", OK);
-        when(writersService.writeAllByAgeLTToXLS(20)).thenReturn(true);
 
         ResponseEntity<String> actual = writerController.writeAllByLessAgeToXLS(20);
 
@@ -70,7 +67,6 @@ public class WriterControllerTests {
     @Test
     void writeAllByLessAgeToCSV_validAgeRange_Ok() {
         ResponseEntity<String> expected = new ResponseEntity<>("File created", OK);
-        when(writersService.writeAllByAgeLTToCSV(20)).thenReturn(true);
 
         ResponseEntity<String> actual = writerController.writeAllByLessAgeToCSV(20);
 

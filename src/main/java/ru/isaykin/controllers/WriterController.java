@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.isaykin.services.WritersService;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -27,24 +26,14 @@ public class WriterController {
 
     @GetMapping("writers/xlsx/age/gt/{age}")
     public ResponseEntity<String> writeAllByGraterAgeToXLS(@PathVariable("age") int age) {
-        ResponseEntity<String> result;
-        if (writersService.writeAllByAgeGTToXLS(age)) {
-            result = new ResponseEntity<>("File created", OK);
-        } else {
-            result = new ResponseEntity<>("NO DATA FOUND", NOT_FOUND);
-        }
-        return result;
+        writersService.writeAllByAgeGTToXLS(age);
+        return new ResponseEntity<>("File created", OK);
     }
 
     @GetMapping("writers/xlsx/age/lt/{age}")
     public ResponseEntity<String> writeAllByLessAgeToXLS(@PathVariable("age") int age) {
-        ResponseEntity<String> result;
-        if (writersService.writeAllByAgeLTToXLS(age)) {
-            result = new ResponseEntity<>("File created", OK);
-        } else {
-            result = new ResponseEntity<>("NO DATA FOUND", NOT_FOUND);
-        }
-        return result;
+        writersService.writeAllByAgeLTToXLS(age);
+        return new ResponseEntity<>("File created", OK);
     }
 
     @GetMapping("writers/csv")
@@ -55,24 +44,14 @@ public class WriterController {
 
     @GetMapping("writers/csv/age/lt/{age}")
     public ResponseEntity<String> writeAllByLessAgeToCSV(@PathVariable("age") int age) {
-        ResponseEntity<String> result;
-        if (writersService.writeAllByAgeLTToCSV(age)) {
-            result = new ResponseEntity<>("File created", OK);
-        } else {
-            result = new ResponseEntity<>("NO DATA FOUND", NOT_FOUND);
-        }
-        return result;
+        writersService.writeAllByAgeLTToCSV(age);
+        return new ResponseEntity<>("File created", OK);
     }
 
     @GetMapping("writers/csv/age/gt/{age}")
     public ResponseEntity<String> writeAllByGraterAgeToCSV(@PathVariable("age") int age) {
-        ResponseEntity<String> result;
-        if (writersService.writeAllByAgeGTToCSV(age)) {
-            result = new ResponseEntity<>("File created", OK);
-        } else {
-            result = new ResponseEntity<>("NO DATA FOUND", NOT_FOUND);
-        }
-        return result;
+        writersService.writeAllByAgeGTToCSV(age);
+        return new ResponseEntity<>("File created", OK);
     }
 
 }

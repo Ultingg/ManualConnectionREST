@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-class AuthorsSQLServiceTest {
+class AuthorsSQLServiceTests {
 
 
     private AuthorRepo authorRepo;
@@ -165,9 +165,9 @@ class AuthorsSQLServiceTest {
 
     @Test
     void insert_null_IllegalArgumentAuthorException() {
-        assertThrows(IllegalArgumentAuthorException.class,()->authorsSQLService.insertAuthor(null));
-        verify(authorRepo,times(0)).save(any());
-        verify(authorRepo,times(0)).save(null);
+        assertThrows(IllegalArgumentAuthorException.class, () -> authorsSQLService.insertAuthor(null));
+        verify(authorRepo, times(0)).save(any());
+        verify(authorRepo, times(0)).save(null);
     }
 
     @Test
@@ -215,7 +215,7 @@ class AuthorsSQLServiceTest {
         Date someDate = Date.valueOf(now().minusYears(5));
         when(authorRepo.getListByAgeGraterThen(any(Date.class))).thenReturn(expected);
 
-        List<Author> actual =  authorsSQLService.getListByAgeGT(5);
+        List<Author> actual = authorsSQLService.getListByAgeGT(5);
 
         assertEquals(expected, actual);
         verify(authorRepo, times(1)).getListByAgeGraterThen(any(Date.class));
@@ -227,6 +227,7 @@ class AuthorsSQLServiceTest {
         assertThrows(IllegalArgumentAuthorException.class, () -> authorsSQLService.getListByAgeGT(null));
         verify(authorRepo, times(0)).getListByAgeGraterThen(any(Date.class));
     }
+
     @Test
     void getGTAge_invalid_IllegalArgumentAuthorException() {
         assertThrows(IllegalArgumentAuthorException.class, () -> authorsSQLService.getListByAgeGT(-10));
@@ -240,7 +241,7 @@ class AuthorsSQLServiceTest {
         Date someDate = Date.valueOf(now().minusYears(5));
         when(authorRepo.getListByAgeLessThen(any(Date.class))).thenReturn(expected);
 
-        List<Author> actual  =  authorsSQLService.getListByAgeLT(5);
+        List<Author> actual = authorsSQLService.getListByAgeLT(5);
 
         assertEquals(expected, actual);
         verify(authorRepo, times(1)).getListByAgeLessThen(any(Date.class));
@@ -252,6 +253,7 @@ class AuthorsSQLServiceTest {
         assertThrows(IllegalArgumentAuthorException.class, () -> authorsSQLService.getListByAgeLT(null));
         verify(authorRepo, times(0)).getListByAgeLessThen(any(Date.class));
     }
+
     @Test
     void getLTAge_invalid_IllegalArgumentAuthorException() {
         assertThrows(IllegalArgumentAuthorException.class, () -> authorsSQLService.getListByAgeLT(-1));
@@ -337,8 +339,8 @@ class AuthorsSQLServiceTest {
             List<Author> authorList = Arrays.asList(author, author1, author2);
             when(authorRepo.findAll()).thenReturn(authorList);
 
-            assertThrows(AuthorNotFoundException.class,()->authorsSQLService.getListByFirstNameAndLastNameOrNull("Molly", "Trevis")
-            ,"Checking throwing of AuthorNotFoundException when searching not existing names.");
+            assertThrows(AuthorNotFoundException.class, () -> authorsSQLService.getListByFirstNameAndLastNameOrNull("Molly", "Trevis")
+                    , "Checking throwing of AuthorNotFoundException when searching not existing names.");
             verify(authorRepo, times(1)).findAll();
         }
     }

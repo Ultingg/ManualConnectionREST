@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -30,7 +31,6 @@ public class ValidationTests {
     private MockMvc mvc;
     @Autowired
     private Validator validator;
-
 
 
     @Test
@@ -49,6 +49,7 @@ public class ValidationTests {
 
         assertTrue(violations.isEmpty());
     }
+
     @Test
     void validation_invalidFirstName_notValidData() throws Exception {
         Author author = Author.builder()
@@ -65,6 +66,7 @@ public class ValidationTests {
 
         assertFalse(violations.isEmpty());
     }
+
     @Test
     void validation_invalidLastName_notValidData() throws Exception {
         Author author = Author.builder()
@@ -81,6 +83,7 @@ public class ValidationTests {
 
         assertFalse(violations.isEmpty());
     }
+
     @Test
     void validation_invalidEmail_notValidData() throws Exception {
         Author author = Author.builder()
@@ -97,6 +100,7 @@ public class ValidationTests {
 
         assertFalse(violations.isEmpty());
     }
+
     @Test
     void validation_invalidDate_notValidData() throws Exception {
         Author author = Author.builder()
